@@ -14,5 +14,10 @@ public class GenomeTesterBehaviour : MonoBehaviour
         DungeonDrawer.DrawDungeonFromGenome(genome, Vector3.zero);
     }
 
+    public void MutateAndDraw()
+    {
+        genome.Mutate();
+        DungeonDrawer.DrawDungeonFromGenome(genome, Vector3.zero);
+    }
 
 }

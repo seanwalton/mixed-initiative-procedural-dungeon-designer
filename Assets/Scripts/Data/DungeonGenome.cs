@@ -10,6 +10,9 @@ public class DungeonGenome {
     public static float EnemyCoverage = 0.05f;
     public static float TreasureCoverage = 0.05f;
 
+    public static float MutateSwapRate = 0.05f;
+    public static float MutateReplaceRate = 0.01f;
+
     public DungeonTileType[,] dungeonMap = new DungeonTileType[Size, Size];
 
 
@@ -65,6 +68,48 @@ public class DungeonGenome {
             {
                 dungeonMap[x, y] = DungeonTileType.EXIT;
                 flag = false;
+            }
+        }
+    }
+
+    public void Mutate()
+    {
+        MutateReplace();
+    }
+
+    private void MutateReplace()
+    {
+        int tileInt = 0;
+        for (int i = 0; i < Size; i++)
+        {
+            for (int j = 0; j < Size; j++)
+            {
+
+                if (Random.value < MutateReplaceRate)
+                {
+                    if ((dungeonMap[i, j] != DungeonTileType.ENTRANCE) && (dungeonMap[i, j] != DungeonTileType.EXIT))
+                    {
+                        tileInt = Random.Range(0, 4);
+                        switch (tileInt)
+                        {
+                            case 0:
+                                dungeonMap[i, j] = DungeonTileType.FLOOR;
+                                break;
+                            case 1:
+                                dungeonMap[i, j] = DungeonTileType.WALL;
+                                break;
+                            case 2:
+                                dungeonMap[i, j] = DungeonTileType.ENEMY;
+                                break;
+                            case 3:
+                                dungeonMap[i, j] = DungeonTileType.TREASURE;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+                    
             }
         }
     }
