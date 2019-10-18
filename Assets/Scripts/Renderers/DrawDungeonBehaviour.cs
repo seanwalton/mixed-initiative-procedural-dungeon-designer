@@ -18,11 +18,6 @@ public class DrawDungeonBehaviour : MonoBehaviour
     private void Awake()
     {
         myMap = gameObject.GetComponent<Tilemap>();
-
-        DungeonGenome genome = new DungeonGenome();
-        genome.RandomlyInitialise();
-        DrawDungeonFromGenome(genome, Vector3.zero);
-
     }
 
 
