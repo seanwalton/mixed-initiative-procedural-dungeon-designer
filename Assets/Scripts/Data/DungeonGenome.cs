@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class DungeonGenome {
 
-    public static int Size = 64;
+    public static int Size = 12;
 
     public DungeonTileType[,] dungeonMap = new DungeonTileType[Size, Size];
 

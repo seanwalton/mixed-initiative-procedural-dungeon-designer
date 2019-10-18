@@ -5,5 +5,5 @@
     ENEMY,
     TREASURE,
     ENTRANCE,
-    DOOR
+    EXIT
 }

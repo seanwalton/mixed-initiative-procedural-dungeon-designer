@@ -19,10 +19,56 @@ public class DrawDungeonBehaviour : MonoBehaviour
     {
         myMap = gameObject.GetComponent<Tilemap>();
 
-        myMap.SetTile(new Vector3Int(0, 0, 0), floorTile);
+        DungeonGenome genome = new DungeonGenome();
+
+        DrawDungeonFromGenome(genome, Vector3.zero);
+
     }
 
-    
+
+    //Draws a dungeon starting at position
+    public void DrawDungeonFromGenome(DungeonGenome genome, Vector3 position)
+    {
+        Vector3Int firstCell = myMap.WorldToCell(position);
+        Vector3Int currentCell = new Vector3Int();
+
+        for (int i = 0; i < DungeonGenome.Size; i++)
+        {
+            for (int j = 0; j < DungeonGenome.Size; j++)
+            {
+                currentCell.x = firstCell.x + i;
+                currentCell.y = firstCell.y + j;
+                currentCell.z = firstCell.z;
+                DrawTileAtLocation(genome.dungeonMap[i, j], currentCell);
+            }
+        }
+    }
+
+    private void DrawTileAtLocation(DungeonTileType type, Vector3Int location)
+    {
+        switch (type)
+        {
+            case DungeonTileType.FLOOR:
+                myMap.SetTile(location, floorTile);
+                break;
+            case DungeonTileType.WALL:
+                myMap.SetTile(location, wallTile);
+                break;
+            case DungeonTileType.ENEMY:
+                myMap.SetTile(location, enemyTile);
+                break;
+            case DungeonTileType.TREASURE:
+                myMap.SetTile(location, treasureTile);
+                break;
+            case DungeonTileType.ENTRANCE:
+                myMap.SetTile(location, entranceTile);
+                break;
+            case DungeonTileType.EXIT:
+                myMap.SetTile(location, exitTile);
+                break;
+            
+        }
+    }
 
 
 }
