@@ -12,6 +12,66 @@ public class DungeonGenome {
 
     public DungeonTileType[,] dungeonMap = new DungeonTileType[Size, Size];
 
+    public static DungeonGenome CrossOver(DungeonGenome parent1, DungeonGenome parent2)
+    {
+        DungeonGenome child = new DungeonGenome();
+
+        //The new child must have exactly one entrance and one exit, so lets pick where those come from now
+        int exit = Random.Range(0, 2);
+        int entrance = Random.Range(0, 2);
+        int parent = 0;
+
+        for (int i = 0; i < Size; i++)
+        {
+            for (int j = 0; j < Size; j++)
+            {
+                //Check for entrance
+                if (( parent1.dungeonMap[i,j] == DungeonTileType.ENTRANCE ) || (parent2.dungeonMap[i, j] == DungeonTileType.ENTRANCE))
+                {
+                    switch (entrance)
+                    {
+                        case 0:
+                            child.dungeonMap[i, j] = parent1.dungeonMap[i, j];
+                            break;
+                        case 1:
+                            child.dungeonMap[i, j] = parent2.dungeonMap[i, j];
+                            break;
+
+                    }
+                }
+                else if ((parent1.dungeonMap[i, j] == DungeonTileType.EXIT) || (parent2.dungeonMap[i, j] == DungeonTileType.EXIT))
+                {
+                    switch (exit)
+                    {
+                        case 0:
+                            child.dungeonMap[i, j] = parent1.dungeonMap[i, j];
+                            break;
+                        case 1:
+                            child.dungeonMap[i, j] = parent2.dungeonMap[i, j];
+                            break;
+
+                    }
+                }
+                else
+                {
+                    parent = Random.Range(0, 2);
+                    switch (parent)
+                    {
+                        case 0:
+                            child.dungeonMap[i, j] = parent1.dungeonMap[i, j];
+                            break;
+                        case 1:
+                            child.dungeonMap[i, j] = parent2.dungeonMap[i, j];
+                            break;
+                        
+                    }
+                }
+            }
+        }
+
+
+        return child;
+    }
 
     public void RandomlyInitialise()
     {
