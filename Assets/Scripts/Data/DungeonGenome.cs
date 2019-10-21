@@ -10,8 +10,6 @@ public class DungeonGenome {
     public static float EnemyCoverage = 0.02f;
     public static float TreasureCoverage = 0.01f;
 
-    public static float MutateSwapRate = 0.05f;
-
     public DungeonTileType[,] dungeonMap = new DungeonTileType[Size, Size];
 
 
@@ -73,8 +71,24 @@ public class DungeonGenome {
 
     public void Mutate()
     {
-        MutateSwap();
-        MutateReplace();
+
+        int value = Random.Range(0, 4);
+
+        if (value == 0)
+        {
+            MutateSwap();
+        }
+        else if (value == 1)
+        {
+            MutateReplace();
+        }
+        else
+        {
+            MutateSwap();
+            MutateReplace();
+        }
+
+       
     }
 
     private void MutateReplace()
@@ -83,17 +97,17 @@ public class DungeonGenome {
         int j = Random.Range(0, Size);
         if ((dungeonMap[i, j] != DungeonTileType.ENTRANCE) && (dungeonMap[i, j] != DungeonTileType.EXIT))
         {
-            float value = Random.value;
-            
-            if (value < TreasureCoverage)
+            int value = Random.Range(0, 4);
+
+            if (value == 0)
             {
                 dungeonMap[i, j] = DungeonTileType.TREASURE;
             }
-            else if (value < EnemyCoverage)
+            else if (value == 1)
             {
                 dungeonMap[i, j] = DungeonTileType.ENEMY;
             }
-            else if (value < WallCoverage)
+            else if (value == 2)
             {
                 dungeonMap[i, j] = DungeonTileType.WALL;
             }
@@ -101,6 +115,11 @@ public class DungeonGenome {
             {
                 dungeonMap[i, j] = DungeonTileType.FLOOR;
             }         
+        }
+        else
+        {
+            //Do a swap if the entrance or exit comes up
+            MutateSwap();
         }
           
     }
@@ -112,78 +131,74 @@ public class DungeonGenome {
         int iNew = 0;
         int jNew = 0;
 
-        for (int i = 0; i < Size; i++)
+        int i = Random.Range(0, Size);
+        int j = Random.Range(0, Size);
+
+        swapDirection = Random.Range(0, 4);
+        swappedTile = dungeonMap[i, j];
+        switch (swapDirection)
         {
-            for (int j = 0; j < Size; j++)
-            {
-
-                if (Random.value < MutateSwapRate)
+            case 0:
+                //up
+                if (j == Size - 1)
                 {
-
-                    swapDirection = Random.Range(0, 4);
-                    swappedTile = dungeonMap[i, j];
-                    switch (swapDirection)
-                    {
-                        case 0:
-                            //up
-                            if (j == Size - 1)
-                            {
-                                jNew = 0;
-                            }
-                            else
-                            {
-                                jNew = j + 1;
-                            }
-                            dungeonMap[i, j] = dungeonMap[i, jNew];
-                            dungeonMap[i, jNew] = swappedTile;
-                            break;
-                        case 1:
-                            //down
-                            if (j == 0)
-                            {
-                                jNew = Size - 1;
-                            }
-                            else
-                            {
-                                jNew = j - 1;
-                            }
-                            dungeonMap[i, j] = dungeonMap[i, jNew];
-                            dungeonMap[i, jNew] = swappedTile;
-                            break;
-                        case 2:
-                            //left
-                            if (i == 0)
-                            {
-                                iNew = Size - 1;
-                            }
-                            else
-                            {
-                                iNew = i - 1;
-                            }
-                            dungeonMap[i, j] = dungeonMap[iNew, j];
-                            dungeonMap[iNew, j] = swappedTile;
-                            break;
-                        case 3:
-                            //right
-                            if (i == Size - 1)
-                            {
-                                iNew = 0;
-                            }
-                            else
-                            {
-                                iNew = i + 1;
-                            }
-                            dungeonMap[i, j] = dungeonMap[iNew, j];
-                            dungeonMap[iNew, j] = swappedTile;
-                            break;
-                        default:
-                            break;
-                    }
-                    
+                    jNew = 0;
                 }
-
-            }
+                else
+                {
+                    jNew = j + 1;
+                }
+                dungeonMap[i, j] = dungeonMap[i, jNew];
+                dungeonMap[i, jNew] = swappedTile;
+                if (dungeonMap[i, j] == dungeonMap[i, jNew]) MutateReplace();
+                break;
+            case 1:
+                //down
+                if (j == 0)
+                {
+                    jNew = Size - 1;
+                }
+                else
+                {
+                    jNew = j - 1;
+                }
+                dungeonMap[i, j] = dungeonMap[i, jNew];
+                dungeonMap[i, jNew] = swappedTile;
+                if (dungeonMap[i, j] == dungeonMap[i, jNew]) MutateReplace();
+                break;
+            case 2:
+                //left
+                if (i == 0)
+                {
+                    iNew = Size - 1;
+                }
+                else
+                {
+                    iNew = i - 1;
+                }
+                dungeonMap[i, j] = dungeonMap[iNew, j];
+                dungeonMap[iNew, j] = swappedTile;
+                if (dungeonMap[i, j] == dungeonMap[iNew, j]) MutateReplace();
+                break;
+            case 3:
+                //right
+                if (i == Size - 1)
+                {
+                    iNew = 0;
+                }
+                else
+                {
+                    iNew = i + 1;
+                }
+                dungeonMap[i, j] = dungeonMap[iNew, j];
+                dungeonMap[iNew, j] = swappedTile;
+                if (dungeonMap[i, j] == dungeonMap[iNew, j]) MutateReplace();
+                break;
+            default:
+                break;
         }
+                    
+               
     }
 
 
