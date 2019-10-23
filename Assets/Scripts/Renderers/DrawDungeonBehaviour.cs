@@ -6,6 +6,8 @@ using UnityEngine.Tilemaps;
 public class DrawDungeonBehaviour : MonoBehaviour
 {
 
+    public Color PathColor;
+
     public Tile floorTile;
     public Tile wallTile;
     public Tile enemyTile;
@@ -14,6 +16,7 @@ public class DrawDungeonBehaviour : MonoBehaviour
     public Tile exitTile;
 
     private Tilemap myMap;
+
 
     private void Awake()
     {
@@ -35,8 +38,24 @@ public class DrawDungeonBehaviour : MonoBehaviour
                 currentCell.y = firstCell.y + j;
                 currentCell.z = firstCell.z;
                 DrawTileAtLocation(genome.dungeonMap[i, j], currentCell);
+                myMap.SetTileFlags(currentCell, TileFlags.None);
+                myMap.SetColor(currentCell, Color.white);
             }
         }
+
+        if (genome.validPath)
+        {
+            for (int i = 0; i < genome.pathFromEntranceToExit.Count; i++)
+            {
+                currentCell.x = firstCell.x + genome.pathFromEntranceToExit[i].Position.x;
+                currentCell.y = firstCell.y + genome.pathFromEntranceToExit[i].Position.y;
+                currentCell.z = firstCell.z;
+
+                myMap.SetTileFlags(currentCell, TileFlags.None);
+                myMap.SetColor(currentCell, PathColor);
+            }
+        }
+
     }
 
     private void DrawTileAtLocation(DungeonTileType type, Vector3Int location)

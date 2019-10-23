@@ -11,6 +11,8 @@ public class DungeonGenome {
     public static float TreasureCoverage = 0.01f;
 
     public DungeonTileType[,] dungeonMap = new DungeonTileType[Size, Size];
+    public List<Node> pathFromEntranceToExit;
+    public bool validPath;
 
     public static DungeonGenome CrossOver(DungeonGenome parent1, DungeonGenome parent2)
     {
@@ -69,7 +71,7 @@ public class DungeonGenome {
             }
         }
 
-
+        child.CheckAndFindPath();
         return child;
     }
 
@@ -127,6 +129,8 @@ public class DungeonGenome {
                 flag = false;
             }
         }
+
+        CheckAndFindPath();
     }
 
     public void Mutate()
@@ -148,7 +152,8 @@ public class DungeonGenome {
             MutateReplace();
         }
 
-       
+        CheckAndFindPath();
+
     }
 
     private void MutateReplace()
@@ -257,8 +262,39 @@ public class DungeonGenome {
             default:
                 break;
         }
+
+        
+
+
+    }
+
+    private void CheckAndFindPath()
+    {
+        Vector2Int start = new Vector2Int();
+        Vector2Int target = new Vector2Int();
+
+        for (int i = 0; i < Size; i++)
+        {
+            for (int j = 0; j < Size; j++)
+            {
+                switch (dungeonMap[i,j])
+                {
                     
-               
+                    case DungeonTileType.ENTRANCE:
+                        start.x = i;
+                        start.y = j;
+                        break;
+                    case DungeonTileType.EXIT:
+                        target.x = i;
+                        target.y = j;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        validPath = PathFinder.FindPath(start, target, this, out pathFromEntranceToExit);
     }
 
 

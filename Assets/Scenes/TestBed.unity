@@ -1723,6 +1723,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b607b773f3e31c740a05297e8a3941e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PathColor: {r: 0, g: 1, b: 0.17721939, a: 1}
   floorTile: {fileID: 11400000, guid: a3cbf7e7c46be7b4590408a5fb4e1688, type: 2}
   wallTile: {fileID: 11400000, guid: cba7e782838eab243832e40ea7fcf011, type: 2}
   enemyTile: {fileID: 11400000, guid: ac3b693fbadff664588ecb710742b79f, type: 2}
