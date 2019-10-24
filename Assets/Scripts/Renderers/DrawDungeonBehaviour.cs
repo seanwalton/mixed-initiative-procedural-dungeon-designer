@@ -37,18 +37,18 @@ public class DrawDungeonBehaviour : MonoBehaviour
                 currentCell.x = firstCell.x + i;
                 currentCell.y = firstCell.y + j;
                 currentCell.z = firstCell.z;
-                DrawTileAtLocation(genome.dungeonMap[i, j], currentCell);
+                DrawTileAtLocation(genome.DungeonMap[i, j], currentCell);
                 myMap.SetTileFlags(currentCell, TileFlags.None);
                 myMap.SetColor(currentCell, Color.white);
             }
         }
 
-        if (genome.validPath)
+        if (genome.ValidPath)
         {
-            for (int i = 0; i < genome.pathFromEntranceToExit.Count; i++)
+            for (int i = 0; i < genome.PathFromEntranceToExit.Count; i++)
             {
-                currentCell.x = firstCell.x + genome.pathFromEntranceToExit[i].Position.x;
-                currentCell.y = firstCell.y + genome.pathFromEntranceToExit[i].Position.y;
+                currentCell.x = firstCell.x + genome.PathFromEntranceToExit[i].Position.x;
+                currentCell.y = firstCell.y + genome.PathFromEntranceToExit[i].Position.y;
                 currentCell.z = firstCell.z;
 
                 myMap.SetTileFlags(currentCell, TileFlags.None);

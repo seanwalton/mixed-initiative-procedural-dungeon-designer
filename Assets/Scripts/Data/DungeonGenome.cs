@@ -10,9 +10,10 @@ public class DungeonGenome {
     public static float EnemyCoverage = 0.02f;
     public static float TreasureCoverage = 0.01f;
 
-    public DungeonTileType[,] dungeonMap = new DungeonTileType[Size, Size];
-    public List<Node> pathFromEntranceToExit;
-    public bool validPath;
+    public DungeonTileType[,] DungeonMap = new DungeonTileType[Size, Size];
+    public List<Node> PathFromEntranceToExit;
+    public bool ValidPath;
+    public Fitness MyFitness;
 
     public static DungeonGenome CrossOver(DungeonGenome parent1, DungeonGenome parent2)
     {
@@ -28,28 +29,28 @@ public class DungeonGenome {
             for (int j = 0; j < Size; j++)
             {
                 //Check for entrance
-                if (( parent1.dungeonMap[i,j] == DungeonTileType.ENTRANCE ) || (parent2.dungeonMap[i, j] == DungeonTileType.ENTRANCE))
+                if (( parent1.DungeonMap[i,j] == DungeonTileType.ENTRANCE ) || (parent2.DungeonMap[i, j] == DungeonTileType.ENTRANCE))
                 {
                     switch (entrance)
                     {
                         case 0:
-                            child.dungeonMap[i, j] = parent1.dungeonMap[i, j];
+                            child.DungeonMap[i, j] = parent1.DungeonMap[i, j];
                             break;
                         case 1:
-                            child.dungeonMap[i, j] = parent2.dungeonMap[i, j];
+                            child.DungeonMap[i, j] = parent2.DungeonMap[i, j];
                             break;
 
                     }
                 }
-                else if ((parent1.dungeonMap[i, j] == DungeonTileType.EXIT) || (parent2.dungeonMap[i, j] == DungeonTileType.EXIT))
+                else if ((parent1.DungeonMap[i, j] == DungeonTileType.EXIT) || (parent2.DungeonMap[i, j] == DungeonTileType.EXIT))
                 {
                     switch (exit)
                     {
                         case 0:
-                            child.dungeonMap[i, j] = parent1.dungeonMap[i, j];
+                            child.DungeonMap[i, j] = parent1.DungeonMap[i, j];
                             break;
                         case 1:
-                            child.dungeonMap[i, j] = parent2.dungeonMap[i, j];
+                            child.DungeonMap[i, j] = parent2.DungeonMap[i, j];
                             break;
 
                     }
@@ -60,10 +61,10 @@ public class DungeonGenome {
                     switch (parent)
                     {
                         case 0:
-                            child.dungeonMap[i, j] = parent1.dungeonMap[i, j];
+                            child.DungeonMap[i, j] = parent1.DungeonMap[i, j];
                             break;
                         case 1:
-                            child.dungeonMap[i, j] = parent2.dungeonMap[i, j];
+                            child.DungeonMap[i, j] = parent2.DungeonMap[i, j];
                             break;
                         
                     }
@@ -82,7 +83,7 @@ public class DungeonGenome {
         {
             for (int j = 0; j < Size; j++)
             {
-                dungeonMap[i, j] = DungeonTileType.FLOOR;
+                DungeonMap[i, j] = DungeonTileType.FLOOR;
             }
         }
 
@@ -91,7 +92,7 @@ public class DungeonGenome {
         {
             for (int j = 0; j < Size; j++)
             {
-                if (Random.value < WallCoverage) dungeonMap[i, j] = DungeonTileType.WALL;
+                if (Random.value < WallCoverage) DungeonMap[i, j] = DungeonTileType.WALL;
             }
         }
 
@@ -100,7 +101,7 @@ public class DungeonGenome {
         {
             for (int j = 0; j < Size; j++)
             {
-                if (Random.value < EnemyCoverage) dungeonMap[i, j] = DungeonTileType.ENEMY;
+                if (Random.value < EnemyCoverage) DungeonMap[i, j] = DungeonTileType.ENEMY;
             }
         }
 
@@ -109,12 +110,12 @@ public class DungeonGenome {
         {
             for (int j = 0; j < Size; j++)
             {
-                if (Random.value < TreasureCoverage) dungeonMap[i, j] = DungeonTileType.TREASURE;
+                if (Random.value < TreasureCoverage) DungeonMap[i, j] = DungeonTileType.TREASURE;
             }
         }
 
         //Need to set an entrance and exit
-        dungeonMap[Random.Range(0, Size), Random.Range(0, Size)] = DungeonTileType.ENTRANCE;
+        DungeonMap[Random.Range(0, Size), Random.Range(0, Size)] = DungeonTileType.ENTRANCE;
 
         bool flag = true;
         int x = 0;
@@ -123,9 +124,9 @@ public class DungeonGenome {
         {
             x = Random.Range(0, Size);
             y = Random.Range(0, Size);
-            if (dungeonMap[x, y] != DungeonTileType.ENTRANCE)
+            if (DungeonMap[x, y] != DungeonTileType.ENTRANCE)
             {
-                dungeonMap[x, y] = DungeonTileType.EXIT;
+                DungeonMap[x, y] = DungeonTileType.EXIT;
                 flag = false;
             }
         }
@@ -160,25 +161,25 @@ public class DungeonGenome {
     {
         int i = Random.Range(0, Size);
         int j = Random.Range(0, Size);
-        if ((dungeonMap[i, j] != DungeonTileType.ENTRANCE) && (dungeonMap[i, j] != DungeonTileType.EXIT))
+        if ((DungeonMap[i, j] != DungeonTileType.ENTRANCE) && (DungeonMap[i, j] != DungeonTileType.EXIT))
         {
             int value = Random.Range(0, 4);
 
             if (value == 0)
             {
-                dungeonMap[i, j] = DungeonTileType.TREASURE;
+                DungeonMap[i, j] = DungeonTileType.TREASURE;
             }
             else if (value == 1)
             {
-                dungeonMap[i, j] = DungeonTileType.ENEMY;
+                DungeonMap[i, j] = DungeonTileType.ENEMY;
             }
             else if (value == 2)
             {
-                dungeonMap[i, j] = DungeonTileType.WALL;
+                DungeonMap[i, j] = DungeonTileType.WALL;
             }
             else
             {
-                dungeonMap[i, j] = DungeonTileType.FLOOR;
+                DungeonMap[i, j] = DungeonTileType.FLOOR;
             }         
         }
         else
@@ -200,7 +201,7 @@ public class DungeonGenome {
         int j = Random.Range(0, Size);
 
         swapDirection = Random.Range(0, 4);
-        swappedTile = dungeonMap[i, j];
+        swappedTile = DungeonMap[i, j];
         switch (swapDirection)
         {
             case 0:
@@ -213,9 +214,9 @@ public class DungeonGenome {
                 {
                     jNew = j + 1;
                 }
-                dungeonMap[i, j] = dungeonMap[i, jNew];
-                dungeonMap[i, jNew] = swappedTile;
-                if (dungeonMap[i, j] == dungeonMap[i, jNew]) MutateReplace();
+                DungeonMap[i, j] = DungeonMap[i, jNew];
+                DungeonMap[i, jNew] = swappedTile;
+                if (DungeonMap[i, j] == DungeonMap[i, jNew]) MutateReplace();
                 break;
             case 1:
                 //down
@@ -227,9 +228,9 @@ public class DungeonGenome {
                 {
                     jNew = j - 1;
                 }
-                dungeonMap[i, j] = dungeonMap[i, jNew];
-                dungeonMap[i, jNew] = swappedTile;
-                if (dungeonMap[i, j] == dungeonMap[i, jNew]) MutateReplace();
+                DungeonMap[i, j] = DungeonMap[i, jNew];
+                DungeonMap[i, jNew] = swappedTile;
+                if (DungeonMap[i, j] == DungeonMap[i, jNew]) MutateReplace();
                 break;
             case 2:
                 //left
@@ -241,9 +242,9 @@ public class DungeonGenome {
                 {
                     iNew = i - 1;
                 }
-                dungeonMap[i, j] = dungeonMap[iNew, j];
-                dungeonMap[iNew, j] = swappedTile;
-                if (dungeonMap[i, j] == dungeonMap[iNew, j]) MutateReplace();
+                DungeonMap[i, j] = DungeonMap[iNew, j];
+                DungeonMap[iNew, j] = swappedTile;
+                if (DungeonMap[i, j] == DungeonMap[iNew, j]) MutateReplace();
                 break;
             case 3:
                 //right
@@ -255,9 +256,9 @@ public class DungeonGenome {
                 {
                     iNew = i + 1;
                 }
-                dungeonMap[i, j] = dungeonMap[iNew, j];
-                dungeonMap[iNew, j] = swappedTile;
-                if (dungeonMap[i, j] == dungeonMap[iNew, j]) MutateReplace();
+                DungeonMap[i, j] = DungeonMap[iNew, j];
+                DungeonMap[iNew, j] = swappedTile;
+                if (DungeonMap[i, j] == DungeonMap[iNew, j]) MutateReplace();
                 break;
             default:
                 break;
@@ -277,7 +278,7 @@ public class DungeonGenome {
         {
             for (int j = 0; j < Size; j++)
             {
-                switch (dungeonMap[i,j])
+                switch (DungeonMap[i,j])
                 {
                     
                     case DungeonTileType.ENTRANCE:
@@ -294,8 +295,13 @@ public class DungeonGenome {
             }
         }
 
-        validPath = PathFinder.FindPath(start, target, this, out pathFromEntranceToExit);
+        ValidPath = PathFinder.FindPath(start, target, this, out PathFromEntranceToExit);
     }
 
+    public void CalculateFitnesses()
+    {
+        MyFitness = new Fitness();
+        MyFitness.CalculateFitnesses(this);
+    }
 
 }

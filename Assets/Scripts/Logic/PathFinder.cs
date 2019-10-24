@@ -111,7 +111,7 @@ public class PathFinder
                 if ((nx >= 0) && (ny >= 0) && (nx < DungeonGenome.Size) && (ny < DungeonGenome.Size))
                 {
 
-                    switch (genome.dungeonMap[nx,ny])
+                    switch (genome.DungeonMap[nx,ny])
                     {
                         case DungeonTileType.FLOOR:
                             passable = true;
