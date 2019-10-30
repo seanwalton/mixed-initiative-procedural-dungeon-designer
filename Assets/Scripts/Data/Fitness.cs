@@ -13,6 +13,8 @@ public class Fitness
 
     public float EnemyCoverage = 0.0f;
     public float TreasureCoverage = 0.0f;
+    public float FractalDimension = 0.0f;
+    public float FractalDimensionFitness = 0.0f;
 
     private bool validPath;
     private List<Node> path;
@@ -31,6 +33,10 @@ public class Fitness
         CalculateTreasureCoverage();
         Debug.Log("Enemy Coverage : " + EnemyCoverage);
         Debug.Log("Treasure Coverage : " + TreasureCoverage);
+
+        CalculateFractalDimension();
+        Debug.Log("Fractal Dimension : " + FractalDimension);
+        Debug.Log("Fractal Dimension Fitness : " + FractalDimensionFitness);
 
     }
 
@@ -68,6 +74,11 @@ public class Fitness
         TreasureCoverage = NumberTreasureTiles / (float) NumberPassableTiles;
     }
 
+    private void CalculateFractalDimension()
+    {
+        FractalDimension = -1f*(Mathf.Log10(NumberReachableTiles) / Mathf.Log10(1.0f / DungeonGenome.Size));
+        FractalDimensionFitness = Mathf.Max(0, 1.0f - Mathf.Abs(1.35f - FractalDimension));
+    }
     
 
 }
