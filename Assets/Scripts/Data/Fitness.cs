@@ -30,7 +30,7 @@ public class Fitness
         CalculateTreasureCoverage();
         CalculateFractalDimension();
 
-        FitnessValue = FractalDimensionFitness;
+        FitnessValue = FractalDimensionFitness * genome.PathFromEntranceToExit.Count;
        
 
     }
