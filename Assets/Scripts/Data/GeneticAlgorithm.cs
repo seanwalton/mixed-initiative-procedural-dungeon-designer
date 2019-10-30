@@ -39,4 +39,6 @@ public class GeneticAlgorithm : MonoBehaviour
             + " Average Fitness: " + Generations[Generations.Count - 1].GetAverageFitness());
     }
 
+    public Generation LastGeneration => Generations[Generations.Count - 1];
+
 }

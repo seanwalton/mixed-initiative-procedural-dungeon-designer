@@ -23,6 +23,7 @@ public class GenomeTesterBehaviour : MonoBehaviour
     public void AdvanceGeneration()
     {
         geneticAlgorithm.NextGeneration();
+        DungeonDrawer.DrawGeneration(geneticAlgorithm.LastGeneration, new Vector3(-1f * DungeonGenome.Size, 0f, 0f));
     }
 
 
