@@ -23,20 +23,11 @@ public class Fitness
     public void CalculateFitnesses(DungeonGenome genome)
     {
         Genome = genome;
-        CalculateNumberOfTiles();
-        Debug.Log("Number of Passable Tiles : " + NumberPassableTiles);
-        Debug.Log("Number of Reachable Tiles : " + NumberReachableTiles);
-        Debug.Log("Number of Treasure Tiles : " + NumberTreasureTiles);
-        Debug.Log("Number of Enemy Tiles : " + NumberEnemyTiles);
-
+        CalculateNumberOfTiles();    
         CalculateEnemyCoverage();
         CalculateTreasureCoverage();
-        Debug.Log("Enemy Coverage : " + EnemyCoverage);
-        Debug.Log("Treasure Coverage : " + TreasureCoverage);
-
         CalculateFractalDimension();
-        Debug.Log("Fractal Dimension : " + FractalDimension);
-        Debug.Log("Fractal Dimension Fitness : " + FractalDimensionFitness);
+       
 
     }
 

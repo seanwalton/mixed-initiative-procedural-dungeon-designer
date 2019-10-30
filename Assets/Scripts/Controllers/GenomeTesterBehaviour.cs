@@ -13,6 +13,19 @@ public class GenomeTesterBehaviour : MonoBehaviour
 
     private DungeonGenome child = new DungeonGenome();
 
+    private GeneticAlgorithm geneticAlgorithm;
+
+    private void Awake()
+    {
+        geneticAlgorithm = gameObject.GetComponent<GeneticAlgorithm>();
+    }
+
+    public void AdvanceGeneration()
+    {
+        geneticAlgorithm.NextGeneration();
+    }
+
+
     public void CreateTwoParentGenomesAndDraw()
     {
         parent1.RandomlyInitialise();
