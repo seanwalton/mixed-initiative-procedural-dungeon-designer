@@ -26,7 +26,7 @@ public class DrawDungeonBehaviour : MonoBehaviour
 
     public void DrawGeneration(Generation gen, Vector3 position)
     {
-        for (int i = 0; i < gen.Individuals.Count; i++)
+        for (int i = 0; i < gen.NumberOfIndividuals; i++)
         {
             DrawDungeonFromGenome(gen.Individuals[i], new Vector3(position.x + i * 1.1f * DungeonGenome.Size,
                 position.y, position.z));

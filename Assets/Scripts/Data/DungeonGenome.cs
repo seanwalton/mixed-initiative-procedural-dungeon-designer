@@ -74,8 +74,22 @@ public class DungeonGenome {
             }
         }
 
-        child.CheckAndFindPath();
+        child.CalculateFitnesses();
         return child;
+    }
+
+
+    public void CopyFromOtherGenome(DungeonGenome genome)
+    {
+        //First set everything to floor
+        for (int i = 0; i < Size; i++)
+        {
+            for (int j = 0; j < Size; j++)
+            {
+                DungeonMap[i, j] = genome.DungeonMap[i,j];
+            }
+        }
+        CalculateFitnesses();
     }
 
     public void RandomlyInitialise()
@@ -133,7 +147,7 @@ public class DungeonGenome {
             }
         }
 
-        CheckAndFindPath();
+        CalculateFitnesses();
     }
 
     public void Mutate()
@@ -155,7 +169,7 @@ public class DungeonGenome {
             MutateReplace();
         }
 
-        CheckAndFindPath();
+        CalculateFitnesses();
 
     }
 
@@ -273,6 +287,8 @@ public class DungeonGenome {
 
     private void CheckAndFindPath()
     {
+        
+
         Vector2Int start = new Vector2Int();
         Vector2Int target = new Vector2Int();
 
@@ -306,6 +322,8 @@ public class DungeonGenome {
 
     public void CalculateFitnesses()
     {
+
+        CheckAndFindPath();
         MyFitness = new Fitness();
         MyFitness.CalculateFitnesses(this);
     }

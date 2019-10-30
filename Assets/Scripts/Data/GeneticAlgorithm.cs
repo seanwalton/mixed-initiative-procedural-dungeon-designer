@@ -6,8 +6,16 @@ public class GeneticAlgorithm : MonoBehaviour
 {
     public int PopulationSize;
 
+    public float MutationRate;
+
     public List<Generation> Generations = new List<Generation>();
 
+    private float numberToMutate;
+
+    private void Awake()
+    {
+        numberToMutate = MutationRate * PopulationSize;
+    }
 
     private void InitializeFirstGeneration()
     {
@@ -17,7 +25,6 @@ public class GeneticAlgorithm : MonoBehaviour
         {
             DungeonGenome genome = new DungeonGenome();
             genome.RandomlyInitialise();
-            genome.CalculateFitnesses();
             gen1.AddIndividual(genome);
         }
 
@@ -32,7 +39,29 @@ public class GeneticAlgorithm : MonoBehaviour
         }
         else
         {
-            //New gen
+            //New generation
+            Generation gen = new Generation();
+
+
+            //Crossover
+            while (gen.NumberOfIndividuals < PopulationSize)
+            {
+
+                DungeonGenome parent1 = LastGeneration.GetRandomAboveAverageIndividual();
+                if (parent1 is null) parent1 = gen.GetRandomIndividual();
+
+                DungeonGenome parent2 = LastGeneration.GetRandomIndividual();
+
+                DungeonGenome genome = DungeonGenome.CrossOver(parent1, parent2);
+                gen.AddIndividual(genome);
+            }
+            //Mutation
+            for (int i = 0; i < numberToMutate; i++)
+            {
+                gen.MutateRandomIndividual();
+            }
+
+            Generations.Add(gen);
         }
 
         Debug.Log("Generation " + Generations.Count
@@ -40,5 +69,7 @@ public class GeneticAlgorithm : MonoBehaviour
     }
 
     public Generation LastGeneration => Generations[Generations.Count - 1];
+
+    public int NumberOfGenerations => Generations.Count;
 
 }

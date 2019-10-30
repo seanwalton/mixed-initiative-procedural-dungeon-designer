@@ -16,6 +16,8 @@ public class Fitness
     public float FractalDimension = 0.0f;
     public float FractalDimensionFitness = 0.0f;
 
+    public float FitnessValue = 0.0f;
+
     private bool validPath;
     private List<Node> path;
     private Vector2Int target;
@@ -27,6 +29,8 @@ public class Fitness
         CalculateEnemyCoverage();
         CalculateTreasureCoverage();
         CalculateFractalDimension();
+
+        FitnessValue = FractalDimensionFitness;
        
 
     }
