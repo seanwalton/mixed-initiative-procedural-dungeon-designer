@@ -14,7 +14,6 @@ public class PathFinder
     /// <param name="path">The path created</param>
     public static bool FindPath(Vector2Int start, Vector2Int target, DungeonGenome genome, out List<Node> path)
     {
-        Debug.Log("looking for path");
         path = new List<Node>();
         Node startNode = new Node(start.x, start.y, true);
         Node targetNode = new Node(target.x, target.y, true);
@@ -75,7 +74,6 @@ public class PathFinder
 
             currentNode = currentNode.Parent;
         }
-        Debug.Log("path found, steps: " + path.Count);
 
         path.Reverse();
         return path;

@@ -13,6 +13,8 @@ public class DungeonGenome {
     public DungeonTileType[,] DungeonMap = new DungeonTileType[Size, Size];
     public List<Node> PathFromEntranceToExit;
     public bool ValidPath;
+    public Vector2Int EntranceLocation;
+    public Vector2Int ExitLocation;
     public Fitness MyFitness;
 
     public static DungeonGenome CrossOver(DungeonGenome parent1, DungeonGenome parent2)
@@ -284,10 +286,14 @@ public class DungeonGenome {
                     case DungeonTileType.ENTRANCE:
                         start.x = i;
                         start.y = j;
+                        EntranceLocation.x = i;
+                        EntranceLocation.y = j;
                         break;
                     case DungeonTileType.EXIT:
                         target.x = i;
                         target.y = j;
+                        ExitLocation.x = i;
+                        ExitLocation.y = j;
                         break;
                     default:
                         break;
