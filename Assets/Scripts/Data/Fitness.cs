@@ -35,7 +35,14 @@ public class Fitness
         CalculateTreasureCoverage();
         CalculateFractalDimension();
         FindCorridors();
-        FitnessValue = FractalDimensionFitness * genome.PathFromEntranceToExit.Count;
+
+        FitnessValue = 0f;
+        for (int i = 0; i < corridors.Count; i++)
+        {
+            FitnessValue = Mathf.Max(FitnessValue, corridors[i].Length);
+        }
+
+        //FitnessValue *= FractalDimensionFitness * genome.PathFromEntranceToExit.Count;
        
 
     }

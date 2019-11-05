@@ -48,7 +48,7 @@ public class GeneticAlgorithm : MonoBehaviour
             {
 
                 DungeonGenome parent1 = LastGeneration.GetRandomAboveAverageIndividual();
-                if (parent1 is null) parent1 = gen.GetRandomIndividual();
+                if (parent1 is null) parent1 = LastGeneration.GetRandomIndividual();
 
                 DungeonGenome parent2 = LastGeneration.GetRandomIndividual();
 
