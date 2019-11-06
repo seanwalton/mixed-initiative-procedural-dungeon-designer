@@ -50,12 +50,12 @@ public class DrawDungeonBehaviour : MonoBehaviour
                 myMap.SetTileFlags(currentCell, TileFlags.None);
                 myMap.SetColor(currentCell, Color.white);
 
-                if (genome.MyFitness.ChamberFlag[i, j] > 0)
-                {
-                    myMap.SetColor(currentCell, PathColor);
-                }
+                //if (genome.MyFitness.ChamberFlag[i, j] > 0)
+                //{
+                //    myMap.SetColor(currentCell, PathColor);
+                //}
 
-                //if (genome.MyFitness.CorridorFlag[i,j] > 0)
+                //if (genome.MyFitness.CorridorFlag[i, j] > 0)
                 //{
                 //    myMap.SetColor(currentCell, PathColor);
                 //}
@@ -63,18 +63,18 @@ public class DrawDungeonBehaviour : MonoBehaviour
             }
         }
 
-        //if (genome.ValidPath)
-        //{
-        //    for (int i = 0; i < genome.PathFromEntranceToExit.Count; i++)
-        //    {
-        //        currentCell.x = firstCell.x + genome.PathFromEntranceToExit[i].Position.x;
-        //        currentCell.y = firstCell.y + genome.PathFromEntranceToExit[i].Position.y;
-        //        currentCell.z = firstCell.z;
+        if (genome.ValidPath)
+        {
+            for (int i = 0; i < genome.PathFromEntranceToExit.Count; i++)
+            {
+                currentCell.x = firstCell.x + genome.PathFromEntranceToExit[i].Position.x;
+                currentCell.y = firstCell.y + genome.PathFromEntranceToExit[i].Position.y;
+                currentCell.z = firstCell.z;
 
-        //        myMap.SetTileFlags(currentCell, TileFlags.None);
-        //        myMap.SetColor(currentCell, PathColor);
-        //    }
-        //}
+                myMap.SetTileFlags(currentCell, TileFlags.None);
+                myMap.SetColor(currentCell, PathColor);
+            }
+        }
 
     }
 

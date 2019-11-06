@@ -40,18 +40,9 @@ public class Fitness
         FindCorridors();
         FindChambers();
 
-        FitnessValue = 0f;
-        for (int i = 0; i < chambers.Count; i++)
-        {
-            FitnessValue += (float)chambers[i].Size;
-        }
+        FitnessValue = chambers.Count + corridors.Count;
 
-        if (chambers.Count > 0)
-        {
-            FitnessValue /= (float)chambers.Count;
-        }
-
-        //FitnessValue *= FractalDimensionFitness * genome.PathFromEntranceToExit.Count;
+        FitnessValue *= FractalDimensionFitness * genome.PathFromEntranceToExit.Count;
        
 
     }

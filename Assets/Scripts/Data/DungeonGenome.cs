@@ -24,6 +24,7 @@ public class DungeonGenome {
         //The new child must have exactly one entrance and one exit, so lets pick where those come from now
         int exit = Random.Range(0, 2);
         int entrance = Random.Range(0, 2);
+        int crossoverType = Random.Range(0, 2);
         int parent = 0;
         int crossoverPointI = Random.Range(0, Size);
         int crossoverPointJ = Random.Range(0, Size);
@@ -61,17 +62,24 @@ public class DungeonGenome {
                 }
                 else
                 {
-                    //parent = Random.Range(0, 2);
 
-                    if ((i > crossoverPointI) && (j > crossoverPointJ))
+                    switch(crossoverType)
                     {
-                        parent = 0;
+                        case 0:
+                            parent = Random.Range(0, 2);
+                            break;
+                        case 1:
+                            if ((i > crossoverPointI) && (j > crossoverPointJ))
+                            {
+                                parent = 0;
+                            }
+                            else
+                            {
+                                parent = 1;
+                            }
+                            break;
                     }
-                    else
-                    {
-                        parent = 1;
-                    }
-
+                  
                     switch (parent)
                     {
                         case 0:
