@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class DungeonGenome {
 
-    public static int Size = 12;
+    public static int Size = 16;
     public static float WallCoverage = 0.3f;
     public static float EnemyCoverage = 0.02f;
     public static float TreasureCoverage = 0.01f;
