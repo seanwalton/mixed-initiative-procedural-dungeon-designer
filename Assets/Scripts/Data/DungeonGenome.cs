@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class DungeonGenome {
 
-    public static int Size = 12;
+    public static int Size = 18;
     public static float WallCoverage = 0.3f;
     public static float EnemyCoverage = 0.02f;
     public static float TreasureCoverage = 0.01f;
@@ -25,6 +25,8 @@ public class DungeonGenome {
         int exit = Random.Range(0, 2);
         int entrance = Random.Range(0, 2);
         int parent = 0;
+        int crossoverPointI = Random.Range(0, Size);
+        int crossoverPointJ = Random.Range(0, Size);
 
         for (int i = 0; i < Size; i++)
         {
@@ -59,7 +61,17 @@ public class DungeonGenome {
                 }
                 else
                 {
-                    parent = Random.Range(0, 2);
+                    //parent = Random.Range(0, 2);
+
+                    if ((i > crossoverPointI) && (j > crossoverPointJ))
+                    {
+                        parent = 0;
+                    }
+                    else
+                    {
+                        parent = 1;
+                    }
+
                     switch (parent)
                     {
                         case 0:

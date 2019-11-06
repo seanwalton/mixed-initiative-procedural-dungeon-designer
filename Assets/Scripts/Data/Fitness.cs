@@ -39,10 +39,15 @@ public class Fitness
         FitnessValue = 0f;
         for (int i = 0; i < corridors.Count; i++)
         {
-            FitnessValue = Mathf.Max(FitnessValue, corridors[i].Length);
+            FitnessValue += (float) corridors[i].Length;
         }
 
-        //FitnessValue *= FractalDimensionFitness * genome.PathFromEntranceToExit.Count;
+        if (corridors.Count > 0)
+        {
+            FitnessValue /= (float) corridors.Count;
+        }
+
+        FitnessValue *= FractalDimensionFitness * genome.PathFromEntranceToExit.Count;
        
 
     }
