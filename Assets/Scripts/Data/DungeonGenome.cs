@@ -17,6 +17,9 @@ public class DungeonGenome {
     public Vector2Int ExitLocation;
     public Fitness MyFitness;
 
+    //There are two crossover types with equal chance of occuring. 
+    //1) Random mixed crossover element by element
+    //2) A random area (square or rectange) in the map is taken from one parent and the rest from the other
     public static DungeonGenome CrossOver(DungeonGenome parent1, DungeonGenome parent2)
     {
         DungeonGenome child = new DungeonGenome();
@@ -26,50 +29,72 @@ public class DungeonGenome {
         int entrance = Random.Range(0, 2);
         int crossoverType = Random.Range(0, 2);
         int parent = 0;
-        int crossoverPointI = Random.Range(0, Size);
-        int crossoverPointJ = Random.Range(0, Size);
+
+        //First set entrance and exit
+        switch (entrance)
+        {
+            case 0:
+                child.DungeonMap[parent1.EntranceLocation.x, parent1.EntranceLocation.y] = DungeonTileType.ENTRANCE;
+                switch (exit)
+                {
+                    case 0:
+                        child.DungeonMap[parent1.ExitLocation.x, parent1.ExitLocation.y] = DungeonTileType.EXIT;
+                        break;
+                    case 1:
+                        if (Vector2Int.Distance(parent2.ExitLocation, parent1.EntranceLocation) == 0)
+                        {
+                            child.DungeonMap[parent1.ExitLocation.x, parent1.ExitLocation.y] = DungeonTileType.EXIT;
+                        }
+                        else
+                        {
+                            child.DungeonMap[parent2.ExitLocation.x, parent2.ExitLocation.y] = DungeonTileType.EXIT;
+                        }
+                        break;
+                }
+                break;
+            case 1:
+                child.DungeonMap[parent2.EntranceLocation.x, parent2.EntranceLocation.y] = DungeonTileType.ENTRANCE;
+                switch (exit)
+                {
+                    case 1:
+                        child.DungeonMap[parent2.ExitLocation.x, parent2.ExitLocation.y] = DungeonTileType.EXIT;
+                        break;
+                    case 0:
+                        if (Vector2Int.Distance(parent1.ExitLocation, parent2.EntranceLocation) == 0)
+                        {
+                            child.DungeonMap[parent2.ExitLocation.x, parent2.ExitLocation.y] = DungeonTileType.EXIT;
+                        }
+                        else
+                        {
+                            child.DungeonMap[parent1.ExitLocation.x, parent1.ExitLocation.y] = DungeonTileType.EXIT;
+                        }
+                        break;
+                }
+                break;
+        }
+
+
+
+
+
+        Vector2Int crossover1 = new Vector2Int(Random.Range(0, Size-1), Random.Range(0, Size-1));
+        Vector2Int crossover2 = new Vector2Int(Random.Range(crossover1.x, Size), Random.Range(crossover1.y, Size));
 
         for (int i = 0; i < Size; i++)
         {
             for (int j = 0; j < Size; j++)
             {
                 //Check for entrance
-                if (( parent1.DungeonMap[i,j] == DungeonTileType.ENTRANCE ) || (parent2.DungeonMap[i, j] == DungeonTileType.ENTRANCE))
-                {
-                    switch (entrance)
-                    {
-                        case 0:
-                            child.DungeonMap[i, j] = parent1.DungeonMap[i, j];
-                            break;
-                        case 1:
-                            child.DungeonMap[i, j] = parent2.DungeonMap[i, j];
-                            break;
-
-                    }
-                }
-                else if ((parent1.DungeonMap[i, j] == DungeonTileType.EXIT) || (parent2.DungeonMap[i, j] == DungeonTileType.EXIT))
-                {
-                    switch (exit)
-                    {
-                        case 0:
-                            child.DungeonMap[i, j] = parent1.DungeonMap[i, j];
-                            break;
-                        case 1:
-                            child.DungeonMap[i, j] = parent2.DungeonMap[i, j];
-                            break;
-
-                    }
-                }
-                else
+                if ((child.DungeonMap[i,j] != DungeonTileType.ENTRANCE) && (child.DungeonMap[i, j] != DungeonTileType.EXIT))
                 {
 
-                    switch(crossoverType)
+                    switch (crossoverType)
                     {
                         case 0:
                             parent = Random.Range(0, 2);
                             break;
                         case 1:
-                            if ((i > crossoverPointI) && (j > crossoverPointJ))
+                            if ((i >= crossover1.x) && (j >= crossover1.y) && (i < crossover2.x) && (j < crossover2.y))
                             {
                                 parent = 0;
                             }
@@ -83,12 +108,26 @@ public class DungeonGenome {
                     switch (parent)
                     {
                         case 0:
-                            child.DungeonMap[i, j] = parent1.DungeonMap[i, j];
+                            if ((parent1.DungeonMap[i, j] == DungeonTileType.ENTRANCE) || (parent1.DungeonMap[i, j] == DungeonTileType.EXIT))
+                            {
+                                child.DungeonMap[i, j] = DungeonTileType.FLOOR;
+                            }
+                            else
+                            {
+                                child.DungeonMap[i, j] = parent1.DungeonMap[i, j];
+                            }               
                             break;
                         case 1:
-                            child.DungeonMap[i, j] = parent2.DungeonMap[i, j];
+                            if ((parent2.DungeonMap[i, j] == DungeonTileType.ENTRANCE) || (parent2.DungeonMap[i, j] == DungeonTileType.EXIT))
+                            {
+                                child.DungeonMap[i, j] = DungeonTileType.FLOOR;
+                            }
+                            else
+                            {
+                                child.DungeonMap[i, j] = parent2.DungeonMap[i, j];
+                            }
                             break;
-                        
+
                     }
                 }
             }
