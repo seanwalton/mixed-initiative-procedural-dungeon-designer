@@ -4,7 +4,7 @@ using UnityEngine;
 public class Fitness 
 {
     public static int TargetCorridorLength = 4;
-    public static int TargetChamberSize = 3;
+    public static int TargetChamberArea = 25;
     public static float TargetCorridorRatio = 1f;
     public static float TargetChamberRatio = 0f;
 
@@ -56,7 +56,14 @@ public class Fitness
         float corridorFitness = 1.0f - Mathf.Abs((TargetCorridorRatio - corridorRatio) /
             Mathf.Max(TargetCorridorRatio, 1.0f - TargetCorridorRatio));
 
-        FitnessValue = 0.25f*chamberFitness + 0.75f*corridorFitness;
+        float patternFitness = (0.25f * chamberFitness) + (0.75f * corridorFitness);
+
+        float pathFitness = genome.PathFromEntranceToExit.Count / (float) NumberReachableTiles;
+
+        float feasibleScore = NumberReachableTiles / (float)NumberPassableTiles;
+
+        FitnessValue = (0.25f * pathFitness) + (0.75f * patternFitness);
+        FitnessValue *= feasibleScore;
 
         //FitnessValue *= FractalDimensionFitness * genome.PathFromEntranceToExit.Count;
        
@@ -289,8 +296,8 @@ public class Fitness
         chamberRatio = 0f;
         foreach (Chamber chamber in chambers)
         {
-            float q = Mathf.Min(1.0f, chamber.Size / TargetChamberSize);
-            chamberRatio += ((q * chamber.Size * chamber.Size) / NumberPassableTiles);
+            float q = Mathf.Min(1.0f, (chamber.Size * chamber.Size) / (float) TargetChamberArea);
+            chamberRatio += ((q * chamber.Size * chamber.Size) / (float) NumberPassableTiles);
         }
     }
 
@@ -299,8 +306,8 @@ public class Fitness
         corridorRatio = 0f;
         foreach (Corridor corridor in corridors)
         {
-            float q = Mathf.Min(1.0f, corridor.Length / TargetCorridorLength);
-            corridorRatio += ((q * corridor.Length) / NumberPassableTiles);
+            float q = Mathf.Min(1.0f, corridor.Length / (float) TargetCorridorLength);
+            corridorRatio += ((q * corridor.Length) / (float) NumberPassableTiles);
         }
     }
 

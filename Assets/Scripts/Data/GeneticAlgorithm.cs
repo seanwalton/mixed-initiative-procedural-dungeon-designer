@@ -42,20 +42,18 @@ public class GeneticAlgorithm : MonoBehaviour
             //New generation
             Generation gen = new Generation();
 
-
             //Crossover
-            while (gen.NumberOfIndividuals < PopulationSize)
+            for (int i = 0; i < LastGeneration.NumberOfIndividuals; i++)
             {
-
                 DungeonGenome parent1 = LastGeneration.GetRandomAboveAverageIndividual();
                 if (parent1 is null) parent1 = LastGeneration.GetRandomIndividual();
 
-                DungeonGenome parent2 = LastGeneration.GetRandomIndividual();
-                
+                DungeonGenome parent2 = LastGeneration.Individuals[i];
 
                 DungeonGenome genome = DungeonGenome.CrossOver(parent1, parent2);
                 gen.AddIndividual(genome);
             }
+
             //Mutation
             for (int i = 0; i < numberToMutate; i++)
             {
