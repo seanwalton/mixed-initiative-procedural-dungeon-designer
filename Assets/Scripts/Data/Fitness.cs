@@ -62,7 +62,7 @@ public class Fitness
 
         float feasibleScore = NumberReachableTiles / (float)NumberPassableTiles;
 
-        FitnessValue = (0.25f * pathFitness) + (0.75f * patternFitness);
+        FitnessValue = (0.5f * patternFitness) + (0.5f * pathFitness);
         FitnessValue *= feasibleScore;
 
         //FitnessValue *= FractalDimensionFitness * genome.PathFromEntranceToExit.Count;

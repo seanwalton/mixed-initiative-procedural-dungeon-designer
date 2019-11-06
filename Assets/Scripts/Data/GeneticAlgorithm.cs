@@ -10,12 +10,7 @@ public class GeneticAlgorithm : MonoBehaviour
 
     public List<Generation> Generations = new List<Generation>();
 
-    private float numberToMutate;
-
-    private void Awake()
-    {
-        numberToMutate = MutationRate * PopulationSize;
-    }
+   
 
     private void InitializeFirstGeneration()
     {
@@ -41,8 +36,7 @@ public class GeneticAlgorithm : MonoBehaviour
         {
             //New generation
             Generation gen = new Generation();
-
-            //Crossover
+     
             for (int i = 0; i < LastGeneration.NumberOfIndividuals; i++)
             {
                 DungeonGenome parent1 = LastGeneration.GetRandomAboveAverageIndividual();
@@ -51,13 +45,11 @@ public class GeneticAlgorithm : MonoBehaviour
                 DungeonGenome parent2 = LastGeneration.Individuals[i];
 
                 DungeonGenome genome = DungeonGenome.CrossOver(parent1, parent2);
-                gen.AddIndividual(genome);
-            }
 
-            //Mutation
-            for (int i = 0; i < numberToMutate; i++)
-            {
-                gen.MutateRandomIndividual();
+                if (Random.value < MutationRate) genome.Mutate();
+
+                gen.AddIndividual(genome);
+
             }
 
             Generations.Add(gen);
