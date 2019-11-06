@@ -27,6 +27,7 @@ public class Fitness
     private Vector2Int target;
 
     private bool[,] reachable = new bool[DungeonGenome.Size, DungeonGenome.Size];
+    private bool[,] passable = new bool[DungeonGenome.Size, DungeonGenome.Size];
 
     private List<Corridor> corridors = new List<Corridor>();
     private float corridorRatio;
@@ -73,11 +74,14 @@ public class Fitness
             for (int j = 0; j < DungeonGenome.Size; j++)
             {
                 reachable[i, j] = false;
+                passable[i, j] = false;
                 if (Genome.DungeonMap[i, j] != DungeonTileType.WALL)
                 {
                     NumberPassableTiles++;
                     target.x = i;
                     target.y = j;
+                    passable[i, j] = true;
+
                     validPath = PathFinder.FindPath(Genome.EntranceLocation, target, Genome, out path);
                     if (validPath)
                     {
@@ -123,9 +127,9 @@ public class Fitness
         {
             for (int j = 0; j < DungeonGenome.Size; j++)
             {
-                if ((ChamberFlag[i, j] < 0) && (reachable[i, j]))
+                if ((ChamberFlag[i, j] < 0) && (passable[i, j]))
                 {
-                    //This isn't already assigned to a chamber and it's reachable
+                    //This isn't already assigned to a chamber and it's passable
                     //Since the loop is forward facing we only need to look forward in i and j
 
                     Vector2Int startCorner = new Vector2Int(i, j);
@@ -149,7 +153,7 @@ public class Fitness
                                 int testj = j + jj;
 
                                 if ((testi >= DungeonGenome.Size) || (testj >= DungeonGenome.Size)
-                                    || (ChamberFlag[testi, testj] > 0) || (!reachable[testi, testj])) valid = false;
+                                    || (ChamberFlag[testi, testj] > 0) || (!passable[testi, testj])) valid = false;
                             }
                         }
 
@@ -202,9 +206,9 @@ public class Fitness
         {
             for (int j = 0; j < DungeonGenome.Size; j++)
             {
-                if ((CorridorFlag[i,j] < 0) && (reachable[i,j]))
+                if ((CorridorFlag[i,j] < 0) && (passable[i,j]))
                 {
-                    //This isn't already assigned to a corridor and it's reachable
+                    //This isn't already assigned to a corridor and it's passable
                     //Since the loop is forward facing we only need to look forward in i and j
 
                     //First check in i direction
@@ -219,7 +223,7 @@ public class Fitness
                         while (!endCorridor)
                         {
                             ii++;
-                            if ((ii < DungeonGenome.Size) && reachable[ii, j] &&
+                            if ((ii < DungeonGenome.Size) && passable[ii, j] &&
                                 (AreAboveAndBelowImpassable(ii, j)))
                             {
                                 corridor.Add(new Vector2Int(ii, j));
@@ -231,7 +235,7 @@ public class Fitness
                             }
                         }
 
-                        corridors.Add(corridor);
+                        if (corridor.Length>1) corridors.Add(corridor);
                     }
 
                     if (AreLeftAndRightImpassable(i, j))
@@ -245,7 +249,7 @@ public class Fitness
                         while (!endCorridor)
                         {
                             jj++;
-                            if ((jj < DungeonGenome.Size) && reachable[i,jj] &&
+                            if ((jj < DungeonGenome.Size) && passable[i,jj] &&
                                 (AreLeftAndRightImpassable(i, jj)))
                             {
                                 corridor.Add(new Vector2Int(i, jj));
@@ -257,7 +261,7 @@ public class Fitness
                             }
                         }
 
-                        corridors.Add(corridor);
+                        if (corridor.Length > 1) corridors.Add(corridor);
                     }
 
                 }
@@ -268,15 +272,15 @@ public class Fitness
     private bool AreAboveAndBelowImpassable(int i, int j)
     {
         //Debug.Log(i.ToString() + " " + j.ToString());
-        return (((j == 0) || (!reachable[i, j - 1]))
-                        && ((j == DungeonGenome.Size - 1) || (!reachable[i, j + 1])));
+        return (((j == 0) || (!passable[i, j - 1]))
+                        && ((j == DungeonGenome.Size - 1) || (!passable[i, j + 1])));
     }
 
     private bool AreLeftAndRightImpassable(int i, int j)
     {
         //Debug.Log(i.ToString() + " " + j.ToString());
-        return (((i == 0) || (!reachable[i-1,j]))
-                        && ((i == DungeonGenome.Size - 1) || (!reachable[i+1,j])));
+        return (((i == 0) || (!passable[i-1,j]))
+                        && ((i == DungeonGenome.Size - 1) || (!passable[i+1,j])));
     }
 
 
@@ -286,7 +290,7 @@ public class Fitness
         foreach (Chamber chamber in chambers)
         {
             float q = Mathf.Min(1.0f, chamber.Size / TargetChamberSize);
-            chamberRatio += ((q * chamber.Size * chamber.Size) / NumberReachableTiles);
+            chamberRatio += ((q * chamber.Size * chamber.Size) / NumberPassableTiles);
         }
     }
 
@@ -296,7 +300,7 @@ public class Fitness
         foreach (Corridor corridor in corridors)
         {
             float q = Mathf.Min(1.0f, corridor.Length / TargetCorridorLength);
-            corridorRatio += ((q * corridor.Length) / NumberReachableTiles);
+            corridorRatio += ((q * corridor.Length) / NumberPassableTiles);
         }
     }
 

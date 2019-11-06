@@ -173,7 +173,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 38
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -197,7 +197,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 75691816}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 52.8, y: -11.8, z: -10}
+  m_LocalPosition: {x: 0, y: -11.8, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1427,6 +1427,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bee72eba73cdc14396792e4a67301a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NumberOfGenerations: 10
   DungeonDrawer: {fileID: 1948221862}
 --- !u!4 &1562672506
 Transform:
@@ -1454,7 +1455,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7492db79298e964aad53fdaf1ae774e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PopulationSize: 10
+  PopulationSize: 150
   MutationRate: 0.5
 --- !u!1 &1923379292
 GameObject:
