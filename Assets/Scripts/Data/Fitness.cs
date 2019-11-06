@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class Fitness 
 {
+    public static int TargetCorridorLength = 4;
+    public static int TargetChamberSize = 3;
+    public static float TargetCorridorRatio = 1f;
+    public static float TargetChamberRatio = 0f;
 
     public DungeonGenome Genome;
 
@@ -25,9 +29,11 @@ public class Fitness
     private bool[,] reachable = new bool[DungeonGenome.Size, DungeonGenome.Size];
 
     private List<Corridor> corridors = new List<Corridor>();
+    private float corridorRatio;
     public int[,] CorridorFlag = new int[DungeonGenome.Size, DungeonGenome.Size];
 
     private List<Chamber> chambers = new List<Chamber>();
+    private float chamberRatio;
     public int[,] ChamberFlag = new int[DungeonGenome.Size, DungeonGenome.Size];
 
     public void CalculateFitnesses(DungeonGenome genome)
@@ -39,10 +45,19 @@ public class Fitness
         CalculateFractalDimension();
         FindCorridors();
         FindChambers();
+        CalculateChamberQualities();
+        CalculateCorridorQualities();
 
-        FitnessValue = chambers.Count + corridors.Count;
 
-        FitnessValue *= FractalDimensionFitness * genome.PathFromEntranceToExit.Count;
+        float chamberFitness = 1.0f - Mathf.Abs((TargetChamberRatio - chamberRatio) /
+            Mathf.Max(TargetChamberRatio, 1.0f - TargetChamberRatio));
+
+        float corridorFitness = 1.0f - Mathf.Abs((TargetCorridorRatio - corridorRatio) /
+            Mathf.Max(TargetCorridorRatio, 1.0f - TargetCorridorRatio));
+
+        FitnessValue = 0.25f*chamberFitness + 0.75f*corridorFitness;
+
+        //FitnessValue *= FractalDimensionFitness * genome.PathFromEntranceToExit.Count;
        
 
     }
@@ -262,6 +277,27 @@ public class Fitness
         //Debug.Log(i.ToString() + " " + j.ToString());
         return (((i == 0) || (!reachable[i-1,j]))
                         && ((i == DungeonGenome.Size - 1) || (!reachable[i+1,j])));
+    }
+
+
+    private void CalculateChamberQualities()
+    {
+        chamberRatio = 0f;
+        foreach (Chamber chamber in chambers)
+        {
+            float q = Mathf.Min(1.0f, chamber.Size / TargetChamberSize);
+            chamberRatio += ((q * chamber.Size * chamber.Size) / NumberReachableTiles);
+        }
+    }
+
+    private void CalculateCorridorQualities()
+    {
+        corridorRatio = 0f;
+        foreach (Corridor corridor in corridors)
+        {
+            float q = Mathf.Min(1.0f, corridor.Length / TargetCorridorLength);
+            corridorRatio += ((q * corridor.Length) / NumberReachableTiles);
+        }
     }
 
 
