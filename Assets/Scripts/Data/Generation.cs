@@ -54,6 +54,23 @@ public class Generation
         return Individuals[bestIndividual];
     }
 
+    public int GetBestIndividualLocation()
+    {
+        float bestFitness = Individuals[0].MyFitness.FitnessValue;
+        int bestIndividual = 0;
+
+        for (int i = 1; i < Individuals.Count; i++)
+        {
+            if (Individuals[i].MyFitness.FitnessValue > bestFitness)
+            {
+                bestIndividual = i;
+                bestFitness = Individuals[i].MyFitness.FitnessValue;
+            }
+        }
+
+        return bestIndividual;
+    }
+
     public DungeonGenome GetRandomAboveAverageIndividual()
     {
         float averageFitness = GetAverageFitness();

@@ -58,7 +58,7 @@ public class Fitness
 
         float pathFitness = genome.PathFromEntranceToExit.Count / (float) NumberPassableTiles;
 
-        FitnessValue = patternFitness;
+        FitnessValue = patternFitness + pathFitness;
 
         //FitnessValue *= FractalDimensionFitness * genome.PathFromEntranceToExit.Count;
        
