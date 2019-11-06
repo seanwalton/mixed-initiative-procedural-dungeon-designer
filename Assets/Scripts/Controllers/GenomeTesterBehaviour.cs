@@ -24,7 +24,7 @@ public class GenomeTesterBehaviour : MonoBehaviour
 
     private void Start()
     {
-        InvokeRepeating("AdvanceGeneration", 0f, 1f);
+        InvokeRepeating("AdvanceGeneration", 0f, 0.1f);
     }
 
     public void AdvanceGeneration()
@@ -35,11 +35,11 @@ public class GenomeTesterBehaviour : MonoBehaviour
             DungeonGenome best = geneticAlgorithm.LastGeneration.GetBestIndividual();
 
             DungeonDrawer.DrawDungeonFromGenome(best,
-                new Vector3(-1f * DungeonGenome.Size, -1.1f * geneticAlgorithm.NumberOfGenerations * DungeonGenome.Size, 0f));
+                new Vector3(-1f * DungeonGenome.Size, -1.1f * 1f * DungeonGenome.Size, 0f));
             Debug.Log("Best fitness " + best.MyFitness.FitnessValue.ToString());
 
             Vector3 camPos = Camera.main.transform.position;
-            camPos.y = 0.5f * DungeonGenome.Size - (1.1f * geneticAlgorithm.NumberOfGenerations * DungeonGenome.Size);
+            camPos.y = 0.5f * DungeonGenome.Size - (1.1f * 1f * DungeonGenome.Size);
 
             Camera.main.transform.position = camPos;
             //DungeonDrawer.DrawGeneration(geneticAlgorithm.LastGeneration, 

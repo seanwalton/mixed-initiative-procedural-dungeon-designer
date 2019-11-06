@@ -13,7 +13,6 @@ public class Fitness
     public int NumberPassableTiles = 0;
     public int NumberEnemyTiles = 0;
     public int NumberTreasureTiles = 0;
-    public int NumberReachableTiles = 0;
 
     public float EnemyCoverage = 0.0f;
     public float TreasureCoverage = 0.0f;
@@ -26,7 +25,6 @@ public class Fitness
     private List<Node> path;
     private Vector2Int target;
 
-    private bool[,] reachable = new bool[DungeonGenome.Size, DungeonGenome.Size];
     private bool[,] passable = new bool[DungeonGenome.Size, DungeonGenome.Size];
 
     private List<Corridor> corridors = new List<Corridor>();
@@ -58,12 +56,9 @@ public class Fitness
 
         float patternFitness = (0.25f * chamberFitness) + (0.75f * corridorFitness);
 
-        float pathFitness = genome.PathFromEntranceToExit.Count / (float) NumberReachableTiles;
+        float pathFitness = genome.PathFromEntranceToExit.Count / (float) NumberPassableTiles;
 
-        float feasibleScore = NumberReachableTiles / (float)NumberPassableTiles;
-
-        FitnessValue = (0.5f * patternFitness) + (0.5f * pathFitness);
-        FitnessValue *= feasibleScore;
+        FitnessValue = patternFitness;
 
         //FitnessValue *= FractalDimensionFitness * genome.PathFromEntranceToExit.Count;
        
@@ -80,7 +75,6 @@ public class Fitness
         {
             for (int j = 0; j < DungeonGenome.Size; j++)
             {
-                reachable[i, j] = false;
                 passable[i, j] = false;
                 if (Genome.DungeonMap[i, j] != DungeonTileType.WALL)
                 {
@@ -89,12 +83,6 @@ public class Fitness
                     target.y = j;
                     passable[i, j] = true;
 
-                    validPath = PathFinder.FindPath(Genome.EntranceLocation, target, Genome, out path);
-                    if (validPath)
-                    {
-                        NumberReachableTiles++;
-                        reachable[i, j] = true;
-                    }
                 }
                 if (Genome.DungeonMap[i, j] == DungeonTileType.ENEMY) NumberEnemyTiles++;
                 if (Genome.DungeonMap[i, j] == DungeonTileType.TREASURE) NumberTreasureTiles++;
@@ -114,7 +102,7 @@ public class Fitness
 
     private void CalculateFractalDimension()
     {
-        FractalDimension = -1f*(Mathf.Log10(NumberReachableTiles) / Mathf.Log10(1.0f / DungeonGenome.Size));
+        FractalDimension = -1f*(Mathf.Log10(NumberPassableTiles) / Mathf.Log10(1.0f / DungeonGenome.Size));
         FractalDimensionFitness = Mathf.Max(0, 1.0f - Mathf.Abs(1.35f - FractalDimension));
     }
 
