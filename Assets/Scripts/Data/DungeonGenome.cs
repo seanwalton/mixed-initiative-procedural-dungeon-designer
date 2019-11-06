@@ -17,6 +17,8 @@ public class DungeonGenome {
     public Vector2Int ExitLocation;
     public Fitness MyFitness;
 
+    private DungeonTileType[,] transposeHelper = new DungeonTileType[Size, Size];
+
     //There are two crossover types with equal chance of occuring. 
     //1) Random mixed crossover element by element
     //2) A random area (square or rectange) in the map is taken from one parent and the rest from the other
@@ -224,12 +226,34 @@ public class DungeonGenome {
         }
         else
         {
-            MutateSwap();
-            MutateReplace();
+            MutateRotate();
         }
 
         CalculateFitnesses();
 
+    }
+
+    private void MutateRotate()
+    {
+        //Find start and end point of rotation
+        Vector2Int rotation1 = new Vector2Int(Random.Range(0, Size - 1), Random.Range(0, Size - 1));
+        Vector2Int rotation2 = new Vector2Int(Random.Range(rotation1.x, Size), Random.Range(rotation1.y, Size));
+
+        for (int i = rotation1.x; i < rotation2.x; i++)
+        {
+            for (int j = rotation1.y; j < rotation2.y; j++)
+            {
+                transposeHelper[i, j] = DungeonMap[i, j];
+            }
+        }
+
+        for (int i = rotation1.x; i < rotation2.x; i++)
+        {
+            for (int j = rotation1.y; j < rotation2.y; j++)
+            {
+                DungeonMap[i, j] = transposeHelper[j, i];
+            }
+        }
     }
 
     private void MutateReplace()
