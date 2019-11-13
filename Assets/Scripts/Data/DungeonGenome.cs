@@ -19,6 +19,20 @@ public class DungeonGenome {
 
     private DungeonTileType[,] transposeHelper = new DungeonTileType[Size, Size];
 
+
+    public static int EditDistance(DungeonGenome g1, DungeonGenome g2)
+    {
+        int dist = 0;
+        for (int i = 0; i < Size; i++)
+        {
+            for (int j = 0; j < Size; j++)
+            {
+                if (g1.DungeonMap[i, j] != g2.DungeonMap[i, j]) dist++;
+            }
+        }
+        return dist;
+    }
+
     //There are two crossover types with equal chance of occuring. 
     //1) Random mixed crossover element by element
     //2) A random area (square or rectange) in the map is taken from one parent and the rest from the other
@@ -29,7 +43,7 @@ public class DungeonGenome {
         //The new child must have exactly one entrance and one exit, so lets pick where those come from now
         int exit = Random.Range(0, 2);
         int entrance = Random.Range(0, 2);
-        int crossoverType = Random.Range(0, 2);
+        int crossoverType = Random.Range(0, 3);
         int parent = 0;
 
         //First set entrance and exit
@@ -82,6 +96,10 @@ public class DungeonGenome {
         Vector2Int crossover1 = new Vector2Int(Random.Range(0, Size-1), Random.Range(0, Size-1));
         Vector2Int crossover2 = new Vector2Int(Random.Range(crossover1.x, Size), Random.Range(crossover1.y, Size));
 
+        int editDistance = EditDistance(parent1, parent2);
+        int halfDist = editDistance / 2;
+        int numChanges = 0;
+
         for (int i = 0; i < Size; i++)
         {
             for (int j = 0; j < Size; j++)
@@ -93,9 +111,11 @@ public class DungeonGenome {
                     switch (crossoverType)
                     {
                         case 0:
+                            //Random
                             parent = Random.Range(0, 2);
                             break;
                         case 1:
+                            //Fixed point (two points as square)
                             if ((i >= crossover1.x) && (j >= crossover1.y) && (i < crossover2.x) && (j < crossover2.y))
                             {
                                 parent = 0;
@@ -103,6 +123,18 @@ public class DungeonGenome {
                             else
                             {
                                 parent = 1;
+                            }
+                            break;
+                        case 2:
+                            //Distance based
+                            parent = 0;
+                            if (parent1.DungeonMap[i,j] != parent2.DungeonMap[i, j])
+                            {
+                                numChanges++;
+                                if (numChanges < halfDist)
+                                {
+                                    parent = Random.Range(0, 2);
+                                }
                             }
                             break;
                     }
@@ -139,6 +171,7 @@ public class DungeonGenome {
         return child;
     }
 
+    
 
     public void CopyFromOtherGenome(DungeonGenome genome)
     {
