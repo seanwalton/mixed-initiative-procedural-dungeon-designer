@@ -3,13 +3,13 @@ using UnityEngine;
 
 public class Fitness 
 {
-    public static int TargetCorridorLength = 4;
-    public static int TargetChamberArea = 25;
-    public static float TargetCorridorRatio = 1.0f;
-    public static float TargetChamberRatio = 0.0f;
+    public static int TargetCorridorLength = 3;
+    public static int TargetChamberArea = 9;
+    public static float TargetCorridorRatio = 0.5f;
+    public static float TargetChamberRatio = 0.5f;
 
-    public static float JointRatio = 0.05f;
-    public static float TurnRatio = 0.95f;
+    public static float JointRatio = 0.5f;
+    public static float TurnRatio = 0.5f;
 
     public DungeonGenome Genome;
 
@@ -63,9 +63,10 @@ public class Fitness
 
         float patternFitness = (0.25f * chamberFitness) + (0.75f * corridorFitness);
 
-        float pathFitness = genome.PathFromEntranceToExit.Count / (float) NumberPassableTiles;
+        float pathFitness = genome.PathFromEntranceToExit.Count / 
+            (float) (DungeonGenome.Size*DungeonGenome.Size);
 
-        FitnessValue = (patternFitness + pathFitness)*0.5f;
+        FitnessValue = patternFitness + patternFitness;
 
         //FitnessValue *= FractalDimensionFitness * genome.PathFromEntranceToExit.Count;
        
