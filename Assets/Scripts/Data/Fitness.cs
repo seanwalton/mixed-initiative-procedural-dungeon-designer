@@ -5,8 +5,11 @@ public class Fitness
 {
     public static int TargetCorridorLength = 4;
     public static int TargetChamberArea = 25;
-    public static float TargetCorridorRatio = 0.5f;
-    public static float TargetChamberRatio = 0.5f;
+    public static float TargetCorridorRatio = 1.0f;
+    public static float TargetChamberRatio = 0.0f;
+
+    public static float JointRatio = 0.05f;
+    public static float TurnRatio = 0.95f;
 
     public DungeonGenome Genome;
 
@@ -378,7 +381,17 @@ public class Fitness
 
         foreach (Connector connector in connectors)
         {
-            corridorRatio += (0.5f *connector.Area) / (float) NumberPassableTiles;
+            switch (connector.Type)
+            {
+                case ConnectorType.JOINT:
+                    corridorRatio += (JointRatio * connector.Area) / (float)NumberPassableTiles;
+                    break;
+                case ConnectorType.TURN:
+                    corridorRatio += (TurnRatio * connector.Area) / (float)NumberPassableTiles;
+                    break;
+            }
+
+            
         }
     }
 
