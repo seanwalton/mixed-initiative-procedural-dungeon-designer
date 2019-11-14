@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class Fitness 
 {
-    public static int TargetCorridorLength = 3;
-    public static int TargetChamberArea = 9;
+    public static int TargetCorridorLength = 4;
+    public static int TargetChamberArea = 25;
     public static float TargetCorridorRatio = 0.5f;
     public static float TargetChamberRatio = 0.5f;
 
