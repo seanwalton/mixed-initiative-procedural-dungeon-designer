@@ -35,6 +35,9 @@ public class Fitness
     private float chamberRatio;
     public int[,] ChamberFlag = new int[DungeonGenome.Size, DungeonGenome.Size];
 
+    private List<Connector> connectors = new List<Connector>();
+    public int[,] ConnectorFlag = new int[DungeonGenome.Size, DungeonGenome.Size];
+
     public void CalculateFitnesses(DungeonGenome genome)
     {
         Genome = genome;
@@ -210,6 +213,7 @@ public class Fitness
                     if (AreAboveAndBelowImpassable(i,j))
                     {
                         Corridor corridor = new Corridor();
+                        corridor.Type = CorridorType.HORIZONTAL;
                         corridor.Add(new Vector2Int(i, j));
                         CorridorFlag[i, j] = corridors.Count;
                         int ii = i;
@@ -236,6 +240,7 @@ public class Fitness
                     if (AreLeftAndRightImpassable(i, j))
                     {
                         Corridor corridor = new Corridor();
+                        corridor.Type = CorridorType.VERTICAL;
                         corridor.Add(new Vector2Int(i, j));
                         CorridorFlag[i, j] = corridors.Count;
                         int jj = j;
@@ -263,6 +268,46 @@ public class Fitness
             }
         }
     }
+
+
+    //Finds connectors between corridors and assigns a quality
+    private void FindConnectors()
+    {
+        for (int i = 0; i < DungeonGenome.Size; i++)
+        {
+            for (int j = 0; j < DungeonGenome.Size; j++)
+            {
+                ConnectorFlag[i, j] = -1;
+            }
+        }
+
+        //Loop through corridors
+        for (int c = 0; c < corridors.Count; c++)
+        {
+            Vector2Int connectorCentre = new Vector2Int();
+            //Look at corridor entrance first
+            if (corridors[c].Type == CorridorType.HORIZONTAL)
+            {
+                connectorCentre.Set(corridors[c].Entrance.x - 1, corridors[c].Entrance.y);
+            }
+            else
+            {
+                connectorCentre.Set(corridors[c].Entrance.x, corridors[c].Entrance.y - 1);
+            }
+
+            //This can be extracted into its own method
+            //Check this is a valid set of coordinates and not already a connector
+
+            //Then create Connector object, by adding all orthogonal passables, check it's a valid connector
+            //add to global list if it is and update connectorflag
+
+
+            //Then look at corridor exit
+        }
+    }
+
+
+
 
     private bool AreAboveAndBelowImpassable(int i, int j)
     {
