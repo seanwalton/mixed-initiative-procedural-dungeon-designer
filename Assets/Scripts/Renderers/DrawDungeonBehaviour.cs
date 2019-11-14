@@ -50,6 +50,11 @@ public class DrawDungeonBehaviour : MonoBehaviour
                 myMap.SetTileFlags(currentCell, TileFlags.None);
                 myMap.SetColor(currentCell, Color.white);
 
+                //if (genome.MyFitness.ConnectorFlag[i, j] > 0)
+                //{
+                //    myMap.SetColor(currentCell, PathColor);
+                //}
+
                 //if (genome.MyFitness.ChamberFlag[i, j] > 0)
                 //{
                 //    myMap.SetColor(currentCell, PathColor);

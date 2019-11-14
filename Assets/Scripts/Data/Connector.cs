@@ -8,7 +8,7 @@ public enum ConnectorType
     TURN //A turn has exactly 2 passable tiles orthogonal to the centre
 }
 
-public class Connector : MonoBehaviour
+public class Connector
 {
     public ConnectorType Type;
     public List<Vector2Int> Tiles = new List<Vector2Int>();

@@ -46,6 +46,7 @@ public class Fitness
         CalculateTreasureCoverage();
         CalculateFractalDimension();
         FindCorridors();
+        FindConnectors();
         FindChambers();
         CalculateChamberQualities();
         CalculateCorridorQualities();
@@ -234,7 +235,7 @@ public class Fitness
                             }
                         }
 
-                        if (corridor.Length>1) corridors.Add(corridor);
+                        if (corridor.Length > 1) corridors.Add(corridor);
                     }
 
                     if (AreLeftAndRightImpassable(i, j))
@@ -284,30 +285,62 @@ public class Fitness
         //Loop through corridors
         for (int c = 0; c < corridors.Count; c++)
         {
-            Vector2Int connectorCentre = new Vector2Int();
+            Vector2Int connCentre = new Vector2Int();
             //Look at corridor entrance first
             if (corridors[c].Type == CorridorType.HORIZONTAL)
             {
-                connectorCentre.Set(corridors[c].Entrance.x - 1, corridors[c].Entrance.y);
+                connCentre.Set(corridors[c].Entrance.x - 1, corridors[c].Entrance.y);
             }
             else
             {
-                connectorCentre.Set(corridors[c].Entrance.x, corridors[c].Entrance.y - 1);
+                connCentre.Set(corridors[c].Entrance.x, corridors[c].Entrance.y - 1);
             }
 
-            //This can be extracted into its own method
-            //Check this is a valid set of coordinates and not already a connector
-
-            //Then create Connector object, by adding all orthogonal passables, check it's a valid connector
-            //add to global list if it is and update connectorflag
-
+            CheckForConnectorAt(connCentre);
 
             //Then look at corridor exit
+            //Look at corridor entrance first
+            if (corridors[c].Type == CorridorType.HORIZONTAL)
+            {
+                connCentre.Set(corridors[c].Exit.x + 1, corridors[c].Exit.y);
+            }
+            else
+            {
+                connCentre.Set(corridors[c].Exit.x, corridors[c].Exit.y + 1);
+            }
+
+            CheckForConnectorAt(connCentre);
         }
     }
 
+    private void CheckForConnectorAt(Vector2Int connCentre)
+    {
+        //This can be extracted into its own method
+        //Check this is a valid set of coordinates and not already a connector
+        if ((connCentre.x >= 1) && (connCentre.y >= 1) &&
+            (connCentre.x < DungeonGenome.Size - 1) && (connCentre.y < DungeonGenome.Size - 1) &&
+            (ConnectorFlag[connCentre.x, connCentre.y] < 0))
+        {
+            //Then create Connector object, by adding all orthogonal passables, check it's a valid connector
+            //add to global list if it is and update connectorflag
 
+            Connector connector = new Connector();
+            connector.Add(connCentre);
 
+            if (passable[connCentre.x + 1, connCentre.y]) connector.Add(new Vector2Int(connCentre.x + 1, connCentre.y));
+            if (passable[connCentre.x - 1, connCentre.y]) connector.Add(new Vector2Int(connCentre.x - 1, connCentre.y));
+            if (passable[connCentre.x, connCentre.y + 1]) connector.Add(new Vector2Int(connCentre.x, connCentre.y + 1));
+            if (passable[connCentre.x, connCentre.y - 1]) connector.Add(new Vector2Int(connCentre.x, connCentre.y - 1));
+
+            if (connector.IsValidConnector())
+            {
+                connector.SetType();
+                connectors.Add(connector);
+                ConnectorFlag[connCentre.x, connCentre.y] = 1;
+            }
+
+        }
+    }
 
     private bool AreAboveAndBelowImpassable(int i, int j)
     {
@@ -341,6 +374,11 @@ public class Fitness
         {
             float q = Mathf.Min(1.0f, corridor.Length / (float) TargetCorridorLength);
             corridorRatio += ((q * corridor.Length) / (float) NumberPassableTiles);
+        }
+
+        foreach (Connector connector in connectors)
+        {
+            corridorRatio += (0.5f *connector.Area) / (float) NumberPassableTiles;
         }
     }
 
