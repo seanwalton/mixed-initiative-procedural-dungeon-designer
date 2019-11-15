@@ -50,6 +50,13 @@ public class Fitness
     public int EntranceSafetyArea;
     public int EntranceGreedArea;
 
+    private List<Vector2Int> treasures = new List<Vector2Int>();
+    private List<Vector2Int> enemys = new List<Vector2Int>();
+
+    private List<float> treasureSafety = new List<float>();
+    private float meanTreasureSafety;
+    private float tresureSafetyVariance;
+
     public void CalculateFitnesses(DungeonGenome genome)
     {
         Genome = genome;
@@ -113,8 +120,18 @@ public class Fitness
                     passable[i, j] = true;
 
                 }
-                if (Genome.DungeonMap[i, j] == DungeonTileType.ENEMY) NumberEnemyTiles++;
-                if (Genome.DungeonMap[i, j] == DungeonTileType.TREASURE) NumberTreasureTiles++;
+                if (Genome.DungeonMap[i, j] == DungeonTileType.ENEMY)
+                {
+                    NumberEnemyTiles++;
+                    Vector2Int location = new Vector2Int(i, j);
+                    enemys.Add(location);
+                }
+                if (Genome.DungeonMap[i, j] == DungeonTileType.TREASURE)
+                {
+                    NumberTreasureTiles++;
+                    Vector2Int location = new Vector2Int(i, j);
+                    treasures.Add(location);
+                }
             }
         }
     }
@@ -497,6 +514,52 @@ public class Fitness
 
             
         }
+    }
+
+    private void CalculateTreasureSafety()
+    {
+
+        foreach (Vector2Int treasure in treasures)
+        {
+            float safety = 0f;
+            bool validPath = PathFinder.FindPath(Genome.EntranceLocation, treasure, Genome, out path);
+
+            if (validPath)
+            {
+                int d_ent = path.Count;
+                safety = 1f;
+
+                foreach (Vector2Int enemy in enemys)
+                {
+                    bool validPathE = PathFinder.FindPath(enemy, treasure, Genome, out path);
+
+                    if (validPathE)
+                    {
+                        float safety_e = Mathf.Max(0f, ((path.Count - d_ent) / (float) (d_ent + path.Count)));
+                        safety = Mathf.Min(safety, safety_e);
+                    }
+                }
+            }
+
+            treasureSafety.Add(safety);
+
+        }
+
+        //Calculate mean and variance of safety
+        meanTreasureSafety = 0f;
+        foreach (float s in treasureSafety)
+        {
+            meanTreasureSafety += s;
+        }
+
+        if (treasureSafety.Count > 0)
+        {
+            meanTreasureSafety /= treasureSafety.Count;
+
+            //Calculate variance here...
+
+        }
+
     }
 
 
