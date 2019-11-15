@@ -171,11 +171,22 @@ public class DungeonGenome {
         return child;
     }
 
+    public void SetAllFloor()
+    {
+        //First set everything to floor
+        for (int i = 0; i < Size; i++)
+        {
+            for (int j = 0; j < Size; j++)
+            {
+                DungeonMap[i, j] = DungeonTileType.FLOOR;
+            }
+        }
+        CalculateFitnesses();
+    }
     
 
     public void CopyFromOtherGenome(DungeonGenome genome)
     {
-        //First set everything to floor
         for (int i = 0; i < Size; i++)
         {
             for (int j = 0; j < Size; j++)

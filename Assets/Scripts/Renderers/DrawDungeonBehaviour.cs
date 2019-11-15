@@ -15,12 +15,12 @@ public class DrawDungeonBehaviour : MonoBehaviour
     public Tile entranceTile;
     public Tile exitTile;
 
-    private Tilemap myMap;
+    public Tilemap MyMap;
 
 
     private void Awake()
     {
-        myMap = gameObject.GetComponent<Tilemap>();
+        MyMap = gameObject.GetComponent<Tilemap>();
     }
 
 
@@ -36,7 +36,7 @@ public class DrawDungeonBehaviour : MonoBehaviour
     //Draws a dungeon starting at position
     public void DrawDungeonFromGenome(DungeonGenome genome, Vector3 position)
     {
-        Vector3Int firstCell = myMap.WorldToCell(position);
+        Vector3Int firstCell = MyMap.WorldToCell(position);
         Vector3Int currentCell = new Vector3Int();
 
         for (int i = 0; i < DungeonGenome.Size; i++)
@@ -47,8 +47,8 @@ public class DrawDungeonBehaviour : MonoBehaviour
                 currentCell.y = firstCell.y + j;
                 currentCell.z = firstCell.z;
                 DrawTileAtLocation(genome.DungeonMap[i, j], currentCell);
-                myMap.SetTileFlags(currentCell, TileFlags.None);
-                myMap.SetColor(currentCell, Color.white);
+                MyMap.SetTileFlags(currentCell, TileFlags.None);
+                MyMap.SetColor(currentCell, Color.white);
 
                 //if (genome.MyFitness.ConnectorFlag[i, j] > 0)
                 //{
@@ -76,8 +76,8 @@ public class DrawDungeonBehaviour : MonoBehaviour
                 currentCell.y = firstCell.y + genome.PathFromEntranceToExit[i].Position.y;
                 currentCell.z = firstCell.z;
 
-                myMap.SetTileFlags(currentCell, TileFlags.None);
-                myMap.SetColor(currentCell, PathColor);
+                MyMap.SetTileFlags(currentCell, TileFlags.None);
+                MyMap.SetColor(currentCell, PathColor);
             }
         }
 
@@ -88,22 +88,22 @@ public class DrawDungeonBehaviour : MonoBehaviour
         switch (type)
         {
             case DungeonTileType.FLOOR:
-                myMap.SetTile(location, floorTile);
+                MyMap.SetTile(location, floorTile);
                 break;
             case DungeonTileType.WALL:
-                myMap.SetTile(location, wallTile);
+                MyMap.SetTile(location, wallTile);
                 break;
             case DungeonTileType.ENEMY:
-                myMap.SetTile(location, enemyTile);
+                MyMap.SetTile(location, enemyTile);
                 break;
             case DungeonTileType.TREASURE:
-                myMap.SetTile(location, treasureTile);
+                MyMap.SetTile(location, treasureTile);
                 break;
             case DungeonTileType.ENTRANCE:
-                myMap.SetTile(location, entranceTile);
+                MyMap.SetTile(location, entranceTile);
                 break;
             case DungeonTileType.EXIT:
-                myMap.SetTile(location, exitTile);
+                MyMap.SetTile(location, exitTile);
                 break;
             
         }
