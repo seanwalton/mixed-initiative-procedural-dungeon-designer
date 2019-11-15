@@ -44,8 +44,8 @@ public class Fitness
     private List<Connector> connectors = new List<Connector>();
     public int[,] ConnectorFlag = new int[DungeonGenome.Size, DungeonGenome.Size];
 
-    private int entranceSafetyArea;
-    private int entranceGreedArea;
+    public int EntranceSafetyArea;
+    public int EntranceGreedArea;
 
     public void CalculateFitnesses(DungeonGenome genome)
     {
@@ -70,9 +70,9 @@ public class Fitness
 
         float patternFitness = (0.25f * chamberFitness) + (0.75f * corridorFitness);
 
-        float safeEntranceFitness = Mathf.Abs(( entranceSafetyArea / NumberPassableTiles) - EntranceSafety);
+        float safeEntranceFitness = Mathf.Abs(( EntranceSafetyArea / NumberPassableTiles) - EntranceSafety);
 
-        float greedEntranceFitness = Mathf.Abs((entranceGreedArea / NumberPassableTiles) - EntranceGreed);
+        float greedEntranceFitness = Mathf.Abs((EntranceGreedArea / NumberPassableTiles) - EntranceGreed);
 
         float pathFitness = genome.PathFromEntranceToExit.Count / 
             (float) (DungeonGenome.Size*DungeonGenome.Size);
@@ -136,14 +136,20 @@ public class Fitness
         bool foundEnemy = false;
         bool foundTreasure = false;
 
-        entranceGreedArea = 1;
-        entranceSafetyArea = 1;
+        EntranceGreedArea = 1;
+        EntranceSafetyArea = 1;
 
         int currentArea = 0;
 
         while ((!foundEnemy) || (!foundTreasure))
         {
             currentArea++;
+
+            bool foundEnemyThisLoop = false;
+            bool foundTreasureThisLoop = false;
+
+            if (!foundEnemy) EntranceSafetyArea = 1;
+            if (!foundTreasure) EntranceGreedArea = 1;
 
             for (int i = -currentArea; i < currentArea; i++)
             {
@@ -159,35 +165,46 @@ public class Fitness
                         {
                             if (Genome.DungeonMap[test_x, test_y] == DungeonTileType.ENEMY)
                             {
-                                entranceSafetyArea = (2 + (currentArea - 1))*(2 + (currentArea - 1));
-                                foundEnemy = true;
-                            }                           
+                                foundEnemyThisLoop = true;
+                            }    
+                            else if (Genome.DungeonMap[test_x, test_y] == DungeonTileType.FLOOR)
+                            {
+                                EntranceSafetyArea++;
+                            }
 
                         }
+                        
 
                         if (!foundTreasure)
                         {
                             if (Genome.DungeonMap[test_x, test_y] == DungeonTileType.TREASURE)
                             {
-                                entranceGreedArea = (2 + (currentArea - 1)) * (2 + (currentArea - 1));
-                                foundTreasure = true;
+                                foundTreasureThisLoop = true;
+                            }
+                            else if (Genome.DungeonMap[test_x, test_y] == DungeonTileType.FLOOR)
+                            {
+                                EntranceGreedArea++;
                             }
                         }
+                        
                     }
                 }
             }
+
+            if (foundEnemyThisLoop) foundEnemy = true;
+            if (foundTreasureThisLoop) foundTreasure = true;
 
             if (currentArea > DungeonGenome.Size)
             {
                 if (!foundEnemy)
                 {
-                    entranceSafetyArea = DungeonGenome.Size * DungeonGenome.Size;
+                    EntranceSafetyArea = NumberPassableTiles;
                     foundEnemy = true;
                 }
 
                 if (!foundTreasure)
                 {
-                    entranceGreedArea = DungeonGenome.Size * DungeonGenome.Size;
+                    EntranceGreedArea = NumberPassableTiles;
                     foundTreasure = true;
                 }
             }

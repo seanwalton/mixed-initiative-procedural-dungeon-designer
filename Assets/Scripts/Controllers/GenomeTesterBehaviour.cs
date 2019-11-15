@@ -36,7 +36,9 @@ public class GenomeTesterBehaviour : MonoBehaviour
 
             DungeonDrawer.DrawDungeonFromGenome(best,
                 new Vector3(-1f * DungeonGenome.Size, -1.1f * 1f * DungeonGenome.Size, 0f));
-            Debug.Log("Best fitness " + best.MyFitness.FitnessValue.ToString());
+            Debug.Log("Best fitness " + best.MyFitness.FitnessValue.ToString() + 
+                " Entrance Safety Area " + best.MyFitness.EntranceSafetyArea.ToString() +
+                " Entrance Greed Area " + best.MyFitness.EntranceGreedArea.ToString());
 
             Vector3 camPos = Camera.main.transform.position;
             camPos.y = 0.5f * DungeonGenome.Size - (1.1f * 1f * DungeonGenome.Size);

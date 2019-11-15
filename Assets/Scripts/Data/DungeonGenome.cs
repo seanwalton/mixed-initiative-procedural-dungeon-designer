@@ -7,7 +7,7 @@ public class DungeonGenome {
 
     public static int Size = 12;
     public static float WallCoverage = 0.3f;
-    public static float EnemyCoverage = 0.02f;
+    public static float EnemyCoverage = 0.01f;
     public static float TreasureCoverage = 0.01f;
 
     public DungeonTileType[,] DungeonMap = new DungeonTileType[Size, Size];
@@ -438,10 +438,32 @@ public class DungeonGenome {
 
     public void CalculateFitnesses()
     {
-
         CheckAndFindPath();
+        CheckTreasuresAndEnemiesReachable();
         MyFitness = new Fitness();
         MyFitness.CalculateFitnesses(this);
+    }
+
+
+    private void CheckTreasuresAndEnemiesReachable()
+    {
+        Vector2Int target = new Vector2Int();
+
+        for (int i = 0; i < Size; i++)
+        {
+            for (int j = 0; j < Size; j++)
+            {
+                List<Node> path;
+
+                if ((DungeonMap[i, j] == DungeonTileType.TREASURE) || (DungeonMap[i, j] == DungeonTileType.ENEMY))
+                {
+                    target.x = i;
+                    target.y = j;
+                    bool validPath = PathFinder.FindPath(EntranceLocation, target, this, out path);
+                    if (!validPath) DungeonMap[i, j] = DungeonTileType.WALL;
+                }
+            }
+        }
     }
 
 }
