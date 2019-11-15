@@ -3,22 +3,22 @@ using UnityEngine;
 
 public class Fitness 
 {
-    public static int TargetCorridorLength = 3;
-    public static int TargetChamberArea = 9;
+    public static int TargetCorridorLength = 4;
+    public static int TargetChamberArea = 25;
     public static float TargetCorridorRatio = 0.5f;
     public static float TargetChamberRatio = 0.5f;
 
     public static float JointRatio = 0.5f;
     public static float TurnRatio = 0.5f;
 
-    public static float TargetTreasureDensity = 0.01f;
+    public static float TargetTreasureDensity = 0.02f;
     public static float TargetEnemyDensity = 0.02f;
 
-    public static float EntranceSafety = 0.02f;
-    public static float EntranceGreed = 0.02f;
+    public static float EntranceSafety = 0.01f;
+    public static float EntranceGreed = 0.01f;
 
     public static float TargetTreasureSafety = 0.5f;
-    public static float TargetTreasureSafetyVariance = 0.1f;
+    public static float TargetTreasureSafetyVariance = 0.2f;
 
     public DungeonGenome Genome;
 

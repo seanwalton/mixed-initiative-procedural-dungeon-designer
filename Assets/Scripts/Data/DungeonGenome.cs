@@ -8,7 +8,7 @@ public class DungeonGenome {
     public static int Size = 12;
     public static float WallCoverage = 0.3f;
     public static float EnemyCoverage = 0.02f;
-    public static float TreasureCoverage = 0.01f;
+    public static float TreasureCoverage = 0.02f;
 
     public DungeonTileType[,] DungeonMap = new DungeonTileType[Size, Size];
     public List<Node> PathFromEntranceToExit;
@@ -439,7 +439,7 @@ public class DungeonGenome {
     public void CalculateFitnesses()
     {
         CheckAndFindPath();
-        CheckTreasuresAndEnemiesReachable();
+        //CheckTreasuresAndEnemiesReachable();
         MyFitness = new Fitness();
         MyFitness.CalculateFitnesses(this);
     }
