@@ -40,10 +40,10 @@ public class GenomeTesterBehaviour : MonoBehaviour
                 " Entrance Safety Area " + best.MyFitness.EntranceSafetyArea.ToString() +
                 " Entrance Greed Area " + best.MyFitness.EntranceGreedArea.ToString());
 
-            Vector3 camPos = Camera.main.transform.position;
-            camPos.y = 0.5f * DungeonGenome.Size - (1.1f * 1f * DungeonGenome.Size);
+            //Vector3 camPos = Camera.main.transform.position;
+            //camPos.y = 0.5f * DungeonGenome.Size - (1.1f * 1f * DungeonGenome.Size);
 
-            Camera.main.transform.position = camPos;
+            //Camera.main.transform.position = camPos;
             //DungeonDrawer.DrawGeneration(geneticAlgorithm.LastGeneration, 
             //    new Vector3(-1f * DungeonGenome.Size, -1.1f * geneticAlgorithm.NumberOfGenerations * DungeonGenome.Size, 0f));
         
