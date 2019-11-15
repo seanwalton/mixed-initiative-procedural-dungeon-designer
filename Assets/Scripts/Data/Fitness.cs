@@ -11,8 +11,11 @@ public class Fitness
     public static float JointRatio = 0.5f;
     public static float TurnRatio = 0.5f;
 
-    public static float EntranceSafety = 0.2f;
-    public static float EntranceGreed = 0.2f;
+    public static float TargetTreasureDensity = 0.05f;
+    public static float TargetEnemyDensity = 0.1f;
+
+    public static float EntranceSafety = 0.1f;
+    public static float EntranceGreed = 0.1f;
 
     public DungeonGenome Genome;
 
@@ -74,13 +77,17 @@ public class Fitness
 
         float greedEntranceFitness = Mathf.Abs((EntranceGreedArea / NumberPassableTiles) - EntranceGreed);
 
+        float enemyFitness = Mathf.Abs((NumberEnemyTiles / NumberPassableTiles) - TargetEnemyDensity);
+        float treasureFitness = Mathf.Abs((NumberTreasureTiles / NumberPassableTiles) - TargetTreasureDensity);
+
         float pathFitness = genome.PathFromEntranceToExit.Count / 
             (float) (DungeonGenome.Size*DungeonGenome.Size);
 
 
-        float enemyTreasureFitness = 1.0f - ((0.5f * safeEntranceFitness) + (0.5f * greedEntranceFitness));
+        float difficultyFitness = 1.0f - ((0.1f * safeEntranceFitness) + (0.1f * greedEntranceFitness) +
+            (0.3f * enemyFitness)+(0.1f * treasureFitness));
 
-        FitnessValue = enemyTreasureFitness + patternFitness;
+        FitnessValue = difficultyFitness + patternFitness;
 
         //FitnessValue *= FractalDimensionFitness * genome.PathFromEntranceToExit.Count;
        
