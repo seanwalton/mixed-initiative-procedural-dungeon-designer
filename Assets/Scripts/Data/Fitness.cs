@@ -11,6 +11,9 @@ public class Fitness
     public static float JointRatio = 0.5f;
     public static float TurnRatio = 0.5f;
 
+    public static float EntranceSafety = 0.2f;
+    public static float EntranceGreed = 0.2f;
+
     public DungeonGenome Genome;
 
     public int NumberPassableTiles = 0;
@@ -41,6 +44,9 @@ public class Fitness
     private List<Connector> connectors = new List<Connector>();
     public int[,] ConnectorFlag = new int[DungeonGenome.Size, DungeonGenome.Size];
 
+    private int entranceSafetyArea;
+    private int entranceGreedArea;
+
     public void CalculateFitnesses(DungeonGenome genome)
     {
         Genome = genome;
@@ -53,6 +59,7 @@ public class Fitness
         FindChambers();
         CalculateChamberQualities();
         CalculateCorridorQualities();
+        CalculateEntranceSafetyAndGreed();
 
 
         float chamberFitness = 1.0f - Mathf.Abs((TargetChamberRatio - chamberRatio) /
@@ -63,10 +70,17 @@ public class Fitness
 
         float patternFitness = (0.25f * chamberFitness) + (0.75f * corridorFitness);
 
+        float safeEntranceFitness = Mathf.Abs(( entranceSafetyArea / NumberPassableTiles) - EntranceSafety);
+
+        float greedEntranceFitness = Mathf.Abs((entranceGreedArea / NumberPassableTiles) - EntranceGreed);
+
         float pathFitness = genome.PathFromEntranceToExit.Count / 
             (float) (DungeonGenome.Size*DungeonGenome.Size);
 
-        FitnessValue = patternFitness + patternFitness;
+
+        float enemyTreasureFitness = 1.0f - ((0.5f * safeEntranceFitness) + (0.5f * greedEntranceFitness));
+
+        FitnessValue = enemyTreasureFitness + patternFitness;
 
         //FitnessValue *= FractalDimensionFitness * genome.PathFromEntranceToExit.Count;
        
@@ -114,6 +128,71 @@ public class Fitness
         FractalDimensionFitness = Mathf.Max(0, 1.0f - Mathf.Abs(1.35f - FractalDimension));
     }
 
+    private void CalculateEntranceSafetyAndGreed()
+    {
+        int e_x = Genome.EntranceLocation.x;
+        int e_y = Genome.EntranceLocation.y;
+
+        bool foundEnemy = false;
+        bool foundTreasure = false;
+
+        entranceGreedArea = 1;
+        entranceSafetyArea = 1;
+
+        int currentArea = 0;
+
+        while ((!foundEnemy) || (!foundTreasure))
+        {
+            currentArea++;
+
+            for (int i = -currentArea; i < currentArea; i++)
+            {
+                for (int j = -currentArea; j < currentArea; j++)
+                {
+                    int test_x = e_x + i;
+                    int test_y = e_y + j;
+
+                    if ((test_x < DungeonGenome.Size) && (test_y < DungeonGenome.Size) &&
+                            (test_x >= 0) && (test_y >= 0))
+                    {
+                        if (!foundEnemy)
+                        {
+                            if (Genome.DungeonMap[test_x, test_y] == DungeonTileType.ENEMY)
+                            {
+                                entranceSafetyArea = (2 + (currentArea - 1))*(2 + (currentArea - 1));
+                                foundEnemy = true;
+                            }                           
+
+                        }
+
+                        if (!foundTreasure)
+                        {
+                            if (Genome.DungeonMap[test_x, test_y] == DungeonTileType.TREASURE)
+                            {
+                                entranceGreedArea = (2 + (currentArea - 1)) * (2 + (currentArea - 1));
+                                foundTreasure = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (currentArea > DungeonGenome.Size)
+            {
+                if (!foundEnemy)
+                {
+                    entranceSafetyArea = DungeonGenome.Size * DungeonGenome.Size;
+                    foundEnemy = true;
+                }
+
+                if (!foundTreasure)
+                {
+                    entranceGreedArea = DungeonGenome.Size * DungeonGenome.Size;
+                    foundTreasure = true;
+                }
+            }
+        }
+    }
 
     private void FindChambers()
     {
