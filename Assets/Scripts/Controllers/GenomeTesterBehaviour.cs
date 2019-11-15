@@ -24,6 +24,11 @@ public class GenomeTesterBehaviour : MonoBehaviour
 
     private void Start()
     {
+        
+    }
+
+    public void StartOptimising()
+    {
         InvokeRepeating("AdvanceGeneration", 0f, 0.1f);
     }
 
