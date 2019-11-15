@@ -17,6 +17,9 @@ public class Fitness
     public static float EntranceSafety = 0.1f;
     public static float EntranceGreed = 0.1f;
 
+    public static float TargetTreasureSafety = 0.5f;
+    public static float TargetTreasureSafetyVariance = 0.1f;
+
     public DungeonGenome Genome;
 
     public int NumberPassableTiles = 0;
@@ -55,7 +58,7 @@ public class Fitness
 
     private List<float> treasureSafety = new List<float>();
     private float meanTreasureSafety;
-    private float tresureSafetyVariance;
+    private float treasureSafetyVariance;
 
     public void CalculateFitnesses(DungeonGenome genome)
     {
@@ -70,6 +73,7 @@ public class Fitness
         CalculateChamberQualities();
         CalculateCorridorQualities();
         CalculateEntranceSafetyAndGreed();
+        CalculateTreasureSafety();
 
 
         float chamberFitness = 1.0f - Mathf.Abs((TargetChamberRatio - chamberRatio) /
@@ -81,20 +85,19 @@ public class Fitness
         float patternFitness = (0.25f * chamberFitness) + (0.75f * corridorFitness);
 
         float safeEntranceFitness = Mathf.Abs(( EntranceSafetyArea / NumberPassableTiles) - EntranceSafety);
-
         float greedEntranceFitness = Mathf.Abs((EntranceGreedArea / NumberPassableTiles) - EntranceGreed);
-
         float enemyFitness = Mathf.Abs((NumberEnemyTiles / NumberPassableTiles) - TargetEnemyDensity);
         float treasureFitness = Mathf.Abs((NumberTreasureTiles / NumberPassableTiles) - TargetTreasureDensity);
-
-        float pathFitness = genome.PathFromEntranceToExit.Count / 
-            (float) (DungeonGenome.Size*DungeonGenome.Size);
-
+        float treasureSafetyFitness = Mathf.Abs(meanTreasureSafety - TargetTreasureSafety);
+        float treasureSafetyVarFitness = Mathf.Abs(treasureSafetyVariance - TargetTreasureSafetyVariance);
 
         float difficultyFitness = 1.0f - ((0.1f * safeEntranceFitness) + (0.1f * greedEntranceFitness) +
-            (0.3f * enemyFitness)+(0.1f * treasureFitness));
+            (0.3f * enemyFitness) + (0.1f * treasureFitness) + (0.2f * treasureSafetyFitness) + (0.2f * treasureSafetyVarFitness));
 
-        FitnessValue = difficultyFitness + patternFitness;
+        float pathFitness = genome.PathFromEntranceToExit.Count / 
+            (float) (DungeonGenome.Size*DungeonGenome.Size); 
+
+        FitnessValue = ((1.0f/5.0f)*difficultyFitness) + ((4.0f / 5.0f) * patternFitness);
 
         //FitnessValue *= FractalDimensionFitness * genome.PathFromEntranceToExit.Count;
        
@@ -557,6 +560,17 @@ public class Fitness
             meanTreasureSafety /= treasureSafety.Count;
 
             //Calculate variance here...
+
+            treasureSafetyVariance = 0f;
+
+            foreach (float s in treasureSafety)
+            {
+                treasureSafetyVariance += (s - meanTreasureSafety) * (s - meanTreasureSafety);
+            }
+
+            treasureSafetyVariance /= treasureSafety.Count;
+
+            treasureSafetyVariance = Mathf.Sqrt(treasureSafetyVariance);
 
         }
 
