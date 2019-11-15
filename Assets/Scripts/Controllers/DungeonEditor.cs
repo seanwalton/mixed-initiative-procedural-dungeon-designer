@@ -25,8 +25,14 @@ public class DungeonEditor : MonoBehaviour
         if (Input.GetMouseButtonUp(0))
         {
             Vector2Int node = GetTileCoordinatesOfCursor();
-            Genome.DungeonMap[node.x, node.y] = NextTileType(Genome.DungeonMap[node.x, node.y]);
-            DrawGenome();
+
+            if ((node.x < DungeonGenome.Size) && (node.y < DungeonGenome.Size))
+            {
+                Genome.DungeonMap[node.x, node.y] = NextTileType(Genome.DungeonMap[node.x, node.y]);
+                DrawGenome();
+                Fitness.SetTargetMetricsFromGenome(Genome);
+            }
+           
         }
     }
 

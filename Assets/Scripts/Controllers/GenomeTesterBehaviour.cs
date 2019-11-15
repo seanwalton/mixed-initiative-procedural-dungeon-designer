@@ -22,11 +22,6 @@ public class GenomeTesterBehaviour : MonoBehaviour
         geneticAlgorithm = gameObject.GetComponent<GeneticAlgorithm>();
     }
 
-    private void Start()
-    {
-        
-    }
-
     public void StartOptimising()
     {
         InvokeRepeating("AdvanceGeneration", 0f, 0.1f);
@@ -40,7 +35,7 @@ public class GenomeTesterBehaviour : MonoBehaviour
             DungeonGenome best = geneticAlgorithm.LastGeneration.GetBestIndividual();
 
             DungeonDrawer.DrawDungeonFromGenome(best,
-                new Vector3(-1f * DungeonGenome.Size, -1.1f * 1f * DungeonGenome.Size, 0f));
+                transform.position);
             Debug.Log("Best fitness " + best.MyFitness.FitnessValue.ToString() + 
                 " Entrance Safety Area " + best.MyFitness.EntranceSafetyArea.ToString() +
                 " Entrance Greed Area " + best.MyFitness.EntranceGreedArea.ToString());

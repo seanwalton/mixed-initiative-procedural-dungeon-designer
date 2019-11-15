@@ -960,7 +960,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 648696591}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -14.28, y: -19.92, z: -10.202461}
+  m_LocalPosition: {x: -15, y: -20, z: -10.202461}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1485,7 +1485,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1562672504}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1203.0977, y: 499.91284, z: -206.84625}
+  m_LocalPosition: {x: 0, y: -20, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1924,6 +1924,7 @@ MonoBehaviour:
   treasureTile: {fileID: 11400000, guid: 1b7d60da2bc093a449c944bd86d3cc4e, type: 2}
   entranceTile: {fileID: 11400000, guid: 7a1a2e1a59206f8439b52c01a869d07e, type: 2}
   exitTile: {fileID: 11400000, guid: 59377507598ed3a47b0f6035929a4ee9, type: 2}
+  MyMap: {fileID: 0}
 --- !u!1 &1988541899
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,6 +5,7 @@ public class Fitness
 {
     public static int TargetCorridorLength = 4;
     public static int TargetChamberArea = 25;
+    public static float TargetPathLength = 0.5f;
     public static float TargetCorridorRatio = 0.5f;
     public static float TargetChamberRatio = 0.5f;
 
@@ -26,8 +27,8 @@ public class Fitness
     public int NumberEnemyTiles = 0;
     public int NumberTreasureTiles = 0;
 
-    public float EnemyCoverage = 0.0f;
-    public float TreasureCoverage = 0.0f;
+    public float EnemyDensity = 0.0f;
+    public float TreasureDensity = 0.0f;
     public float FractalDimension = 0.0f;
     public float FractalDimensionFitness = 0.0f;
 
@@ -39,15 +40,15 @@ public class Fitness
 
     private bool[,] passable = new bool[DungeonGenome.Size, DungeonGenome.Size];
 
-    private List<Corridor> corridors = new List<Corridor>();
-    private float corridorRatio;
+    public List<Corridor> Corridors = new List<Corridor>();
+    public float CorridorRatio;
     public int[,] CorridorFlag = new int[DungeonGenome.Size, DungeonGenome.Size];
 
-    private List<Chamber> chambers = new List<Chamber>();
-    private float chamberRatio;
+    public List<Chamber> Chambers = new List<Chamber>();
+    public float ChamberRatio;
     public int[,] ChamberFlag = new int[DungeonGenome.Size, DungeonGenome.Size];
 
-    private List<Connector> connectors = new List<Connector>();
+    public List<Connector> Connectors = new List<Connector>();
     public int[,] ConnectorFlag = new int[DungeonGenome.Size, DungeonGenome.Size];
 
     public int EntranceSafetyArea;
@@ -57,8 +58,87 @@ public class Fitness
     private List<Vector2Int> enemys = new List<Vector2Int>();
 
     private List<float> treasureSafety = new List<float>();
-    private float meanTreasureSafety;
-    private float treasureSafetyVariance;
+    public float MeanTreasureSafety;
+    public float TreasureSafetyVariance;
+
+    public static void SetTargetMetricsFromGenome(DungeonGenome genome)
+    {
+        genome.CalculateFitnesses();
+
+        TargetPathLength = genome.PathFromEntranceToExit.Count / (float)genome.MyFitness.NumberPassableTiles;
+
+        Debug.Log("TargetPathLength " + TargetPathLength);
+
+        TargetCorridorLength = 0;
+        foreach (Corridor c in genome.MyFitness.Corridors)
+        {
+            TargetCorridorLength += c.Length;
+        }
+        if (genome.MyFitness.Corridors.Count > 0) TargetCorridorLength /= genome.MyFitness.Corridors.Count;
+
+        Debug.Log("TargetCorridorLength " + TargetCorridorLength);
+
+        TargetChamberArea = 0;
+        foreach (Chamber c in genome.MyFitness.Chambers)
+        {
+            TargetChamberArea += c.Area;
+        }
+        if (genome.MyFitness.Chambers.Count > 0) TargetChamberArea /= genome.MyFitness.Chambers.Count;
+
+        Debug.Log("TargetChamberArea " + TargetChamberArea);
+
+        TargetCorridorRatio = genome.MyFitness.CorridorRatio;
+        TargetChamberRatio = genome.MyFitness.ChamberRatio;
+
+        Debug.Log("TargetCorridorRatio " + TargetCorridorRatio);
+        Debug.Log("TargetChamberRatio " + TargetChamberRatio);
+
+
+        float numJoints = 0f;
+        float numTurns = 0f;
+
+        foreach (Connector c in genome.MyFitness.Connectors)
+        {
+            if (c.Type == ConnectorType.JOINT) numJoints += 1.0f;
+            if (c.Type == ConnectorType.TURN) numTurns += 1.0f;
+        }
+
+        if ((numJoints+numTurns) > 0f)
+        {
+            JointRatio = numJoints / (numJoints + numTurns);
+            TurnRatio = numTurns / (numJoints + numTurns);
+        }
+        else
+        {
+            JointRatio = 0.5f;
+            TurnRatio = 0.5f;
+        }
+
+        Debug.Log("JointRatio " + JointRatio);
+        Debug.Log("TurnRatio " + TurnRatio);
+
+        TargetTreasureDensity = genome.MyFitness.TreasureDensity;
+        TargetEnemyDensity = genome.MyFitness.EnemyDensity;
+
+        Debug.Log("TargetTreasureDensity " + TargetTreasureDensity);
+        Debug.Log("TargetEnemyDensity " + TargetEnemyDensity);
+
+        EntranceSafety = genome.MyFitness.EntranceSafetyArea / (float)genome.MyFitness.NumberPassableTiles;
+        EntranceGreed = genome.MyFitness.EntranceGreedArea / (float)genome.MyFitness.NumberPassableTiles;
+
+        Debug.Log("EntranceSafety " + EntranceSafety);
+        Debug.Log("EntranceGreed " + EntranceGreed);
+
+        TargetTreasureSafety = genome.MyFitness.MeanTreasureSafety;
+        TargetTreasureSafetyVariance = genome.MyFitness.TreasureSafetyVariance;
+
+        Debug.Log("TargetTreasureSafety " + TargetTreasureSafety);
+        Debug.Log("TargetTreasureSafetyVariance " + TargetTreasureSafetyVariance);
+
+
+
+    }
+
 
     public void CalculateFitnesses(DungeonGenome genome)
     {
@@ -76,14 +156,14 @@ public class Fitness
         CalculateTreasureSafety();
 
 
-        float chamberFitness = 1.0f - Mathf.Abs((TargetChamberRatio - chamberRatio) /
+        float chamberFitness = 1.0f - Mathf.Abs((TargetChamberRatio - ChamberRatio) /
             Mathf.Max(TargetChamberRatio, 1.0f - TargetChamberRatio));
 
-        float corridorFitness = 1.0f - Mathf.Abs((TargetCorridorRatio - corridorRatio) /
+        float corridorFitness = 1.0f - Mathf.Abs((TargetCorridorRatio - CorridorRatio) /
             Mathf.Max(TargetCorridorRatio, 1.0f - TargetCorridorRatio));
 
-        float pathFitness = genome.PathFromEntranceToExit.Count /
-            (float)(DungeonGenome.Size * DungeonGenome.Size);
+        float pathFitness = 1.0f - Mathf.Abs(TargetPathLength - (genome.PathFromEntranceToExit.Count /
+            (float)(DungeonGenome.Size * DungeonGenome.Size)));
 
         float patternFitness = (0.25f * chamberFitness) + (0.5f * corridorFitness) + (0.25f * pathFitness);
 
@@ -91,8 +171,8 @@ public class Fitness
         float greedEntranceFitness = Mathf.Abs((EntranceGreedArea / NumberPassableTiles) - EntranceGreed);
         float enemyFitness = Mathf.Abs((NumberEnemyTiles / NumberPassableTiles) - TargetEnemyDensity);
         float treasureFitness = Mathf.Abs((NumberTreasureTiles / NumberPassableTiles) - TargetTreasureDensity);
-        float treasureSafetyFitness = Mathf.Abs(meanTreasureSafety - TargetTreasureSafety);
-        float treasureSafetyVarFitness = Mathf.Abs(treasureSafetyVariance - TargetTreasureSafetyVariance);
+        float treasureSafetyFitness = Mathf.Abs(MeanTreasureSafety - TargetTreasureSafety);
+        float treasureSafetyVarFitness = Mathf.Abs(TreasureSafetyVariance - TargetTreasureSafetyVariance);
 
         float difficultyFitness = 1.0f - ((0.1f * safeEntranceFitness) + (0.1f * greedEntranceFitness) +
             (0.3f * enemyFitness) + (0.1f * treasureFitness) + (0.2f * treasureSafetyFitness) + (0.2f * treasureSafetyVarFitness));
@@ -143,12 +223,12 @@ public class Fitness
 
     private void CalculateEnemyCoverage()
     {
-        EnemyCoverage = NumberEnemyTiles / (float) NumberPassableTiles;
+        EnemyDensity = NumberEnemyTiles / (float) NumberPassableTiles;
     }
 
     private void CalculateTreasureCoverage()
     {
-        TreasureCoverage = NumberTreasureTiles / (float) NumberPassableTiles;
+        TreasureDensity = NumberTreasureTiles / (float) NumberPassableTiles;
     }
 
     private void CalculateFractalDimension()
@@ -362,7 +442,7 @@ public class Fitness
                         //Enter this Chamber
                         endCorner.Set(i + size_i, j + size_j);
                         Chamber chamber = new Chamber(startCorner, endCorner);
-                        chambers.Add(chamber);
+                        Chambers.Add(chamber);
                         for (int ii = 0; ii <= size_i; ii++)
                         {
                             for (int jj = 0; jj <= size_j; jj++)
@@ -370,7 +450,7 @@ public class Fitness
                                 int testi = i + ii;
                                 int testj = j + jj;
 
-                                ChamberFlag[testi, testj] = chambers.Count;
+                                ChamberFlag[testi, testj] = Chambers.Count;
                             }
                         }
 
@@ -409,7 +489,7 @@ public class Fitness
                         Corridor corridor = new Corridor();
                         corridor.Type = CorridorType.HORIZONTAL;
                         corridor.Add(new Vector2Int(i, j));
-                        CorridorFlag[i, j] = corridors.Count;
+                        CorridorFlag[i, j] = Corridors.Count;
                         int ii = i;
                         bool endCorridor = false;
 
@@ -420,7 +500,7 @@ public class Fitness
                                 (AreAboveAndBelowImpassable(ii, j)))
                             {
                                 corridor.Add(new Vector2Int(ii, j));
-                                CorridorFlag[ii, j] = corridors.Count;
+                                CorridorFlag[ii, j] = Corridors.Count;
                             }
                             else
                             {
@@ -428,7 +508,7 @@ public class Fitness
                             }
                         }
 
-                        if (corridor.Length > 1) corridors.Add(corridor);
+                        if (corridor.Length > 1) Corridors.Add(corridor);
                     }
 
                     if (AreLeftAndRightImpassable(i, j))
@@ -436,7 +516,7 @@ public class Fitness
                         Corridor corridor = new Corridor();
                         corridor.Type = CorridorType.VERTICAL;
                         corridor.Add(new Vector2Int(i, j));
-                        CorridorFlag[i, j] = corridors.Count;
+                        CorridorFlag[i, j] = Corridors.Count;
                         int jj = j;
                         bool endCorridor = false;
 
@@ -447,7 +527,7 @@ public class Fitness
                                 (AreLeftAndRightImpassable(i, jj)))
                             {
                                 corridor.Add(new Vector2Int(i, jj));
-                                CorridorFlag[i, jj] = corridors.Count;
+                                CorridorFlag[i, jj] = Corridors.Count;
                             }
                             else
                             {
@@ -455,7 +535,7 @@ public class Fitness
                             }
                         }
 
-                        if (corridor.Length > 1) corridors.Add(corridor);
+                        if (corridor.Length > 1) Corridors.Add(corridor);
                     }
 
                 }
@@ -476,30 +556,30 @@ public class Fitness
         }
 
         //Loop through corridors
-        for (int c = 0; c < corridors.Count; c++)
+        for (int c = 0; c < Corridors.Count; c++)
         {
             Vector2Int connCentre = new Vector2Int();
             //Look at corridor entrance first
-            if (corridors[c].Type == CorridorType.HORIZONTAL)
+            if (Corridors[c].Type == CorridorType.HORIZONTAL)
             {
-                connCentre.Set(corridors[c].Entrance.x - 1, corridors[c].Entrance.y);
+                connCentre.Set(Corridors[c].Entrance.x - 1, Corridors[c].Entrance.y);
             }
             else
             {
-                connCentre.Set(corridors[c].Entrance.x, corridors[c].Entrance.y - 1);
+                connCentre.Set(Corridors[c].Entrance.x, Corridors[c].Entrance.y - 1);
             }
 
             CheckForConnectorAt(connCentre);
 
             //Then look at corridor exit
             //Look at corridor entrance first
-            if (corridors[c].Type == CorridorType.HORIZONTAL)
+            if (Corridors[c].Type == CorridorType.HORIZONTAL)
             {
-                connCentre.Set(corridors[c].Exit.x + 1, corridors[c].Exit.y);
+                connCentre.Set(Corridors[c].Exit.x + 1, Corridors[c].Exit.y);
             }
             else
             {
-                connCentre.Set(corridors[c].Exit.x, corridors[c].Exit.y + 1);
+                connCentre.Set(Corridors[c].Exit.x, Corridors[c].Exit.y + 1);
             }
 
             CheckForConnectorAt(connCentre);
@@ -528,7 +608,7 @@ public class Fitness
             if (connector.IsValidConnector())
             {
                 connector.SetType();
-                connectors.Add(connector);
+                Connectors.Add(connector);
                 ConnectorFlag[connCentre.x, connCentre.y] = 1;
             }
 
@@ -552,33 +632,33 @@ public class Fitness
 
     private void CalculateChamberQualities()
     {
-        chamberRatio = 0f;
-        foreach (Chamber chamber in chambers)
+        ChamberRatio = 0f;
+        foreach (Chamber chamber in Chambers)
         {
             float q = (0.5f * (Mathf.Min(1.0f, (chamber.Area) / (float) TargetChamberArea))) +
                 (0.5f * chamber.Squareness);
-            chamberRatio += ((q * chamber.Area) / (float) NumberPassableTiles);
+            ChamberRatio += ((q * chamber.Area) / (float) NumberPassableTiles);
         }
     }
 
     private void CalculateCorridorQualities()
     {
-        corridorRatio = 0f;
-        foreach (Corridor corridor in corridors)
+        CorridorRatio = 0f;
+        foreach (Corridor corridor in Corridors)
         {
             float q = Mathf.Min(1.0f, corridor.Length / (float) TargetCorridorLength);
-            corridorRatio += ((q * corridor.Length) / (float) NumberPassableTiles);
+            CorridorRatio += ((q * corridor.Length) / (float) NumberPassableTiles);
         }
 
-        foreach (Connector connector in connectors)
+        foreach (Connector connector in Connectors)
         {
             switch (connector.Type)
             {
                 case ConnectorType.JOINT:
-                    corridorRatio += (JointRatio * connector.Area) / (float)NumberPassableTiles;
+                    CorridorRatio += (JointRatio * connector.Area) / (float)NumberPassableTiles;
                     break;
                 case ConnectorType.TURN:
-                    corridorRatio += (TurnRatio * connector.Area) / (float)NumberPassableTiles;
+                    CorridorRatio += (TurnRatio * connector.Area) / (float)NumberPassableTiles;
                     break;
             }
 
@@ -616,28 +696,28 @@ public class Fitness
         }
 
         //Calculate mean and variance of safety
-        meanTreasureSafety = 0f;
+        MeanTreasureSafety = 0f;
         foreach (float s in treasureSafety)
         {
-            meanTreasureSafety += s;
+            MeanTreasureSafety += s;
         }
 
         if (treasureSafety.Count > 0)
         {
-            meanTreasureSafety /= treasureSafety.Count;
+            MeanTreasureSafety /= treasureSafety.Count;
 
             //Calculate variance here...
 
-            treasureSafetyVariance = 0f;
+            TreasureSafetyVariance = 0f;
 
             foreach (float s in treasureSafety)
             {
-                treasureSafetyVariance += (s - meanTreasureSafety) * (s - meanTreasureSafety);
+                TreasureSafetyVariance += (s - MeanTreasureSafety) * (s - MeanTreasureSafety);
             }
 
-            treasureSafetyVariance /= treasureSafety.Count;
+            TreasureSafetyVariance /= treasureSafety.Count;
 
-            treasureSafetyVariance = Mathf.Sqrt(treasureSafetyVariance);
+            TreasureSafetyVariance = Mathf.Sqrt(TreasureSafetyVariance);
 
         }
 
