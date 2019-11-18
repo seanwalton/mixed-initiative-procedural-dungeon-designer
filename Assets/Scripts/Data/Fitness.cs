@@ -21,6 +21,10 @@ public class Fitness
     public static float TargetTreasureSafety = 0.5f;
     public static float TargetTreasureSafetyVariance = 0.2f;
 
+    public static float TargetFractalIndex = 1.35f;
+
+
+
     public DungeonGenome Genome;
 
     public int NumberPassableTiles = 0;
@@ -64,6 +68,9 @@ public class Fitness
     public static void SetTargetMetricsFromGenome(DungeonGenome genome)
     {
         genome.CalculateFitnesses();
+
+        TargetFractalIndex = genome.MyFitness.FractalDimension;
+        Debug.Log("Target Fractal Dimension " + TargetFractalIndex);
 
         TargetPathLength = genome.PathFromEntranceToExit.Count / (float)genome.MyFitness.NumberPassableTiles;
 
@@ -177,9 +184,10 @@ public class Fitness
         float difficultyFitness = 1.0f - ((0.1f * safeEntranceFitness) + (0.1f * greedEntranceFitness) +
             (0.3f * enemyFitness) + (0.1f * treasureFitness) + (0.2f * treasureSafetyFitness) + (0.2f * treasureSafetyVarFitness));
 
-        //FitnessValue = ((1.0f/5.0f)*difficultyFitness) + ((4.0f / 5.0f) * patternFitness);
+        float fractalFitness = 1.0f - Mathf.Abs((TargetFractalIndex - FractalDimension) / TargetFractalIndex);
 
-        FitnessValue = FractalDimensionFitness;
+        FitnessValue = (difficultyFitness + patternFitness + fractalFitness)/3.0f;
+
 
         //FitnessValue *= FractalDimensionFitness * genome.PathFromEntranceToExit.Count;
 
@@ -277,7 +285,6 @@ public class Fitness
             (Mathf.Log10(1.0f / d[2]) - Mathf.Log10(1.0f / d[3]));
 
         FractalDimension = (f1 + f2 + f3)/3.0f;
-        FractalDimensionFitness = Mathf.Max(0, 1.0f - Mathf.Abs(1.35f - FractalDimension));
     }
 
     private void CalculateEntranceSafetyAndGreed()
