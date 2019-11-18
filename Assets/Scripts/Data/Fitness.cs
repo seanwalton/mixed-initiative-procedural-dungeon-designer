@@ -67,7 +67,7 @@ public class Fitness
 
         TargetPathLength = genome.PathFromEntranceToExit.Count / (float)genome.MyFitness.NumberPassableTiles;
 
-        Debug.Log("TargetPathLength " + TargetPathLength);
+        //Debug.Log("TargetPathLength " + TargetPathLength);
 
         TargetCorridorLength = 0;
         foreach (Corridor c in genome.MyFitness.Corridors)
@@ -76,7 +76,7 @@ public class Fitness
         }
         if (genome.MyFitness.Corridors.Count > 0) TargetCorridorLength /= genome.MyFitness.Corridors.Count;
 
-        Debug.Log("TargetCorridorLength " + TargetCorridorLength);
+        //Debug.Log("TargetCorridorLength " + TargetCorridorLength);
 
         TargetChamberArea = 0;
         foreach (Chamber c in genome.MyFitness.Chambers)
@@ -85,13 +85,13 @@ public class Fitness
         }
         if (genome.MyFitness.Chambers.Count > 0) TargetChamberArea /= genome.MyFitness.Chambers.Count;
 
-        Debug.Log("TargetChamberArea " + TargetChamberArea);
+        //Debug.Log("TargetChamberArea " + TargetChamberArea);
 
         TargetCorridorRatio = genome.MyFitness.CorridorRatio;
         TargetChamberRatio = genome.MyFitness.ChamberRatio;
 
-        Debug.Log("TargetCorridorRatio " + TargetCorridorRatio);
-        Debug.Log("TargetChamberRatio " + TargetChamberRatio);
+        //Debug.Log("TargetCorridorRatio " + TargetCorridorRatio);
+        //Debug.Log("TargetChamberRatio " + TargetChamberRatio);
 
 
         float numJoints = 0f;
@@ -114,26 +114,26 @@ public class Fitness
             TurnRatio = 0.5f;
         }
 
-        Debug.Log("JointRatio " + JointRatio);
-        Debug.Log("TurnRatio " + TurnRatio);
+        //Debug.Log("JointRatio " + JointRatio);
+        //Debug.Log("TurnRatio " + TurnRatio);
 
         TargetTreasureDensity = genome.MyFitness.TreasureDensity;
         TargetEnemyDensity = genome.MyFitness.EnemyDensity;
 
-        Debug.Log("TargetTreasureDensity " + TargetTreasureDensity);
-        Debug.Log("TargetEnemyDensity " + TargetEnemyDensity);
+        //Debug.Log("TargetTreasureDensity " + TargetTreasureDensity);
+        //Debug.Log("TargetEnemyDensity " + TargetEnemyDensity);
 
         EntranceSafety = genome.MyFitness.EntranceSafetyArea / (float)genome.MyFitness.NumberPassableTiles;
         EntranceGreed = genome.MyFitness.EntranceGreedArea / (float)genome.MyFitness.NumberPassableTiles;
 
-        Debug.Log("EntranceSafety " + EntranceSafety);
-        Debug.Log("EntranceGreed " + EntranceGreed);
+        //Debug.Log("EntranceSafety " + EntranceSafety);
+        //Debug.Log("EntranceGreed " + EntranceGreed);
 
         TargetTreasureSafety = genome.MyFitness.MeanTreasureSafety;
         TargetTreasureSafetyVariance = genome.MyFitness.TreasureSafetyVariance;
 
-        Debug.Log("TargetTreasureSafety " + TargetTreasureSafety);
-        Debug.Log("TargetTreasureSafetyVariance " + TargetTreasureSafetyVariance);
+        //Debug.Log("TargetTreasureSafety " + TargetTreasureSafety);
+        //Debug.Log("TargetTreasureSafetyVariance " + TargetTreasureSafetyVariance);
 
 
 
@@ -177,12 +177,12 @@ public class Fitness
         float difficultyFitness = 1.0f - ((0.1f * safeEntranceFitness) + (0.1f * greedEntranceFitness) +
             (0.3f * enemyFitness) + (0.1f * treasureFitness) + (0.2f * treasureSafetyFitness) + (0.2f * treasureSafetyVarFitness));
 
-        
+        //FitnessValue = ((1.0f/5.0f)*difficultyFitness) + ((4.0f / 5.0f) * patternFitness);
 
-        FitnessValue = ((1.0f/5.0f)*difficultyFitness) + ((4.0f / 5.0f) * patternFitness);
+        FitnessValue = FractalDimensionFitness;
 
         //FitnessValue *= FractalDimensionFitness * genome.PathFromEntranceToExit.Count;
-       
+
 
     }
 
@@ -233,7 +233,50 @@ public class Fitness
 
     private void CalculateFractalDimension()
     {
-        FractalDimension = -1f*(Mathf.Log10(NumberPassableTiles) / Mathf.Log10(1.0f / DungeonGenome.Size));
+        
+
+
+        //We need to calculate the fractal dimension at 3 points
+        int[] d = { 1, DungeonGenome.Size / 6, DungeonGenome.Size / 4, DungeonGenome.Size / 2 };
+        int[] numWall = { 0, 0, 0, 0 };
+
+        for (int k = 0; k < d.Length; k++)
+        {
+            for (int i_start = 0; i_start < DungeonGenome.Size; i_start += d[k])
+            {
+                for (int j_start = 0; j_start < DungeonGenome.Size; j_start += d[k])
+                {
+                    bool wallFound = false;
+
+                    for (int i = 0; i < d[k]; i++)
+                    {
+                        for (int j = 0; j < d[k]; j++)
+                        {
+
+                            if ((i_start + i < DungeonGenome.Size) && (j_start + j < DungeonGenome.Size) &&
+                                    (Genome.DungeonMap[i_start+i, j_start+j] == DungeonTileType.WALL))
+                            {
+                                wallFound = true;
+                            }
+                        }
+                    }
+
+                    if (wallFound) numWall[k]++;
+
+                }
+            }
+        }
+
+        float f1 = (Mathf.Log10(numWall[0]) - Mathf.Log10(numWall[1])) /
+            (Mathf.Log10(1.0f / d[0]) - Mathf.Log10(1.0f / d[1]));
+
+        float f2 = (Mathf.Log10(numWall[1]) - Mathf.Log10(numWall[2])) /
+            (Mathf.Log10(1.0f / d[1]) - Mathf.Log10(1.0f / d[2]));
+
+        float f3 = (Mathf.Log10(numWall[2]) - Mathf.Log10(numWall[3])) /
+            (Mathf.Log10(1.0f / d[2]) - Mathf.Log10(1.0f / d[3]));
+
+        FractalDimension = (f1 + f2 + f3)/3.0f;
         FractalDimensionFitness = Mathf.Max(0, 1.0f - Mathf.Abs(1.35f - FractalDimension));
     }
 
