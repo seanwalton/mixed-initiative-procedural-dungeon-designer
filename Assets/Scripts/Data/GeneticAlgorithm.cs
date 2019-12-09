@@ -10,7 +10,34 @@ public class GeneticAlgorithm : MonoBehaviour
 
     public List<Generation> Generations = new List<Generation>();
 
-   
+
+    public void InitializeFirstGeneration(DungeonGenome masterGenome)
+    {
+        Generation gen1 = new Generation();
+
+        //Add a mutated version of the masterGenome
+        DungeonGenome genome = new DungeonGenome();
+        genome.CopyFromOtherGenome(masterGenome);
+        for (int i = 0; i < Random.Range(DungeonGenome.Size, 4 * DungeonGenome.Size); i++)
+        {
+            genome.Mutate();
+        }
+        gen1.AddIndividual(genome);
+
+        for (int i = 0; i < PopulationSize; i++)
+        {
+            DungeonGenome genome2 = new DungeonGenome();
+            genome2.CopyFromOtherGenome(gen1.GetRandomIndividual());
+            for (int j = 0; j < Random.Range(DungeonGenome.Size, 4 * DungeonGenome.Size); j++)
+            {
+                genome2.Mutate();
+            }
+            gen1.AddIndividual(genome2);
+        }
+
+        Generations.Add(gen1);
+
+    }   
 
     private void InitializeFirstGeneration()
     {

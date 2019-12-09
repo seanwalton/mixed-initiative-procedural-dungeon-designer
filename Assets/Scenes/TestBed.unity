@@ -1477,6 +1477,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NumberOfGenerations: 10
   DungeonDrawer: {fileID: 1948221862}
+  DungeonEditor: {fileID: 648696592}
 --- !u!4 &1562672506
 Transform:
   m_ObjectHideFlags: 0
@@ -1503,7 +1504,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7492db79298e964aad53fdaf1ae774e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PopulationSize: 300
+  PopulationSize: 100
   MutationRate: 0.5
 --- !u!1 &1923379292
 GameObject:

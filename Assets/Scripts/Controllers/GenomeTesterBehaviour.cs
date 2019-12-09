@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class GenomeTesterBehaviour : MonoBehaviour
 {
-    public int NumberOfGenerations;
 
     public DrawDungeonBehaviour DungeonDrawer;
+
+    public DungeonEditor DungeonEditor;
 
     private DungeonGenome genome = new DungeonGenome();
 
@@ -24,6 +25,7 @@ public class GenomeTesterBehaviour : MonoBehaviour
 
     public void StartOptimising()
     {
+        geneticAlgorithm.InitializeFirstGeneration(DungeonEditor.Genome);
         InvokeRepeating("AdvanceGeneration", 0f, 0.1f);
     }
 
