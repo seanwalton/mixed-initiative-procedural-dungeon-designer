@@ -28,7 +28,7 @@ public class GeneticAlgorithm : MonoBehaviour
         {
             DungeonGenome genome2 = new DungeonGenome();
             genome2.CopyFromOtherGenome(gen1.GetRandomIndividual());
-            for (int j = 0; j < Random.Range(DungeonGenome.Size, 4 * DungeonGenome.Size); j++)
+            for (int j = 0; j < Random.Range(DungeonGenome.Size, 2 * DungeonGenome.Size); j++)
             {
                 genome2.Mutate();
             }
@@ -49,7 +49,7 @@ public class GeneticAlgorithm : MonoBehaviour
             genome.RandomlyInitialise();
             gen1.AddIndividual(genome);
         }
-
+        gen1.Sort();
         Generations.Add(gen1);
     }
 
@@ -79,7 +79,7 @@ public class GeneticAlgorithm : MonoBehaviour
 
             DungeonGenome bestDungeon = LastGeneration.GetBestIndividual();
             gen.AddIndividual(bestDungeon);
-
+            gen.Sort();
             Generations.Add(gen);
         }
 

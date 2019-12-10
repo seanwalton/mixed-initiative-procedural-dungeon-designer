@@ -1,9 +1,11 @@
-﻿using System.Collections;
+﻿
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class DungeonGenome {
+public class DungeonGenome : System.IComparable
+{
 
     public static int Size = 12;
     public static float WallCoverage = 0.3f;
@@ -475,6 +477,29 @@ public class DungeonGenome {
                 }
             }
         }
+    }
+
+    public int CompareTo(object obj)
+    {
+        DungeonGenome fitnessIn = (DungeonGenome) obj;
+
+        int numWins = 0;
+        int numLose = 0;
+
+        for (int i = 0; i < MyFitness.FitnessValues.Count; i++)
+        {
+            if (MyFitness.FitnessValues[i] > fitnessIn.MyFitness.FitnessValues[i])
+            {
+                numWins++;
+            }
+
+            if (MyFitness.FitnessValues[i] < fitnessIn.MyFitness.FitnessValues[i])
+            {
+                numLose++;
+            }
+
+        }
+        return (numLose-numWins);
     }
 
 }

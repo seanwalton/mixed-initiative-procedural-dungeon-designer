@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class Fitness 
+public class Fitness
 {
     public static int TargetCorridorLength = 4;
     public static int TargetChamberArea = 25;
@@ -37,6 +38,7 @@ public class Fitness
     public float FractalDimensionFitness = 0.0f;
 
     public float FitnessValue = 0.0f;
+    public List<float> FitnessValues = new List<float>();
 
     private bool validPath;
     private List<Node> path;
@@ -162,34 +164,48 @@ public class Fitness
         CalculateEntranceSafetyAndGreed();
         CalculateTreasureSafety();
 
+        FitnessValues.Clear();
 
         float chamberFitness = 1.0f - Mathf.Abs((TargetChamberRatio - ChamberRatio) /
             Mathf.Max(TargetChamberRatio, 1.0f - TargetChamberRatio));
+        FitnessValues.Add(chamberFitness);
 
         float corridorFitness = 1.0f - Mathf.Abs((TargetCorridorRatio - CorridorRatio) /
             Mathf.Max(TargetCorridorRatio, 1.0f - TargetCorridorRatio));
+        FitnessValues.Add(corridorFitness);
 
         float pathFitness = 1.0f - Mathf.Abs(TargetPathLength - (genome.PathFromEntranceToExit.Count /
             (float)(DungeonGenome.Size * DungeonGenome.Size)));
+        FitnessValues.Add(pathFitness);
 
         float patternFitness = (0.25f * chamberFitness) + (0.5f * corridorFitness) + (0.25f * pathFitness);
 
         float safeEntranceFitness = Mathf.Abs(( EntranceSafetyArea / NumberPassableTiles) - EntranceSafety);
+        FitnessValues.Add(safeEntranceFitness);
+
         float greedEntranceFitness = Mathf.Abs((EntranceGreedArea / NumberPassableTiles) - EntranceGreed);
+        FitnessValues.Add(greedEntranceFitness);
+
         float enemyFitness = Mathf.Abs((NumberEnemyTiles / NumberPassableTiles) - TargetEnemyDensity);
+        FitnessValues.Add(enemyFitness);
+
         float treasureFitness = Mathf.Abs((NumberTreasureTiles / NumberPassableTiles) - TargetTreasureDensity);
+        FitnessValues.Add(treasureFitness);
+
         float treasureSafetyFitness = Mathf.Abs(MeanTreasureSafety - TargetTreasureSafety);
+        FitnessValues.Add(treasureSafetyFitness);
+
         float treasureSafetyVarFitness = Mathf.Abs(TreasureSafetyVariance - TargetTreasureSafetyVariance);
+        FitnessValues.Add(treasureSafetyVarFitness);
 
         float difficultyFitness = 1.0f - ((0.1f * safeEntranceFitness) + (0.1f * greedEntranceFitness) +
             (0.3f * enemyFitness) + (0.1f * treasureFitness) + (0.2f * treasureSafetyFitness) + (0.2f * treasureSafetyVarFitness));
 
         float fractalFitness = 1.0f - Mathf.Abs((TargetFractalIndex - FractalDimension) / TargetFractalIndex);
+        FitnessValues.Add(fractalFitness);
 
         FitnessValue = (difficultyFitness + patternFitness + fractalFitness)/3.0f;
 
-
-        //FitnessValue *= FractalDimensionFitness * genome.PathFromEntranceToExit.Count;
 
 
     }
@@ -773,5 +789,5 @@ public class Fitness
 
     }
 
-
+    
 }

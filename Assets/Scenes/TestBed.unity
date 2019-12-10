@@ -1475,7 +1475,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bee72eba73cdc14396792e4a67301a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NumberOfGenerations: 10
   DungeonDrawer: {fileID: 1948221862}
   DungeonEditor: {fileID: 648696592}
 --- !u!4 &1562672506

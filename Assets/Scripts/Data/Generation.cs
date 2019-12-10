@@ -11,7 +11,16 @@ public class Generation
         Individuals.Add(genome);
     }
 
-
+    public void Sort()
+    {
+        Individuals.Sort();
+        //Debug.Log("***");
+        //for (int i = 0; i < 5; i++)
+        //{
+        //    Debug.Log(i.ToString() + " " + string.Join(":",Individuals[i].MyFitness.FitnessValues));
+        //}
+        //Debug.Log("***");
+    }
 
     public float GetAverageFitness()
     {
@@ -39,62 +48,24 @@ public class Generation
 
     public DungeonGenome GetBestIndividual()
     {
+        //Sort();
         float bestFitness = Individuals[0].MyFitness.FitnessValue;
         int bestIndividual = 0;
-
-        for (int i = 1; i < Individuals.Count; i++)
-        {
-            if (Individuals[i].MyFitness.FitnessValue > bestFitness)
-            {
-                bestIndividual = i;
-                bestFitness = Individuals[i].MyFitness.FitnessValue;
-            }
-        }
 
         return Individuals[bestIndividual];
     }
 
     public int GetBestIndividualLocation()
     {
-        float bestFitness = Individuals[0].MyFitness.FitnessValue;
-        int bestIndividual = 0;
-
-        for (int i = 1; i < Individuals.Count; i++)
-        {
-            if (Individuals[i].MyFitness.FitnessValue > bestFitness)
-            {
-                bestIndividual = i;
-                bestFitness = Individuals[i].MyFitness.FitnessValue;
-            }
-        }
-
-        return bestIndividual;
+        //Sort();
+        return 0;
     }
 
     public DungeonGenome GetRandomAboveAverageIndividual()
     {
-        float averageFitness = GetAverageFitness();
-
-        
-        
-        int numTrys = 0;
-
-        while (numTrys < (Individuals.Count*10))
-        {
-            int i = Random.Range(0, NumberOfIndividuals);
-
-            if (Individuals[i].ValidPath)
-            {
-                if (Individuals[i].MyFitness.FitnessValue > averageFitness)
-                {
-                    return Individuals[i];
-                }
-            }
-
-            numTrys++;
-        }
-
-        return null;
+        //Sort();
+        int i = Random.Range(0, NumberOfIndividuals/2);
+        return Individuals[i];      
 
     }
 
