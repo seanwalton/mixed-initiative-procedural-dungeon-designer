@@ -34,7 +34,7 @@ public class GenomeTesterBehaviour : MonoBehaviour
         
             geneticAlgorithm.NextGeneration();
 
-            DungeonGenome best = geneticAlgorithm.LastGeneration.GetBestIndividual();
+            DungeonGenome best = geneticAlgorithm.LastFeasibleGeneration.GetBestIndividual();
 
             DungeonDrawer.DrawDungeonFromGenome(best,
                 transform.position);
