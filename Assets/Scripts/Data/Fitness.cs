@@ -24,6 +24,8 @@ public class Fitness
 
     public static float TargetFractalIndex = 1.35f;
 
+    public static float TargetPassableToImpassableRatio = 0.7f;
+
 
 
     public DungeonGenome Genome;
@@ -31,6 +33,7 @@ public class Fitness
     public int NumberPassableTiles = 0;
     public int NumberEnemyTiles = 0;
     public int NumberTreasureTiles = 0;
+    public int NumberWallTiles = 0;
 
     public float EnemyDensity = 0.0f;
     public float TreasureDensity = 0.0f;
@@ -144,7 +147,7 @@ public class Fitness
         //Debug.Log("TargetTreasureSafety " + TargetTreasureSafety);
         //Debug.Log("TargetTreasureSafetyVariance " + TargetTreasureSafetyVariance);
 
-
+        TargetPassableToImpassableRatio = genome.MyFitness.NumberPassableTiles / ((float) genome.MyFitness.NumberWallTiles);
 
     }
 
@@ -174,28 +177,25 @@ public class Fitness
             Mathf.Max(TargetCorridorRatio, 1.0f - TargetCorridorRatio));
         FitnessValues.Add(corridorFitness);
 
-        float pathFitness = 1.0f - Mathf.Abs(TargetPathLength - (genome.PathFromEntranceToExit.Count /
-            (float)(DungeonGenome.Size * DungeonGenome.Size)));
-        FitnessValues.Add(pathFitness);
+        
 
-        float patternFitness = (0.25f * chamberFitness) + (0.5f * corridorFitness) + (0.25f * pathFitness);
 
-        float safeEntranceFitness = Mathf.Abs(( EntranceSafetyArea / NumberPassableTiles) - EntranceSafety);
+        float safeEntranceFitness = 1.0f - Mathf.Abs(( EntranceSafetyArea / (float)NumberPassableTiles) - EntranceSafety);
         FitnessValues.Add(safeEntranceFitness);
 
-        float greedEntranceFitness = Mathf.Abs((EntranceGreedArea / NumberPassableTiles) - EntranceGreed);
+        float greedEntranceFitness = 1.0f - Mathf.Abs((EntranceGreedArea / (float)NumberPassableTiles) - EntranceGreed);
         FitnessValues.Add(greedEntranceFitness);
 
-        float enemyFitness = Mathf.Abs((NumberEnemyTiles / NumberPassableTiles) - TargetEnemyDensity);
+        float enemyFitness = 1.0f - Mathf.Abs((NumberEnemyTiles / (float)NumberPassableTiles) - TargetEnemyDensity);
         FitnessValues.Add(enemyFitness);
 
-        float treasureFitness = Mathf.Abs((NumberTreasureTiles / NumberPassableTiles) - TargetTreasureDensity);
+        float treasureFitness = 1.0f - Mathf.Abs((NumberTreasureTiles / (float)NumberPassableTiles) - TargetTreasureDensity);
         FitnessValues.Add(treasureFitness);
 
-        float treasureSafetyFitness = Mathf.Abs(MeanTreasureSafety - TargetTreasureSafety);
+        float treasureSafetyFitness = 1.0f - Mathf.Abs(MeanTreasureSafety - TargetTreasureSafety);
         FitnessValues.Add(treasureSafetyFitness);
 
-        float treasureSafetyVarFitness = Mathf.Abs(TreasureSafetyVariance - TargetTreasureSafetyVariance);
+        float treasureSafetyVarFitness = 1.0f - Mathf.Abs(TreasureSafetyVariance - TargetTreasureSafetyVariance);
         FitnessValues.Add(treasureSafetyVarFitness);
 
         float difficultyFitness = 1.0f - ((0.1f * safeEntranceFitness) + (0.1f * greedEntranceFitness) +
@@ -203,6 +203,17 @@ public class Fitness
 
         float fractalFitness = 1.0f - Mathf.Abs((TargetFractalIndex - FractalDimension) / TargetFractalIndex);
         //FitnessValues.Add(fractalFitness);
+
+        //Visual fitnesses
+        float numberOfPassableFitness = 1.0f -
+            Mathf.Abs((NumberPassableTiles / (float)NumberWallTiles) - TargetPassableToImpassableRatio);
+        FitnessValues.Add(numberOfPassableFitness);
+
+        float pathFitness = 1.0f - Mathf.Abs(TargetPathLength - (genome.PathFromEntranceToExit.Count /
+            (float)(DungeonGenome.Size * DungeonGenome.Size)));
+        FitnessValues.Add(pathFitness);
+
+        float patternFitness = (0.25f * chamberFitness) + (0.5f * corridorFitness) + (0.25f * pathFitness);
 
         FitnessValue = (difficultyFitness + patternFitness + fractalFitness)/3.0f;
 
@@ -215,6 +226,7 @@ public class Fitness
         NumberPassableTiles = 0;
         NumberEnemyTiles = 0;
         NumberTreasureTiles = 0;
+        NumberWallTiles = 0;
 
         for (int i = 0; i < DungeonGenome.Size; i++)
         {
@@ -228,6 +240,10 @@ public class Fitness
                     target.y = j;
                     passable[i, j] = true;
 
+                }
+                else
+                {
+                    NumberWallTiles++;
                 }
                 if (Genome.DungeonMap[i, j] == DungeonTileType.ENEMY)
                 {
