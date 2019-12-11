@@ -106,7 +106,8 @@ public class GeneticAlgorithm : MonoBehaviour
 
                 if (Random.value < MutationRate) genome.Mutate();
                 
-                if (parent2.CompareTo(genome) > 0)
+                if ((parent2.CompareTo(genome) > 0) || 
+                    (i > (MutationRate * LastFeasibleGeneration.NumberOfIndividuals)))
                 {
                     if (genome.ValidPath)
                     {
@@ -134,8 +135,7 @@ public class GeneticAlgorithm : MonoBehaviour
 
             for (int i = 0; i < LastInfeasibleGeneration.NumberOfIndividuals; i++)
             {
-                DungeonGenome parent1 = LastInfeasibleGeneration.GetRandomAboveAverageIndividual();
-                if (parent1 is null) parent1 = LastInfeasibleGeneration.GetRandomIndividual();
+                DungeonGenome parent1 = LastInfeasibleGeneration.GetRandomIndividual();
 
                 DungeonGenome parent2 = LastInfeasibleGeneration.Individuals[i];
 
@@ -143,7 +143,8 @@ public class GeneticAlgorithm : MonoBehaviour
 
                 if (Random.value < MutationRate) genome.Mutate();
 
-                if (parent2.CompareTo(genome) > 0)
+                if ((parent2.CompareTo(genome) > 0) ||
+                    (i > (MutationRate * LastInfeasibleGeneration.NumberOfIndividuals)))
                 {
                     if (genome.ValidPath)
                     {

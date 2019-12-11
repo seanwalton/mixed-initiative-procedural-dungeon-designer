@@ -421,6 +421,9 @@ public class DungeonGenome : System.IComparable
         Vector2Int start = new Vector2Int();
         Vector2Int target = new Vector2Int();
 
+        bool startExists = false;
+        bool endExists = false;
+
         for (int i = 0; i < Size; i++)
         {
             for (int j = 0; j < Size; j++)
@@ -433,12 +436,14 @@ public class DungeonGenome : System.IComparable
                         start.y = j;
                         EntranceLocation.x = i;
                         EntranceLocation.y = j;
+                        startExists = true;
                         break;
                     case DungeonTileType.EXIT:
                         target.x = i;
                         target.y = j;
                         ExitLocation.x = i;
                         ExitLocation.y = j;
+                        endExists = true;
                         break;
                     default:
                         break;
@@ -446,7 +451,16 @@ public class DungeonGenome : System.IComparable
             }
         }
 
-        ValidPath = PathFinder.FindPath(start, target, this, out PathFromEntranceToExit);
+        if (startExists && endExists)
+        {
+            ValidPath = PathFinder.FindPath(start, target, this, out PathFromEntranceToExit);
+        }
+        else
+        {
+            ValidPath = false;
+            PathFromEntranceToExit = new List<Node>();
+        }
+        
     }
 
     public void CalculateFitnesses()
