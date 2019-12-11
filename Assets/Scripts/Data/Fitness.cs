@@ -176,7 +176,7 @@ public class Fitness
 
         float pathFitness = 1.0f - Mathf.Abs(TargetPathLength - (genome.PathFromEntranceToExit.Count /
             (float)(DungeonGenome.Size * DungeonGenome.Size)));
-        //FitnessValues.Add(pathFitness);
+        FitnessValues.Add(pathFitness);
 
         float patternFitness = (0.25f * chamberFitness) + (0.5f * corridorFitness) + (0.25f * pathFitness);
 
