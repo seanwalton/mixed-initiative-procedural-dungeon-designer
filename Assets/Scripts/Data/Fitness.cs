@@ -201,8 +201,7 @@ public class Fitness
         float difficultyFitness = 1.0f - ((0.1f * safeEntranceFitness) + (0.1f * greedEntranceFitness) +
             (0.3f * enemyFitness) + (0.1f * treasureFitness) + (0.2f * treasureSafetyFitness) + (0.2f * treasureSafetyVarFitness));
 
-        float fractalFitness = 1.0f - Mathf.Abs((TargetFractalIndex - FractalDimension) / TargetFractalIndex);
-        //FitnessValues.Add(fractalFitness);
+        
 
         //Visual fitnesses
         float numberOfPassableFitness = 1.0f -
@@ -212,6 +211,9 @@ public class Fitness
         float pathFitness = 1.0f - Mathf.Abs(TargetPathLength - (genome.PathFromEntranceToExit.Count /
             (float)(DungeonGenome.Size * DungeonGenome.Size)));
         FitnessValues.Add(pathFitness);
+
+        float fractalFitness = 1.0f - Mathf.Abs((TargetFractalIndex - FractalDimension) / TargetFractalIndex);
+        FitnessValues.Add(fractalFitness);
 
         float patternFitness = (0.25f * chamberFitness) + (0.5f * corridorFitness) + (0.25f * pathFitness);
 
