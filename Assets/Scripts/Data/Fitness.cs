@@ -29,6 +29,12 @@ public class Fitness
     public static float TargetUpDownWallRatio = 0f;
     public static float TargetLeftRightWallRatio = 0f;
 
+    public static float TargetUpDownEnemyRatio = 0f;
+    public static float TargetLeftRightEnemyRatio = 0f;
+
+    public static float TargetUpDownTreasureRatio = 0f;
+    public static float TargetLeftRightTreasureRatio = 0f;
+
     public DungeonGenome Genome;
 
     public int NumberPassableTiles = 0;
@@ -40,6 +46,16 @@ public class Fitness
     public int NumberWallTiles_Right = 0;
     public int NumberWallTiles_Top = 0;
     public int NumberWallTiles_Bottom = 0;
+
+    public int NumberEnemyTiles_Left = 0;
+    public int NumberEnemyTiles_Right = 0;
+    public int NumberEnemyTiles_Top = 0;
+    public int NumberEnemyTiles_Bottom = 0;
+
+    public int NumberTreasureTiles_Left = 0;
+    public int NumberTreasureTiles_Right = 0;
+    public int NumberTreasureTiles_Top = 0;
+    public int NumberTreasureTiles_Bottom = 0;
 
 
     public float EnemyDensity = 0.0f;
@@ -79,6 +95,12 @@ public class Fitness
 
     public float LeftRightWallRatio = 0f;
     public float UpDownWallRatio = 0f;
+
+    public float LeftRightEnemyRatio = 0f;
+    public float UpDownEnemyRatio = 0f;
+
+    public float LeftRightTreasureRatio = 0f;
+    public float UpDownTreasureRatio = 0f;
 
     public static void SetTargetMetricsFromGenome(DungeonGenome genome)
     {
@@ -162,6 +184,12 @@ public class Fitness
         TargetUpDownWallRatio = genome.MyFitness.UpDownWallRatio;
         TargetLeftRightWallRatio = genome.MyFitness.LeftRightWallRatio;
 
+        TargetUpDownEnemyRatio = genome.MyFitness.UpDownEnemyRatio;
+        TargetLeftRightEnemyRatio = genome.MyFitness.LeftRightEnemyRatio;
+
+        TargetUpDownTreasureRatio = genome.MyFitness.UpDownTreasureRatio;
+        TargetLeftRightTreasureRatio = genome.MyFitness.LeftRightTreasureRatio;
+
     }
 
 
@@ -234,6 +262,18 @@ public class Fitness
         float upDownWallFitness = 1.0f - Mathf.Abs(TargetUpDownWallRatio - UpDownWallRatio);
         FitnessValues.Add(upDownWallFitness);
 
+        float leftRightEnemyFitness = 1.0f - Mathf.Abs(TargetLeftRightEnemyRatio - LeftRightEnemyRatio);
+        FitnessValues.Add(leftRightEnemyFitness);
+
+        float upDownEnemyFitness = 1.0f - Mathf.Abs(TargetUpDownEnemyRatio - UpDownEnemyRatio);
+        FitnessValues.Add(upDownEnemyFitness);
+
+        float leftRightTreasureFitness = 1.0f - Mathf.Abs(TargetLeftRightTreasureRatio - LeftRightTreasureRatio);
+        FitnessValues.Add(leftRightTreasureFitness);
+
+        float upDownTreasureFitness = 1.0f - Mathf.Abs(TargetUpDownTreasureRatio - UpDownTreasureRatio);
+        FitnessValues.Add(upDownTreasureFitness);
+
         float patternFitness = (0.25f * chamberFitness) + (0.5f * corridorFitness) + (0.25f * pathFitness);
 
         FitnessValue = (difficultyFitness + patternFitness + fractalFitness)/3.0f;
@@ -291,12 +331,47 @@ public class Fitness
                 if (Genome.DungeonMap[i, j] == DungeonTileType.ENEMY)
                 {
                     NumberEnemyTiles++;
+                    if (i < DungeonGenome.Size / 2)
+                    {
+                        NumberEnemyTiles_Left++;
+                    }
+                    else
+                    {
+                        NumberEnemyTiles_Right++;
+                    }
+
+                    if (j < DungeonGenome.Size / 2)
+                    {
+                        NumberEnemyTiles_Bottom++;
+                    }
+                    else
+                    {
+                        NumberEnemyTiles_Top++;
+                    }
+
                     Vector2Int location = new Vector2Int(i, j);
                     enemys.Add(location);
                 }
                 if (Genome.DungeonMap[i, j] == DungeonTileType.TREASURE)
                 {
                     NumberTreasureTiles++;
+                    if (i < DungeonGenome.Size / 2)
+                    {
+                        NumberTreasureTiles_Left++;
+                    }
+                    else
+                    {
+                        NumberTreasureTiles_Right++;
+                    }
+
+                    if (j < DungeonGenome.Size / 2)
+                    {
+                        NumberTreasureTiles_Bottom++;
+                    }
+                    else
+                    {
+                        NumberTreasureTiles_Top++;
+                    }
                     Vector2Int location = new Vector2Int(i, j);
                     treasures.Add(location);
                 }
@@ -310,6 +385,24 @@ public class Fitness
         {
             UpDownWallRatio = Mathf.Abs((NumberWallTiles_Top - NumberWallTiles_Bottom) / (float)NumberWallTiles);
             LeftRightWallRatio = Mathf.Abs((NumberWallTiles_Left - NumberWallTiles_Right) / (float)NumberWallTiles);
+        }
+
+        UpDownEnemyRatio = 0f;
+        LeftRightEnemyRatio = 0f;
+
+        if (NumberEnemyTiles > 0)
+        {
+            UpDownEnemyRatio = Mathf.Abs((NumberEnemyTiles_Top - NumberEnemyTiles_Bottom) / (float)NumberEnemyTiles);
+            LeftRightEnemyRatio = Mathf.Abs((NumberEnemyTiles_Left - NumberEnemyTiles_Right) / (float)NumberEnemyTiles);
+        }
+
+        UpDownTreasureRatio = 0f;
+        LeftRightTreasureRatio = 0f;
+
+        if (NumberTreasureTiles > 0)
+        {
+            UpDownTreasureRatio = Mathf.Abs((NumberTreasureTiles_Top - NumberTreasureTiles_Bottom) / (float)NumberTreasureTiles);
+            LeftRightTreasureRatio = Mathf.Abs((NumberTreasureTiles_Left - NumberTreasureTiles_Right) / (float)NumberTreasureTiles);
         }
     }
 
