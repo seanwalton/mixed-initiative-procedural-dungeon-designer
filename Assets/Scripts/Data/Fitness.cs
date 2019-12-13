@@ -26,7 +26,8 @@ public class Fitness
 
     public static float TargetPassableToImpassableRatio = 0.7f;
 
-
+    public static float TargetUpDownWallRatio = 0f;
+    public static float TargetLeftRightWallRatio = 0f;
 
     public DungeonGenome Genome;
 
@@ -34,6 +35,12 @@ public class Fitness
     public int NumberEnemyTiles = 0;
     public int NumberTreasureTiles = 0;
     public int NumberWallTiles = 0;
+
+    public int NumberWallTiles_Left = 0;
+    public int NumberWallTiles_Right = 0;
+    public int NumberWallTiles_Top = 0;
+    public int NumberWallTiles_Bottom = 0;
+
 
     public float EnemyDensity = 0.0f;
     public float TreasureDensity = 0.0f;
@@ -69,6 +76,9 @@ public class Fitness
     private List<float> treasureSafety = new List<float>();
     public float MeanTreasureSafety;
     public float TreasureSafetyVariance;
+
+    public float LeftRightWallRatio = 0f;
+    public float UpDownWallRatio = 0f;
 
     public static void SetTargetMetricsFromGenome(DungeonGenome genome)
     {
@@ -149,6 +159,9 @@ public class Fitness
 
         TargetPassableToImpassableRatio = genome.MyFitness.NumberPassableTiles / ((float) genome.MyFitness.NumberWallTiles);
 
+        TargetUpDownWallRatio = genome.MyFitness.UpDownWallRatio;
+        TargetLeftRightWallRatio = genome.MyFitness.LeftRightWallRatio;
+
     }
 
 
@@ -215,6 +228,12 @@ public class Fitness
         float fractalFitness = 1.0f - Mathf.Abs((TargetFractalIndex - FractalDimension) / TargetFractalIndex);
         FitnessValues.Add(fractalFitness);
 
+        float leftRightWallFitness = 1.0f - Mathf.Abs(TargetLeftRightWallRatio - LeftRightWallRatio);
+        FitnessValues.Add(leftRightWallFitness);
+
+        float upDownWallFitness = 1.0f - Mathf.Abs(TargetUpDownWallRatio - UpDownWallRatio);
+        FitnessValues.Add(upDownWallFitness);
+
         float patternFitness = (0.25f * chamberFitness) + (0.5f * corridorFitness) + (0.25f * pathFitness);
 
         FitnessValue = (difficultyFitness + patternFitness + fractalFitness)/3.0f;
@@ -229,6 +248,10 @@ public class Fitness
         NumberEnemyTiles = 0;
         NumberTreasureTiles = 0;
         NumberWallTiles = 0;
+        NumberWallTiles_Left = 0;
+        NumberWallTiles_Right = 0;
+        NumberWallTiles_Top = 0;
+        NumberWallTiles_Bottom = 0;
 
         for (int i = 0; i < DungeonGenome.Size; i++)
         {
@@ -246,6 +269,24 @@ public class Fitness
                 else
                 {
                     NumberWallTiles++;
+                    if (i < DungeonGenome.Size/2)
+                    {
+                        NumberWallTiles_Left++;
+                    }
+                    else
+                    {
+                        NumberWallTiles_Right++;
+                    }
+
+                    if (j < DungeonGenome.Size / 2)
+                    {
+                        NumberWallTiles_Bottom++;
+                    }
+                    else
+                    {
+                        NumberWallTiles_Top++;
+                    }
+
                 }
                 if (Genome.DungeonMap[i, j] == DungeonTileType.ENEMY)
                 {
@@ -260,6 +301,15 @@ public class Fitness
                     treasures.Add(location);
                 }
             }
+        }
+
+        UpDownWallRatio = 0f;
+        LeftRightWallRatio = 0f;
+
+        if (NumberWallTiles > 0)
+        {
+            UpDownWallRatio = Mathf.Abs((NumberWallTiles_Top - NumberWallTiles_Bottom) / (float)NumberWallTiles);
+            LeftRightWallRatio = Mathf.Abs((NumberWallTiles_Left - NumberWallTiles_Right) / (float)NumberWallTiles);
         }
     }
 
