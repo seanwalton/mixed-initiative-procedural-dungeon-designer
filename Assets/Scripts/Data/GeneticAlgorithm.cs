@@ -97,8 +97,8 @@ public class GeneticAlgorithm : MonoBehaviour
 
             for (int i = 0; i < LastFeasibleGeneration.NumberOfIndividuals; i++)
             {
-                DungeonGenome parent1 = LastFeasibleGeneration.GetRandomAboveAverageIndividual();
-                if (parent1 is null) parent1 = LastFeasibleGeneration.GetRandomIndividual();
+                DungeonGenome parent1 = LastFeasibleGeneration.GetRandomIndividual();
+                //if (parent1 is null) parent1 = LastFeasibleGeneration.GetRandomIndividual();
 
                 DungeonGenome parent2 = LastFeasibleGeneration.Individuals[i];
 
