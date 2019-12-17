@@ -1071,6 +1071,8 @@ MonoBehaviour:
   - {fileID: 967359642}
   - {fileID: 363426653}
   - {fileID: 631377604}
+  StartOptimisationButton: {fileID: 189653592}
+  NumberOfSubGenerations: 100
 --- !u!4 &1116428058
 Transform:
   m_ObjectHideFlags: 0
@@ -1372,6 +1374,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Main Dungeon Editor
+      objectReference: {fileID: 0}
+    - target: {fileID: 8739761716927412504, guid: 160e40bc7cbce1c4fb7a12a7d23729e4,
+        type: 3}
+      propertyPath: m_textInfo.characterCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8739761716927412504, guid: 160e40bc7cbce1c4fb7a12a7d23729e4,
+        type: 3}
+      propertyPath: m_textInfo.spaceCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8739761716927412504, guid: 160e40bc7cbce1c4fb7a12a7d23729e4,
+        type: 3}
+      propertyPath: m_textInfo.wordCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8739761716927412504, guid: 160e40bc7cbce1c4fb7a12a7d23729e4,
+        type: 3}
+      propertyPath: m_textInfo.lineCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8739761716927412504, guid: 160e40bc7cbce1c4fb7a12a7d23729e4,
+        type: 3}
+      propertyPath: m_textInfo.pageCount
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 160e40bc7cbce1c4fb7a12a7d23729e4, type: 3}

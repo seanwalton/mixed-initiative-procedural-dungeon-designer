@@ -1,20 +1,28 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GeneticAlgorithmController : MonoBehaviour
 {
 
     public DungeonEditor InitialDungeonEditor;
     public DungeonEditor[] TopDungeonEditors;
+    public Button StartOptimisationButton;
+
+    public int NumberOfSubGenerations;
 
 
     private GeneticAlgorithm geneticAlgorithm;
     private Generation lastGen;
+    private int numGenerationsUntilStop;
+    private int numberSubIterations;
 
     private void Awake()
     {
         geneticAlgorithm = gameObject.GetComponent<GeneticAlgorithm>();
+        InitialDungeonEditor.SetToggleActive(false);
+        numberSubIterations = 0;
     }
 
     private void Start()
@@ -27,7 +35,9 @@ public class GeneticAlgorithmController : MonoBehaviour
 
     public void StartOptimising()
     {
-        Fitness.SetTargetMetricsFromGenome(InitialDungeonEditor.Genome);
+        StartOptimisationButton.gameObject.SetActive(false);
+        if (numberSubIterations == 0) Fitness.SetTargetMetricsFromGenome(InitialDungeonEditor.Genome);
+        numGenerationsUntilStop = NumberOfSubGenerations;
         InvokeRepeating("AdvanceGeneration", 0f, 0.1f);
     }
 
@@ -45,12 +55,22 @@ public class GeneticAlgorithmController : MonoBehaviour
             {
                 TopDungeonEditors[i].gameObject.SetActive(true);
                 TopDungeonEditors[i].SetGenome(lastGen.Individuals[i]);
+                TopDungeonEditors[i].SetToggleActive(false);
             }
             else
             {
                 TopDungeonEditors[i].gameObject.SetActive(false);
             }
             
+        }
+
+        numGenerationsUntilStop--;
+
+        if (numGenerationsUntilStop == 0)
+        {
+            numberSubIterations++;
+            StartOptimisationButton.gameObject.SetActive(true);
+            CancelInvoke("AdvanceGeneration");
         }
 
     }

@@ -1,12 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DungeonEditor : MonoBehaviour
 {
+
     public DungeonGenome Genome = new DungeonGenome();
     public DrawDungeonBehaviour DungeonDrawer;
 
+    public Toggle Liked;
 
     public void SetGenome(DungeonGenome genome)
     {
@@ -14,9 +17,14 @@ public class DungeonEditor : MonoBehaviour
         DrawGenome();
     }
 
+    public void SetToggleActive(bool active)
+    {
+        Liked.gameObject.SetActive(active);
+    }
+
     private void Start()
     {
-        Genome.RandomlyInitialise();
+        Genome.SetAllFloor();
         DrawGenome();
     }
 
@@ -32,7 +40,8 @@ public class DungeonEditor : MonoBehaviour
         {
             Vector2Int node = GetTileCoordinatesOfCursor();
 
-            if ((node.x < DungeonGenome.Size) && (node.y < DungeonGenome.Size))
+            if (((node.x < DungeonGenome.Size) && (node.y < DungeonGenome.Size)) &&
+                ((node.x >= 0) && (node.y >= 0)))
             {
                 Genome.DungeonMap[node.x, node.y] = NextTileType(Genome.DungeonMap[node.x, node.y]);
                 DrawGenome();             
