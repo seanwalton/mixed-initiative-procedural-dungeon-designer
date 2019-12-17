@@ -9,9 +9,8 @@ public class DungeonEditor : MonoBehaviour
 
     private void Start()
     {
-        Genome.SetAllFloor();
+        Genome.RandomlyInitialise();
         DrawGenome();
-
     }
 
     private void DrawGenome()
