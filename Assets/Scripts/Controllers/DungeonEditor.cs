@@ -7,6 +7,13 @@ public class DungeonEditor : MonoBehaviour
     public DungeonGenome Genome = new DungeonGenome();
     public DrawDungeonBehaviour DungeonDrawer;
 
+
+    public void SetGenome(DungeonGenome genome)
+    {
+        Genome = genome;
+        DrawGenome();
+    }
+
     private void Start()
     {
         Genome.RandomlyInitialise();
