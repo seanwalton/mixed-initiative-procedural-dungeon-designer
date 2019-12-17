@@ -35,6 +35,8 @@ public class Fitness
     public static float TargetUpDownTreasureRatio = 0f;
     public static float TargetLeftRightTreasureRatio = 0f;
 
+    public static int NumberOfTargetGenomes = 0;
+
     public DungeonGenome Genome;
 
     public int NumberPassableTiles = 0;
@@ -107,11 +109,10 @@ public class Fitness
         genome.CalculateFitnesses();
 
         TargetFractalIndex = genome.MyFitness.FractalDimension;
-        Debug.Log("Target Fractal Dimension " + TargetFractalIndex);
 
         TargetPathLength = genome.PathFromEntranceToExit.Count / (float)genome.MyFitness.NumberPassableTiles;
 
-        //Debug.Log("TargetPathLength " + TargetPathLength);
+        Debug.Log("Target Path Length " + TargetPathLength.ToString());
 
         TargetCorridorLength = 0;
         foreach (Corridor c in genome.MyFitness.Corridors)
@@ -120,8 +121,6 @@ public class Fitness
         }
         if (genome.MyFitness.Corridors.Count > 0) TargetCorridorLength /= genome.MyFitness.Corridors.Count;
 
-        //Debug.Log("TargetCorridorLength " + TargetCorridorLength);
-
         TargetChamberArea = 0;
         foreach (Chamber c in genome.MyFitness.Chambers)
         {
@@ -129,14 +128,8 @@ public class Fitness
         }
         if (genome.MyFitness.Chambers.Count > 0) TargetChamberArea /= genome.MyFitness.Chambers.Count;
 
-        //Debug.Log("TargetChamberArea " + TargetChamberArea);
-
         TargetCorridorRatio = genome.MyFitness.CorridorRatio;
         TargetChamberRatio = genome.MyFitness.ChamberRatio;
-
-        //Debug.Log("TargetCorridorRatio " + TargetCorridorRatio);
-        //Debug.Log("TargetChamberRatio " + TargetChamberRatio);
-
 
         float numJoints = 0f;
         float numTurns = 0f;
@@ -158,26 +151,14 @@ public class Fitness
             TurnRatio = 0.5f;
         }
 
-        //Debug.Log("JointRatio " + JointRatio);
-        //Debug.Log("TurnRatio " + TurnRatio);
-
         TargetTreasureDensity = genome.MyFitness.TreasureDensity;
         TargetEnemyDensity = genome.MyFitness.EnemyDensity;
-
-        //Debug.Log("TargetTreasureDensity " + TargetTreasureDensity);
-        //Debug.Log("TargetEnemyDensity " + TargetEnemyDensity);
 
         EntranceSafety = genome.MyFitness.EntranceSafetyArea / (float)genome.MyFitness.NumberPassableTiles;
         EntranceGreed = genome.MyFitness.EntranceGreedArea / (float)genome.MyFitness.NumberPassableTiles;
 
-        //Debug.Log("EntranceSafety " + EntranceSafety);
-        //Debug.Log("EntranceGreed " + EntranceGreed);
-
         TargetTreasureSafety = genome.MyFitness.MeanTreasureSafety;
         TargetTreasureSafetyVariance = genome.MyFitness.TreasureSafetyVariance;
-
-        //Debug.Log("TargetTreasureSafety " + TargetTreasureSafety);
-        //Debug.Log("TargetTreasureSafetyVariance " + TargetTreasureSafetyVariance);
 
         TargetPassableToImpassableRatio = genome.MyFitness.NumberPassableTiles / ((float) genome.MyFitness.NumberWallTiles);
 
@@ -189,6 +170,105 @@ public class Fitness
 
         TargetUpDownTreasureRatio = genome.MyFitness.UpDownTreasureRatio;
         TargetLeftRightTreasureRatio = genome.MyFitness.LeftRightTreasureRatio;
+
+        NumberOfTargetGenomes = 1;
+
+    }
+
+
+    public static void UpdateTargetMetricsFromGenome(DungeonGenome genome)
+    {
+        genome.CalculateFitnesses();
+
+        TargetFractalIndex = ((NumberOfTargetGenomes*TargetFractalIndex) + genome.MyFitness.FractalDimension) / (NumberOfTargetGenomes + 1);
+
+        
+
+        TargetPathLength = ((NumberOfTargetGenomes*TargetPathLength) + 
+            (genome.PathFromEntranceToExit.Count / (float)genome.MyFitness.NumberPassableTiles)) / (NumberOfTargetGenomes + 1);
+
+        Debug.Log("Target Path Length " + TargetPathLength.ToString());
+
+
+        int oldTarget = TargetCorridorLength;
+        TargetCorridorLength = 0;
+        foreach (Corridor c in genome.MyFitness.Corridors)
+        {
+            TargetCorridorLength += c.Length;
+        }
+        if (genome.MyFitness.Corridors.Count > 0) TargetCorridorLength /= genome.MyFitness.Corridors.Count;
+
+        TargetCorridorLength = ((NumberOfTargetGenomes * oldTarget) + TargetCorridorLength) / (NumberOfTargetGenomes + 1);
+
+        oldTarget = TargetChamberArea;
+        TargetChamberArea = 0;
+        foreach (Chamber c in genome.MyFitness.Chambers)
+        {
+            TargetChamberArea += c.Area;
+        }
+        if (genome.MyFitness.Chambers.Count > 0) TargetChamberArea /= genome.MyFitness.Chambers.Count;
+        TargetChamberArea = ((NumberOfTargetGenomes * oldTarget) + TargetChamberArea) / (NumberOfTargetGenomes + 1);
+
+        TargetCorridorRatio = ((NumberOfTargetGenomes * TargetCorridorRatio) + genome.MyFitness.CorridorRatio)
+            / (NumberOfTargetGenomes + 1);
+        TargetChamberRatio = ((NumberOfTargetGenomes * TargetChamberRatio) + genome.MyFitness.ChamberRatio)
+            / (NumberOfTargetGenomes + 1);
+
+        float numJoints = 0f;
+        float numTurns = 0f;
+
+        foreach (Connector c in genome.MyFitness.Connectors)
+        {
+            if (c.Type == ConnectorType.JOINT) numJoints += 1.0f;
+            if (c.Type == ConnectorType.TURN) numTurns += 1.0f;
+        }
+
+        float oldJointRatio = JointRatio;
+        float oldTurnRatio = TurnRatio;
+
+        if ((numJoints + numTurns) > 0f)
+        {
+            JointRatio = numJoints / (numJoints + numTurns);
+            TurnRatio = numTurns / (numJoints + numTurns);
+        }
+        else
+        {
+            JointRatio = 0.5f;
+            TurnRatio = 0.5f;
+        }
+
+        JointRatio = ((NumberOfTargetGenomes * oldJointRatio) + JointRatio) / (NumberOfTargetGenomes + 1);
+        TurnRatio = ((NumberOfTargetGenomes * oldTurnRatio) + TurnRatio) / (NumberOfTargetGenomes + 1);
+
+
+        TargetTreasureDensity = ((NumberOfTargetGenomes * TargetTreasureDensity) + genome.MyFitness.TreasureDensity) 
+            / (NumberOfTargetGenomes + 1);
+        TargetEnemyDensity = ((NumberOfTargetGenomes * TargetEnemyDensity) + genome.MyFitness.EnemyDensity)
+            / (NumberOfTargetGenomes + 1);
+
+        EntranceSafety = ((NumberOfTargetGenomes * EntranceSafety) + 
+            (genome.MyFitness.EntranceSafetyArea / (float)genome.MyFitness.NumberPassableTiles)) / (NumberOfTargetGenomes + 1);
+
+        EntranceGreed = ((NumberOfTargetGenomes * EntranceGreed) + 
+            (genome.MyFitness.EntranceGreedArea / (float)genome.MyFitness.NumberPassableTiles)) / (NumberOfTargetGenomes + 1);
+
+        TargetTreasureSafety = ((NumberOfTargetGenomes * TargetTreasureSafety) + genome.MyFitness.MeanTreasureSafety) / (NumberOfTargetGenomes + 1);
+        TargetTreasureSafetyVariance = ((NumberOfTargetGenomes * TargetTreasureSafetyVariance) 
+            + genome.MyFitness.TreasureSafetyVariance) / (NumberOfTargetGenomes + 1);
+
+        TargetPassableToImpassableRatio = ((NumberOfTargetGenomes * TargetPassableToImpassableRatio) 
+            + (genome.MyFitness.NumberPassableTiles / ((float)genome.MyFitness.NumberWallTiles))) / (NumberOfTargetGenomes + 1);
+
+        TargetUpDownWallRatio = ((NumberOfTargetGenomes * TargetUpDownWallRatio) + genome.MyFitness.UpDownWallRatio) / (NumberOfTargetGenomes + 1);
+        TargetLeftRightWallRatio = ((NumberOfTargetGenomes * TargetLeftRightWallRatio) + genome.MyFitness.LeftRightWallRatio) / (NumberOfTargetGenomes + 1);
+
+        TargetUpDownEnemyRatio = ((NumberOfTargetGenomes * TargetUpDownEnemyRatio) + genome.MyFitness.UpDownEnemyRatio) / (NumberOfTargetGenomes + 1);
+        TargetLeftRightEnemyRatio = ((NumberOfTargetGenomes * TargetLeftRightEnemyRatio) + genome.MyFitness.LeftRightEnemyRatio) / (NumberOfTargetGenomes + 1);
+
+        TargetUpDownTreasureRatio = ((NumberOfTargetGenomes * TargetUpDownTreasureRatio) + genome.MyFitness.UpDownTreasureRatio) / (NumberOfTargetGenomes + 1);
+        TargetLeftRightTreasureRatio = ((NumberOfTargetGenomes * TargetLeftRightTreasureRatio) + genome.MyFitness.LeftRightTreasureRatio) / (NumberOfTargetGenomes + 1);
+
+        NumberOfTargetGenomes++;
 
     }
 

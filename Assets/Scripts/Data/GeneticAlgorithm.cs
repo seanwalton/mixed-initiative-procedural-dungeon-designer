@@ -175,9 +175,9 @@ public class GeneticAlgorithm : MonoBehaviour
             GenerationsInfeasiblePop.Add(genIF);
         }
 
-        Debug.Log("Generation " + GenerationsFeasiblePop.Count
-            + " Feasible: " + LastFeasibleGeneration.GetAverageFitness()
-            + " Infeasible: " + LastInfeasibleGeneration.GetAverageFitness());
+        //Debug.Log("Generation " + GenerationsFeasiblePop.Count
+        //    + " Feasible: " + LastFeasibleGeneration.GetAverageFitness()
+        //    + " Infeasible: " + LastInfeasibleGeneration.GetAverageFitness());
     }
 
     public Generation LastFeasibleGeneration => GenerationsFeasiblePop[GenerationsFeasiblePop.Count - 1];

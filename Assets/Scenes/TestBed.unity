@@ -1072,7 +1072,7 @@ MonoBehaviour:
   - {fileID: 363426653}
   - {fileID: 631377604}
   StartOptimisationButton: {fileID: 189653592}
-  NumberOfSubGenerations: 100
+  NumberOfSubGenerations: 50
 --- !u!4 &1116428058
 Transform:
   m_ObjectHideFlags: 0

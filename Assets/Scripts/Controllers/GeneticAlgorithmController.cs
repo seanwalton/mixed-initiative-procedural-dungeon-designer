@@ -36,7 +36,21 @@ public class GeneticAlgorithmController : MonoBehaviour
     public void StartOptimising()
     {
         StartOptimisationButton.gameObject.SetActive(false);
-        if (numberSubIterations == 0) Fitness.SetTargetMetricsFromGenome(InitialDungeonEditor.Genome);
+        if (numberSubIterations == 0)
+        {
+            Fitness.SetTargetMetricsFromGenome(InitialDungeonEditor.Genome);
+        }
+        else
+        {
+            for (int i = 0; i < TopDungeonEditors.Length; i++)
+            {
+                if (TopDungeonEditors[i].Liked.isOn)
+                {
+                    Fitness.UpdateTargetMetricsFromGenome(TopDungeonEditors[i].Genome);
+                }
+            }
+        }
+        
         numGenerationsUntilStop = NumberOfSubGenerations;
         InvokeRepeating("AdvanceGeneration", 0f, 0.1f);
     }
@@ -70,6 +84,20 @@ public class GeneticAlgorithmController : MonoBehaviour
         {
             numberSubIterations++;
             StartOptimisationButton.gameObject.SetActive(true);
+            for (int i = 0; i < TopDungeonEditors.Length; i++)
+            {
+                if (i < lastGen.NumberOfIndividuals)
+                {
+                    TopDungeonEditors[i].SetToggleActive(true);
+                    TopDungeonEditors[i].Liked.isOn = false;
+                }
+                else
+                {
+                    TopDungeonEditors[i].gameObject.SetActive(false);
+                    TopDungeonEditors[i].Liked.isOn = false;
+                }
+
+            }
             CancelInvoke("AdvanceGeneration");
         }
 
