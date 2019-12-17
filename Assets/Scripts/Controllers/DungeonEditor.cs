@@ -29,8 +29,7 @@ public class DungeonEditor : MonoBehaviour
             if ((node.x < DungeonGenome.Size) && (node.y < DungeonGenome.Size))
             {
                 Genome.DungeonMap[node.x, node.y] = NextTileType(Genome.DungeonMap[node.x, node.y]);
-                DrawGenome();
-                Fitness.SetTargetMetricsFromGenome(Genome);
+                DrawGenome();             
             }
            
         }

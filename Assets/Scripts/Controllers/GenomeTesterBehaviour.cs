@@ -26,6 +26,7 @@ public class GenomeTesterBehaviour : MonoBehaviour
     public void StartOptimising()
     {
         //geneticAlgorithm.InitializeFirstGeneration(DungeonEditor.Genome);
+        Fitness.SetTargetMetricsFromGenome(DungeonEditor.Genome);
         InvokeRepeating("AdvanceGeneration", 0f, 0.1f);
     }
 
