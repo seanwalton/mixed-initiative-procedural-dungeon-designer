@@ -502,12 +502,12 @@ public class DungeonGenome : System.IComparable
 
         for (int i = 0; i < MyFitness.FitnessValues.Count; i++)
         {
-            if (MyFitness.FitnessValues[i] > fitnessIn.MyFitness.FitnessValues[i])
+            if (MyFitness.FitnessValues[i] < fitnessIn.MyFitness.FitnessValues[i])
             {
                 numWins++;
             }
 
-            if (MyFitness.FitnessValues[i] < fitnessIn.MyFitness.FitnessValues[i])
+            if (MyFitness.FitnessValues[i] > fitnessIn.MyFitness.FitnessValues[i])
             {
                 numLose++;
             }
