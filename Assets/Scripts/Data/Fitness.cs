@@ -10,6 +10,9 @@ public class Fitness
     public static float TargetCorridorRatio = 0.5f;
     public static float TargetChamberRatio = 0.5f;
 
+    public static float TargetNumberCorridors = 1f;
+    public static float TargetNumberChambers = 1f;
+
     public static float TargetJointRatio = 0.5f;
     public static float TargetTurnRatio = 0.5f;
 
@@ -127,7 +130,10 @@ public class Fitness
         
 
         TargetChamberArea = genome.MyFitness.MeanChamberArea;
-       
+
+        TargetNumberChambers = genome.MyFitness.Chambers.Count;
+        TargetNumberCorridors = genome.MyFitness.Corridors.Count;
+
 
         TargetCorridorRatio = genome.MyFitness.CorridorRatio;
         TargetChamberRatio = genome.MyFitness.ChamberRatio;
@@ -186,6 +192,12 @@ public class Fitness
         TargetCorridorRatio = ((NumberOfTargetGenomes * TargetCorridorRatio) + genome.MyFitness.CorridorRatio)
             / (NumberOfTargetGenomes + 1);
         TargetChamberRatio = ((NumberOfTargetGenomes * TargetChamberRatio) + genome.MyFitness.ChamberRatio)
+            / (NumberOfTargetGenomes + 1);
+
+
+        TargetNumberChambers = ((NumberOfTargetGenomes * TargetNumberChambers) + genome.MyFitness.Chambers.Count)
+            / (NumberOfTargetGenomes + 1);
+        TargetNumberCorridors = ((NumberOfTargetGenomes * TargetNumberCorridors) + genome.MyFitness.Corridors.Count)
             / (NumberOfTargetGenomes + 1);
 
         TargetJointRatio = ((NumberOfTargetGenomes * TargetJointRatio) + genome.MyFitness.JointRatio) / (NumberOfTargetGenomes + 1);
@@ -252,8 +264,14 @@ public class Fitness
         float corridorFitness = Mathf.Abs(TargetCorridorRatio - CorridorRatio);
         FitnessValues.Add(corridorFitness);
 
-        
 
+        float numChamberFitness = Mathf.Abs(TargetNumberChambers - Chambers.Count);
+        FitnessValues.Add(numChamberFitness);
+
+        float numCorridorFitness = Mathf.Abs(TargetNumberCorridors - Corridors.Count);
+        FitnessValues.Add(numCorridorFitness);
+
+        
 
         float safeEntranceFitness = Mathf.Abs( EntranceSafetyArea - EntranceSafety);
         FitnessValues.Add(safeEntranceFitness);
