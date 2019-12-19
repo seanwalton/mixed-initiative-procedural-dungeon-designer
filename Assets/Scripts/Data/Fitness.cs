@@ -38,6 +38,9 @@ public class Fitness
     public static float TargetUpDownTreasureRatio = 0f;
     public static float TargetLeftRightTreasureRatio = 0f;
 
+    public static float TargetUpDownTreasureToEnemyRatio = 0f;
+    public static float TargetLeftRightTreasureToEnemyRatio = 0f;
+
     public static int NumberOfTargetGenomes = 0;
 
     public DungeonGenome Genome;
@@ -117,6 +120,9 @@ public class Fitness
     public float LeftRightTreasureRatio = 0f;
     public float UpDownTreasureRatio = 0f;
 
+    public float LeftRightTreasureToEnemyRatio = 0f;
+    public float UpDownTreasureToEnemyRatio = 0f;
+
     public static void SetTargetMetricsFromGenome(DungeonGenome genome)
     {
         genome.CalculateFitnesses();
@@ -162,6 +168,9 @@ public class Fitness
 
         TargetUpDownTreasureRatio = genome.MyFitness.UpDownTreasureRatio;
         TargetLeftRightTreasureRatio = genome.MyFitness.LeftRightTreasureRatio;
+
+        TargetUpDownTreasureToEnemyRatio = genome.MyFitness.UpDownTreasureToEnemyRatio;
+        TargetLeftRightTreasureToEnemyRatio = genome.MyFitness.LeftRightTreasureToEnemyRatio;
 
         NumberOfTargetGenomes = 1;
 
@@ -231,6 +240,9 @@ public class Fitness
 
         TargetUpDownTreasureRatio = ((NumberOfTargetGenomes * TargetUpDownTreasureRatio) + genome.MyFitness.UpDownTreasureRatio) / (NumberOfTargetGenomes + 1);
         TargetLeftRightTreasureRatio = ((NumberOfTargetGenomes * TargetLeftRightTreasureRatio) + genome.MyFitness.LeftRightTreasureRatio) / (NumberOfTargetGenomes + 1);
+
+        TargetUpDownTreasureToEnemyRatio = ((NumberOfTargetGenomes * TargetUpDownTreasureToEnemyRatio) + genome.MyFitness.UpDownTreasureToEnemyRatio) / (NumberOfTargetGenomes + 1);
+        TargetLeftRightTreasureToEnemyRatio = ((NumberOfTargetGenomes * TargetLeftRightTreasureToEnemyRatio) + genome.MyFitness.LeftRightTreasureToEnemyRatio) / (NumberOfTargetGenomes + 1);
 
         NumberOfTargetGenomes++;
 
@@ -354,6 +366,16 @@ public class Fitness
         float upDownTreasureFitness = Mathf.Abs(TargetUpDownTreasureRatio - UpDownTreasureRatio);
         FitnessValues.Add(upDownTreasureFitness);
         FitnessValue += upDownTreasureFitness;
+        numFitnesses += 1f;
+
+        float leftRightTreasureToEnemyFitness = Mathf.Abs(TargetLeftRightTreasureToEnemyRatio - LeftRightTreasureToEnemyRatio);
+        FitnessValues.Add(leftRightTreasureToEnemyFitness);
+        FitnessValue += leftRightTreasureToEnemyFitness;
+        numFitnesses += 1f;
+
+        float upDownTreasureToEnemyFitness = Mathf.Abs(TargetUpDownTreasureToEnemyRatio - UpDownTreasureToEnemyRatio);
+        FitnessValues.Add(upDownTreasureToEnemyFitness);
+        FitnessValue += upDownTreasureToEnemyFitness;
         numFitnesses += 1f;
 
         FitnessValue /= numFitnesses;
@@ -484,6 +506,17 @@ public class Fitness
             UpDownTreasureRatio = Mathf.Abs((NumberTreasureTiles_Top - NumberTreasureTiles_Bottom) / (float)NumberTreasureTiles);
             LeftRightTreasureRatio = Mathf.Abs((NumberTreasureTiles_Left - NumberTreasureTiles_Right) / (float)NumberTreasureTiles);
         }
+
+        UpDownTreasureToEnemyRatio = 0f;
+        LeftRightTreasureToEnemyRatio = 0f;
+
+        if ((NumberEnemyTiles+NumberEnemyTiles) > 0)
+        {
+            UpDownTreasureToEnemyRatio = Mathf.Abs((NumberTreasureTiles_Top - NumberEnemyTiles_Bottom) / (float)(NumberTreasureTiles+NumberEnemyTiles));
+            LeftRightTreasureToEnemyRatio = Mathf.Abs((NumberTreasureTiles_Left - NumberEnemyTiles_Right) / (float)(NumberTreasureTiles + NumberEnemyTiles));
+        }
+
+
     }
 
     private void CalculateEnemyCoverage()
