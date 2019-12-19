@@ -1049,8 +1049,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7492db79298e964aad53fdaf1ae774e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PopulationSize: 100
-  MutationRate: 0.5
+  PopulationSize: 150
+  MutationRate: 0.9
 --- !u!114 &1116428057
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1072,7 +1072,7 @@ MonoBehaviour:
   - {fileID: 363426653}
   - {fileID: 631377604}
   StartOptimisationButton: {fileID: 189653592}
-  NumberOfSubGenerations: 50
+  NumberOfSubGenerations: 150
 --- !u!4 &1116428058
 Transform:
   m_ObjectHideFlags: 0
