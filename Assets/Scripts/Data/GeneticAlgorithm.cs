@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
+[System.Serializable]
 public class GeneticAlgorithm : MonoBehaviour
 {
     public int PopulationSize;
@@ -10,6 +12,9 @@ public class GeneticAlgorithm : MonoBehaviour
 
     public List<Generation> GenerationsFeasiblePop = new List<Generation>();
     public List<Generation> GenerationsInfeasiblePop = new List<Generation>();
+
+    
+    public GALog FeasibleLog = new GALog();
 
 
     public void InitializeFirstGeneration(DungeonGenome masterGenome)
@@ -175,9 +180,28 @@ public class GeneticAlgorithm : MonoBehaviour
             GenerationsInfeasiblePop.Add(genIF);
         }
 
+        FeasibleLog.Add(new GenerationLog(LastFeasibleGeneration, GenerationsFeasiblePop.Count));
+
         Debug.Log("Generation " + GenerationsFeasiblePop.Count
             + " Feasible Average: " + LastFeasibleGeneration.GetAverageFitness()
             + " Feasible Best: " + LastFeasibleGeneration.GetBestFitness());
+    }
+
+
+    public void SaveLogs()
+    {
+        string filepath = Application.persistentDataPath + "/" 
+            + System.DateTime.Now.Day.ToString() + System.DateTime.Now.Month.ToString() +
+            System.DateTime.Now.Hour.ToString() + System.DateTime.Now.Minute.ToString() + "_genLogs.JSON";
+
+        Debug.Log("Saving logs to " + filepath);
+        
+
+        string saveJSON = JsonUtility.ToJson(FeasibleLog);
+        using (StreamWriter sw = new StreamWriter(filepath))
+        {
+            sw.WriteLine(saveJSON);
+        }
     }
 
     public Generation LastFeasibleGeneration => GenerationsFeasiblePop[GenerationsFeasiblePop.Count - 1];

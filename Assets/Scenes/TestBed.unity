@@ -1051,6 +1051,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PopulationSize: 150
   MutationRate: 0.9
+  FeasibleLog:
+    FeasibleLog: []
 --- !u!114 &1116428057
 MonoBehaviour:
   m_ObjectHideFlags: 0

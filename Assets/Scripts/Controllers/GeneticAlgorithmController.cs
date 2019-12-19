@@ -98,6 +98,9 @@ public class GeneticAlgorithmController : MonoBehaviour
                 }
 
             }
+
+            geneticAlgorithm.SaveLogs();
+
             CancelInvoke("AdvanceGeneration");
         }
 
