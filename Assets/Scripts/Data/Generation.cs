@@ -34,6 +34,11 @@ public class Generation
         return (fitness / Individuals.Count);
     }
 
+    public float GetBestFitness()
+    {
+        return Individuals[0].MyFitness.FitnessValue;
+    }
+
     public void MutateRandomIndividual()
     {
         int i = Random.Range(0, Individuals.Count);
@@ -49,10 +54,9 @@ public class Generation
     public DungeonGenome GetBestIndividual()
     {
         //Sort();
-        float bestFitness = Individuals[0].MyFitness.FitnessValue;
-        int bestIndividual = 0;
+        
 
-        return Individuals[bestIndividual];
+        return Individuals[0];
     }
 
     public int GetBestIndividualLocation()

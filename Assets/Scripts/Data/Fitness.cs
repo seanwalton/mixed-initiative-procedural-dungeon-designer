@@ -257,75 +257,106 @@ public class Fitness
         PassableToImpassableRatio = NumberPassableTiles / ((float)NumberWallTiles);
 
         FitnessValues.Clear();
+        FitnessValue = 0f;
+        float numFitnesses = 0f;
 
         float chamberFitness = Mathf.Abs(TargetChamberRatio - ChamberRatio);
         FitnessValues.Add(chamberFitness);
+        FitnessValue += chamberFitness;
+        numFitnesses += 1f;
 
         float corridorFitness = Mathf.Abs(TargetCorridorRatio - CorridorRatio);
         FitnessValues.Add(corridorFitness);
+        FitnessValue += corridorFitness;
+        numFitnesses += 1f;
 
-
-        float numChamberFitness = Mathf.Abs(TargetNumberChambers - Chambers.Count);
+        float numChamberFitness = Mathf.Abs(TargetNumberChambers - Chambers.Count)/
+            (DungeonGenome.Size * DungeonGenome.Size);
         FitnessValues.Add(numChamberFitness);
+        FitnessValue += numChamberFitness;
+        numFitnesses += 1f;
 
-        float numCorridorFitness = Mathf.Abs(TargetNumberCorridors - Corridors.Count);
+        float numCorridorFitness = Mathf.Abs(TargetNumberCorridors - Corridors.Count) /
+            (DungeonGenome.Size * DungeonGenome.Size);
         FitnessValues.Add(numCorridorFitness);
-
-        
+        FitnessValue += numCorridorFitness;
+        numFitnesses += 1f;
 
         float safeEntranceFitness = Mathf.Abs( EntranceSafetyArea - EntranceSafety);
         FitnessValues.Add(safeEntranceFitness);
+        FitnessValue += safeEntranceFitness;
+        numFitnesses += 1f;
 
         float greedEntranceFitness = Mathf.Abs(EntranceGreedArea - EntranceGreed);
         FitnessValues.Add(greedEntranceFitness);
+        FitnessValue += greedEntranceFitness;
+        numFitnesses += 1f;
 
         float enemyFitness = Mathf.Abs(EnemyDensity - TargetEnemyDensity);
         FitnessValues.Add(enemyFitness);
+        FitnessValue += enemyFitness;
+        numFitnesses += 1f;
 
         float treasureFitness = Mathf.Abs(TreasureDensity - TargetTreasureDensity);
         FitnessValues.Add(treasureFitness);
+        FitnessValue += treasureFitness;
+        numFitnesses += 1f;
 
         float treasureSafetyFitness = Mathf.Abs(MeanTreasureSafety - TargetTreasureSafety);
         FitnessValues.Add(treasureSafetyFitness);
+        FitnessValue += treasureSafetyFitness;
+        numFitnesses += 1f;
 
         float treasureSafetyVarFitness = Mathf.Abs(TreasureSafetyVariance - TargetTreasureSafetyVariance);
         FitnessValues.Add(treasureSafetyVarFitness);
+        FitnessValue += treasureSafetyVarFitness;
+        numFitnesses += 1f;
 
-        float difficultyFitness = 1.0f - ((0.1f * safeEntranceFitness) + (0.1f * greedEntranceFitness) +
-            (0.3f * enemyFitness) + (0.1f * treasureFitness) + (0.2f * treasureSafetyFitness) + (0.2f * treasureSafetyVarFitness));
-
-        
         //Visual fitnesses
         float numberOfPassableFitness =  Mathf.Abs(PassableToImpassableRatio - TargetPassableToImpassableRatio);
         FitnessValues.Add(numberOfPassableFitness);
+        FitnessValue += numberOfPassableFitness;
+        numFitnesses += 1f;
 
         float pathFitness = Mathf.Abs(TargetPathLength - PathLength);
         FitnessValues.Add(pathFitness);
+        FitnessValue += pathFitness;
+        numFitnesses += 1f;
 
         //float fractalFitness = 1.0f - Mathf.Abs(TargetFractalIndex - FractalDimension);
         //FitnessValues.Add(fractalFitness);
 
         float leftRightWallFitness = Mathf.Abs(TargetLeftRightWallRatio - LeftRightWallRatio);
         FitnessValues.Add(leftRightWallFitness);
+        FitnessValue += leftRightWallFitness;
+        numFitnesses += 1f;
 
         float upDownWallFitness = Mathf.Abs(TargetUpDownWallRatio - UpDownWallRatio);
         FitnessValues.Add(upDownWallFitness);
+        FitnessValue += upDownWallFitness;
+        numFitnesses += 1f;
 
         float leftRightEnemyFitness = Mathf.Abs(TargetLeftRightEnemyRatio - LeftRightEnemyRatio);
         FitnessValues.Add(leftRightEnemyFitness);
+        FitnessValue += leftRightEnemyFitness;
+        numFitnesses += 1f;
 
         float upDownEnemyFitness = Mathf.Abs(TargetUpDownEnemyRatio - UpDownEnemyRatio);
         FitnessValues.Add(upDownEnemyFitness);
+        FitnessValue += upDownEnemyFitness;
+        numFitnesses += 1f;
 
         float leftRightTreasureFitness = Mathf.Abs(TargetLeftRightTreasureRatio - LeftRightTreasureRatio);
         FitnessValues.Add(leftRightTreasureFitness);
+        FitnessValue += leftRightTreasureFitness;
+        numFitnesses += 1f;
 
         float upDownTreasureFitness = Mathf.Abs(TargetUpDownTreasureRatio - UpDownTreasureRatio);
         FitnessValues.Add(upDownTreasureFitness);
+        FitnessValue += upDownTreasureFitness;
+        numFitnesses += 1f;
 
-        float patternFitness = (0.25f * chamberFitness) + (0.5f * corridorFitness) + (0.25f * pathFitness);
-
-        FitnessValue = (difficultyFitness + patternFitness)/2.0f;
+        FitnessValue /= numFitnesses;
 
 
 
