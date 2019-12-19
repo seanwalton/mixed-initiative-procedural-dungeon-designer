@@ -192,16 +192,21 @@ public class GeneticAlgorithm : MonoBehaviour
     {
         string filepath = Application.persistentDataPath + "/" 
             + System.DateTime.Now.Day.ToString() + System.DateTime.Now.Month.ToString() +
-            System.DateTime.Now.Hour.ToString() + System.DateTime.Now.Minute.ToString() + "_genLogs.JSON";
+            System.DateTime.Now.Hour.ToString() + System.DateTime.Now.Minute.ToString() + "/";
+
+        Directory.CreateDirectory(filepath);
 
         Debug.Log("Saving logs to " + filepath);
         
 
         string saveJSON = JsonUtility.ToJson(FeasibleLog);
-        using (StreamWriter sw = new StreamWriter(filepath))
+        using (StreamWriter sw = new StreamWriter(filepath+"logs.JSON"))
         {
             sw.WriteLine(saveJSON);
         }
+
+        ScreenCapture.CaptureScreenshot(filepath+"img.png");
+
     }
 
     public Generation LastFeasibleGeneration => GenerationsFeasiblePop[GenerationsFeasiblePop.Count - 1];
