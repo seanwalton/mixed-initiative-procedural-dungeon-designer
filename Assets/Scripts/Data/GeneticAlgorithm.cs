@@ -6,6 +6,7 @@ using UnityEngine;
 [System.Serializable]
 public class GeneticAlgorithm : MonoBehaviour
 {
+    public string ExperimentName;
     public int PopulationSize;
 
     public float MutationRate;
@@ -190,7 +191,7 @@ public class GeneticAlgorithm : MonoBehaviour
 
     public void SaveLogs()
     {
-        string filepath = Application.persistentDataPath + "/" 
+        string filepath = Application.persistentDataPath + "/" + ExperimentName + "_"
             + System.DateTime.Now.Day.ToString() + System.DateTime.Now.Month.ToString() +
             System.DateTime.Now.Hour.ToString() + System.DateTime.Now.Minute.ToString() + "/";
 
