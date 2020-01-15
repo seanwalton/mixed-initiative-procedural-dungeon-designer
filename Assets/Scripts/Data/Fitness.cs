@@ -13,6 +13,9 @@ public class Fitness
 
     public static float TargetMaxChamberSize = 25f;
     public static float TargetMinChamberSize = 5f;
+
+    public static float TargetMaxChamberSquareness = 0.5f;
+    public static float TargetMinChamberSquareness = 0.5f;
     public static float TargetMeanChamberSquareness = 0.5f;
 
     public static float TargetNumberCorridors = 1f;
@@ -108,6 +111,8 @@ public class Fitness
     public float MaxChamberSize;
     public float MinChamberSize;
     public float MeanChamberSquareness;
+    public float MaxChamberSquareness;
+    public float MinChamberSquareness;
 
     public int[,] ChamberFlag = new int[DungeonGenome.Size, DungeonGenome.Size];
 
@@ -161,6 +166,8 @@ public class Fitness
         TargetMaxChamberSize = genome.MyFitness.MaxChamberSize;
         TargetMinChamberSize = genome.MyFitness.MinChamberSize;
         TargetMeanChamberSquareness = genome.MyFitness.MeanChamberSquareness;
+        TargetMinChamberSquareness = genome.MyFitness.MinChamberSquareness;
+        TargetMaxChamberSquareness = genome.MyFitness.MaxChamberSquareness;
 
         TargetNumberOfJoints = genome.MyFitness.NumJoints;
         TargetNumberOfTurns = genome.MyFitness.NumTurns;
@@ -225,7 +232,12 @@ public class Fitness
             / (NumberOfTargetGenomes + 1);
         TargetMinChamberSize = ((NumberOfTargetGenomes * TargetMinChamberSize) + genome.MyFitness.MinChamberSize)
             / (NumberOfTargetGenomes + 1);
+
         TargetMeanChamberSquareness = ((NumberOfTargetGenomes * TargetMeanChamberSquareness) + genome.MyFitness.MeanChamberSquareness)
+            / (NumberOfTargetGenomes + 1);
+        TargetMinChamberSquareness = ((NumberOfTargetGenomes * TargetMinChamberSquareness) + genome.MyFitness.MinChamberSquareness)
+            / (NumberOfTargetGenomes + 1);
+        TargetMaxChamberSquareness = ((NumberOfTargetGenomes * TargetMaxChamberSquareness) + genome.MyFitness.MaxChamberSquareness)
             / (NumberOfTargetGenomes + 1);
 
 
@@ -349,6 +361,16 @@ public class Fitness
         float chamberSquareFitness = Mathf.Abs(TargetMeanChamberSquareness - MeanChamberSquareness);
         FitnessValues.Add(chamberSquareFitness);
         FitnessValue += chamberSquareFitness;
+        numFitnesses += 1f;
+
+        float chamberMinSquareFitness = Mathf.Abs(TargetMinChamberSquareness - MinChamberSquareness);
+        FitnessValues.Add(chamberMinSquareFitness);
+        FitnessValue += chamberMinSquareFitness;
+        numFitnesses += 1f;
+
+        float chamberMaxSquareFitness = Mathf.Abs(TargetMaxChamberSquareness - MaxChamberSquareness);
+        FitnessValues.Add(chamberMaxSquareFitness);
+        FitnessValue += chamberMaxSquareFitness;
         numFitnesses += 1f;
 
 
@@ -1076,12 +1098,16 @@ public class Fitness
         MaxChamberSize = 0f;
         MeanChamberSquareness = 0f;
         MeanChamberArea = 0f;
+        MaxChamberSquareness = 0f;
+        MinChamberSquareness = DungeonGenome.Size * DungeonGenome.Size;
         foreach (Chamber chamber in Chambers)
         {
             MeanChamberArea += chamber.Area;
             MinChamberSize = Mathf.Min(MinChamberSize, chamber.Area);
             MaxChamberSize = Mathf.Max(MaxChamberSize, chamber.Area);
             MeanChamberSquareness += 0.5f*chamber.Squareness;
+            MaxChamberSquareness = Mathf.Max(MaxChamberSquareness, 0.5f * chamber.Squareness);
+            MinChamberSquareness = Mathf.Min(MinChamberSquareness, 0.5f * chamber.Squareness);
         }
 
         if (Chambers.Count > 0)
@@ -1093,6 +1119,8 @@ public class Fitness
         {
             MinChamberSize = 0f;
             MaxChamberSize = 0f;
+            MaxChamberSquareness = 0f;
+            MinChamberSquareness = 0f;
         }
 
        
