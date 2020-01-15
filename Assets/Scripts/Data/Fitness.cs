@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Fitness
 {
-    public static float TargetCorridorLength = 4f;
+    public static float TargetMeanCorridorLength = 4f;
     public static float TargetMeanChamberArea = 25f;
-    public static float TargetMeanPathLength = 0.5f;
+    public static float TargetPathLength = 0.5f;
 
     public static float TargetMaxCorridorLength = 5f;
     public static float TargetMinCorridorLength = 5f;
@@ -18,8 +18,8 @@ public class Fitness
     public static float TargetNumberCorridors = 1f;
     public static float TargetNumberChambers = 1f;
 
-    public static float TargetJointRatio = 0.5f;
-    public static float TargetTurnRatio = 0.5f;
+    public static float TargetNumberOfJoints = 0.5f;
+    public static float TargetNumberOfTurns = 0.5f;
 
     public static float TargetTreasureDensity = 0.02f;
     public static float TargetEnemyDensity = 0.02f;
@@ -96,8 +96,8 @@ public class Fitness
     public List<Chamber> Chambers = new List<Chamber>();
 
     public float MeanChamberArea { get; private set; }
-    public float JointRatio { get; private set; }
-    public float TurnRatio { get; private set; }
+    public float NumJoints { get; private set; }
+    public float NumTurns { get; private set; }
     public float PathLength { get; private set; }
     public float PassableToImpassableRatio { get; private set; }
 
@@ -145,10 +145,10 @@ public class Fitness
 
         TargetFractalIndex = genome.MyFitness.FractalDimension;
 
-        TargetMeanPathLength = genome.MyFitness.PathLength;
-        Debug.Log("Target Path Length " + TargetMeanPathLength.ToString());
+        TargetPathLength = genome.MyFitness.PathLength;
+        Debug.Log("Target Path Length " + TargetPathLength.ToString());
 
-        TargetCorridorLength = genome.MyFitness.MeanCorridorLength;
+        TargetMeanCorridorLength = genome.MyFitness.MeanCorridorLength;
         
 
         TargetMeanChamberArea = genome.MyFitness.MeanChamberArea;
@@ -162,8 +162,8 @@ public class Fitness
         TargetMinChamberSize = genome.MyFitness.MinChamberSize;
         TargetMeanChamberSquareness = genome.MyFitness.MeanChamberSquareness;
 
-        TargetJointRatio = genome.MyFitness.JointRatio;
-        TargetTurnRatio = genome.MyFitness.TurnRatio;
+        TargetNumberOfJoints = genome.MyFitness.NumJoints;
+        TargetNumberOfTurns = genome.MyFitness.NumTurns;
 
         
 
@@ -202,15 +202,15 @@ public class Fitness
         TargetFractalIndex = ((NumberOfTargetGenomes*TargetFractalIndex) + genome.MyFitness.FractalDimension) / (NumberOfTargetGenomes + 1);
 
     
-        TargetMeanPathLength = ((NumberOfTargetGenomes*TargetMeanPathLength) + 
+        TargetPathLength = ((NumberOfTargetGenomes*TargetPathLength) + 
             (genome.MyFitness.PathLength)) / (NumberOfTargetGenomes + 1);
 
-        Debug.Log("Target Path Length " + TargetMeanPathLength.ToString());
+        Debug.Log("Target Path Length " + TargetPathLength.ToString());
 
 
         
 
-        TargetCorridorLength = ((NumberOfTargetGenomes * TargetCorridorLength) + genome.MyFitness.MeanCorridorLength) / (NumberOfTargetGenomes + 1);
+        TargetMeanCorridorLength = ((NumberOfTargetGenomes * TargetMeanCorridorLength) + genome.MyFitness.MeanCorridorLength) / (NumberOfTargetGenomes + 1);
 
         TargetMeanChamberArea = ((NumberOfTargetGenomes * TargetMeanChamberArea) + genome.MyFitness.MeanChamberArea) / (NumberOfTargetGenomes + 1);
 
@@ -234,8 +234,8 @@ public class Fitness
         TargetNumberCorridors = ((NumberOfTargetGenomes * TargetNumberCorridors) + genome.MyFitness.Corridors.Count)
             / (NumberOfTargetGenomes + 1);
 
-        TargetJointRatio = ((NumberOfTargetGenomes * TargetJointRatio) + genome.MyFitness.JointRatio) / (NumberOfTargetGenomes + 1);
-        TargetTurnRatio = ((NumberOfTargetGenomes * TargetJointRatio) + genome.MyFitness.TurnRatio) / (NumberOfTargetGenomes + 1);
+        TargetNumberOfJoints = ((NumberOfTargetGenomes * TargetNumberOfJoints) + genome.MyFitness.NumJoints) / (NumberOfTargetGenomes + 1);
+        TargetNumberOfTurns = ((NumberOfTargetGenomes * TargetNumberOfJoints) + genome.MyFitness.NumTurns) / (NumberOfTargetGenomes + 1);
 
 
         TargetTreasureDensity = ((NumberOfTargetGenomes * TargetTreasureDensity) + genome.MyFitness.TreasureDensity) 
@@ -297,10 +297,24 @@ public class Fitness
         FitnessValue = 0f;
         float numFitnesses = 0f;
 
-        
 
+        float jointFitness = Mathf.Abs(TargetNumberOfJoints - NumJoints) /
+            (DungeonGenome.Size * DungeonGenome.Size);
+        FitnessValues.Add(jointFitness);
+        FitnessValue += jointFitness;
+        numFitnesses += 1f;
 
-        
+        float turnFitness = Mathf.Abs(TargetNumberOfTurns - NumTurns) /
+            (DungeonGenome.Size * DungeonGenome.Size);
+        FitnessValues.Add(turnFitness);
+        FitnessValue += turnFitness;
+        numFitnesses += 1f;
+
+        float corridorMeanFitness = Mathf.Abs(TargetMeanCorridorLength - MeanCorridorLength) /
+            (DungeonGenome.Size * DungeonGenome.Size);
+        FitnessValues.Add(corridorMeanFitness);
+        FitnessValue += corridorMeanFitness;
+        numFitnesses += 1f;
 
         float corridorMaxFitness = Mathf.Abs(TargetMaxCorridorLength - MaxCorridorLength) /
             (DungeonGenome.Size * DungeonGenome.Size);
@@ -312,6 +326,12 @@ public class Fitness
             (DungeonGenome.Size * DungeonGenome.Size);
         FitnessValues.Add(corridorMinFitness);
         FitnessValue += corridorMinFitness;
+        numFitnesses += 1f;
+
+        float chamberMeanFitness = Mathf.Abs(TargetMeanChamberArea - MeanChamberArea) /
+            (DungeonGenome.Size * DungeonGenome.Size);
+        FitnessValues.Add(chamberMeanFitness);
+        FitnessValue += chamberMeanFitness;
         numFitnesses += 1f;
 
         float chamberMaxFitness = Mathf.Abs(TargetMaxChamberSize - MaxChamberSize) /
@@ -383,7 +403,7 @@ public class Fitness
         FitnessValue += numberOfPassableFitness;
         numFitnesses += 1f;
 
-        float pathFitness = Mathf.Abs(TargetMeanPathLength - PathLength);
+        float pathFitness = Mathf.Abs(TargetPathLength - PathLength);
         FitnessValues.Add(pathFitness);
         FitnessValue += pathFitness;
         numFitnesses += 1f;
@@ -953,27 +973,15 @@ public class Fitness
 
     private void CalculateConnectorFitness()
     {
-        float numJoints = 0f;
-        float numTurns = 0f;
+        NumJoints = 0f;
+        NumTurns = 0f;
 
         foreach (Connector c in Connectors)
         {
-            if (c.Type == ConnectorType.JOINT) numJoints += 1.0f;
-            if (c.Type == ConnectorType.TURN) numTurns += 1.0f;
+            if (c.Type == ConnectorType.JOINT) NumJoints += 1.0f;
+            if (c.Type == ConnectorType.TURN) NumTurns += 1.0f;
         }
 
-        
-
-        if ((numJoints + numTurns) > 0f)
-        {
-            JointRatio = numJoints / (numJoints + numTurns);
-            TurnRatio = numTurns / (numJoints + numTurns);
-        }
-        else
-        {
-            JointRatio = 0.5f;
-            TurnRatio = 0.5f;
-        }
     }
 
     //Finds connectors between corridors and assigns a quality
