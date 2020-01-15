@@ -5,10 +5,15 @@ using UnityEngine;
 public class Fitness
 {
     public static float TargetCorridorLength = 4f;
-    public static float TargetChamberArea = 25f;
-    public static float TargetPathLength = 0.5f;
-    public static float TargetCorridorRatio = 0.5f;
-    public static float TargetChamberRatio = 0.5f;
+    public static float TargetMeanChamberArea = 25f;
+    public static float TargetMeanPathLength = 0.5f;
+
+    public static float TargetMaxCorridorLength = 5f;
+    public static float TargetMinCorridorLength = 5f;
+
+    public static float TargetMaxChamberSize = 25f;
+    public static float TargetMinChamberSize = 5f;
+    public static float TargetMeanChamberSquareness = 0.5f;
 
     public static float TargetNumberCorridors = 1f;
     public static float TargetNumberChambers = 1f;
@@ -42,6 +47,8 @@ public class Fitness
     public static float TargetLeftRightTreasureToEnemyRatio = 0f;
 
     public static int NumberOfTargetGenomes = 0;
+
+    public static DungeonGenome InitialUserDesign;
 
     public DungeonGenome Genome;
 
@@ -81,20 +88,26 @@ public class Fitness
     private bool[,] passable = new bool[DungeonGenome.Size, DungeonGenome.Size];
 
     public List<Corridor> Corridors = new List<Corridor>();
-    public float CorridorRatio;
 
     public float MeanCorridorLength { get; private set; }
 
     public int[,] CorridorFlag = new int[DungeonGenome.Size, DungeonGenome.Size];
 
     public List<Chamber> Chambers = new List<Chamber>();
-    public float ChamberRatio;
 
     public float MeanChamberArea { get; private set; }
     public float JointRatio { get; private set; }
     public float TurnRatio { get; private set; }
     public float PathLength { get; private set; }
     public float PassableToImpassableRatio { get; private set; }
+
+
+    public float MaxCorridorLength;
+    public float MinCorridorLength;
+
+    public float MaxChamberSize;
+    public float MinChamberSize;
+    public float MeanChamberSquareness;
 
     public int[,] ChamberFlag = new int[DungeonGenome.Size, DungeonGenome.Size];
 
@@ -127,22 +140,27 @@ public class Fitness
     {
         genome.CalculateFitnesses();
 
+        InitialUserDesign = new DungeonGenome();
+        InitialUserDesign.CopyFromOtherGenome(genome);
+
         TargetFractalIndex = genome.MyFitness.FractalDimension;
 
-        TargetPathLength = genome.MyFitness.PathLength;
-        Debug.Log("Target Path Length " + TargetPathLength.ToString());
+        TargetMeanPathLength = genome.MyFitness.PathLength;
+        Debug.Log("Target Path Length " + TargetMeanPathLength.ToString());
 
         TargetCorridorLength = genome.MyFitness.MeanCorridorLength;
         
 
-        TargetChamberArea = genome.MyFitness.MeanChamberArea;
+        TargetMeanChamberArea = genome.MyFitness.MeanChamberArea;
 
         TargetNumberChambers = genome.MyFitness.Chambers.Count;
         TargetNumberCorridors = genome.MyFitness.Corridors.Count;
 
-
-        TargetCorridorRatio = genome.MyFitness.CorridorRatio;
-        TargetChamberRatio = genome.MyFitness.ChamberRatio;
+        TargetMaxCorridorLength = genome.MyFitness.MaxCorridorLength;
+        TargetMinCorridorLength = genome.MyFitness.MinCorridorLength;
+        TargetMaxChamberSize = genome.MyFitness.MaxChamberSize;
+        TargetMinChamberSize = genome.MyFitness.MinChamberSize;
+        TargetMeanChamberSquareness = genome.MyFitness.MeanChamberSquareness;
 
         TargetJointRatio = genome.MyFitness.JointRatio;
         TargetTurnRatio = genome.MyFitness.TurnRatio;
@@ -184,23 +202,30 @@ public class Fitness
         TargetFractalIndex = ((NumberOfTargetGenomes*TargetFractalIndex) + genome.MyFitness.FractalDimension) / (NumberOfTargetGenomes + 1);
 
     
-        TargetPathLength = ((NumberOfTargetGenomes*TargetPathLength) + 
+        TargetMeanPathLength = ((NumberOfTargetGenomes*TargetMeanPathLength) + 
             (genome.MyFitness.PathLength)) / (NumberOfTargetGenomes + 1);
 
-        Debug.Log("Target Path Length " + TargetPathLength.ToString());
+        Debug.Log("Target Path Length " + TargetMeanPathLength.ToString());
 
 
         
 
         TargetCorridorLength = ((NumberOfTargetGenomes * TargetCorridorLength) + genome.MyFitness.MeanCorridorLength) / (NumberOfTargetGenomes + 1);
 
-        TargetChamberArea = ((NumberOfTargetGenomes * TargetChamberArea) + genome.MyFitness.MeanChamberArea) / (NumberOfTargetGenomes + 1);
+        TargetMeanChamberArea = ((NumberOfTargetGenomes * TargetMeanChamberArea) + genome.MyFitness.MeanChamberArea) / (NumberOfTargetGenomes + 1);
 
 
 
-        TargetCorridorRatio = ((NumberOfTargetGenomes * TargetCorridorRatio) + genome.MyFitness.CorridorRatio)
+        
+        TargetMaxCorridorLength = ((NumberOfTargetGenomes * TargetMaxCorridorLength) + genome.MyFitness.MaxCorridorLength)
             / (NumberOfTargetGenomes + 1);
-        TargetChamberRatio = ((NumberOfTargetGenomes * TargetChamberRatio) + genome.MyFitness.ChamberRatio)
+        TargetMinCorridorLength = ((NumberOfTargetGenomes * TargetMinCorridorLength) + genome.MyFitness.MinCorridorLength)
+            / (NumberOfTargetGenomes + 1);
+        TargetMaxChamberSize = ((NumberOfTargetGenomes * TargetMaxChamberSize) + genome.MyFitness.MaxChamberSize)
+            / (NumberOfTargetGenomes + 1);
+        TargetMinChamberSize = ((NumberOfTargetGenomes * TargetMinChamberSize) + genome.MyFitness.MinChamberSize)
+            / (NumberOfTargetGenomes + 1);
+        TargetMeanChamberSquareness = ((NumberOfTargetGenomes * TargetMeanChamberSquareness) + genome.MyFitness.MeanChamberSquareness)
             / (NumberOfTargetGenomes + 1);
 
 
@@ -272,15 +297,43 @@ public class Fitness
         FitnessValue = 0f;
         float numFitnesses = 0f;
 
-        float chamberFitness = Mathf.Abs(TargetChamberRatio - ChamberRatio);
-        FitnessValues.Add(chamberFitness);
-        FitnessValue += chamberFitness;
+        
+
+
+        
+
+        float corridorMaxFitness = Mathf.Abs(TargetMaxCorridorLength - MaxCorridorLength) /
+            (DungeonGenome.Size * DungeonGenome.Size);
+        FitnessValues.Add(corridorMaxFitness);
+        FitnessValue += corridorMaxFitness;
         numFitnesses += 1f;
 
-        float corridorFitness = Mathf.Abs(TargetCorridorRatio - CorridorRatio);
-        FitnessValues.Add(corridorFitness);
-        FitnessValue += corridorFitness;
+        float corridorMinFitness = Mathf.Abs(TargetMinCorridorLength - MinCorridorLength) /
+            (DungeonGenome.Size * DungeonGenome.Size);
+        FitnessValues.Add(corridorMinFitness);
+        FitnessValue += corridorMinFitness;
         numFitnesses += 1f;
+
+        float chamberMaxFitness = Mathf.Abs(TargetMaxChamberSize - MaxChamberSize) /
+            (DungeonGenome.Size * DungeonGenome.Size);
+        FitnessValues.Add(chamberMaxFitness);
+        FitnessValue += chamberMaxFitness;
+        numFitnesses += 1f;
+
+        float chamberMinFitness = Mathf.Abs(TargetMinChamberSize - MinChamberSize) /
+            (DungeonGenome.Size * DungeonGenome.Size);
+        FitnessValues.Add(chamberMinFitness);
+        FitnessValue += chamberMinFitness;
+        numFitnesses += 1f;
+
+        float chamberSquareFitness = Mathf.Abs(TargetMeanChamberSquareness - MeanChamberSquareness);
+        FitnessValues.Add(chamberSquareFitness);
+        FitnessValue += chamberSquareFitness;
+        numFitnesses += 1f;
+
+
+
+
 
         float numChamberFitness = Mathf.Abs(TargetNumberChambers - Chambers.Count)/
             (DungeonGenome.Size * DungeonGenome.Size);
@@ -330,7 +383,7 @@ public class Fitness
         FitnessValue += numberOfPassableFitness;
         numFitnesses += 1f;
 
-        float pathFitness = Mathf.Abs(TargetPathLength - PathLength);
+        float pathFitness = Mathf.Abs(TargetMeanPathLength - PathLength);
         FitnessValues.Add(pathFitness);
         FitnessValue += pathFitness;
         numFitnesses += 1f;
@@ -377,6 +430,16 @@ public class Fitness
         FitnessValues.Add(upDownTreasureToEnemyFitness);
         FitnessValue += upDownTreasureToEnemyFitness;
         numFitnesses += 1f;
+
+        if (InitialUserDesign != null)
+        {
+            float novelty = ((float)((DungeonGenome.Size * DungeonGenome.Size) - DungeonGenome.EditDistance(Genome, InitialUserDesign))) /
+            (DungeonGenome.Size * DungeonGenome.Size);
+            FitnessValues.Add(novelty);
+            FitnessValue += novelty;
+            numFitnesses += 1f;
+        }
+        
 
         FitnessValue /= numFitnesses;
 
@@ -1001,47 +1064,55 @@ public class Fitness
 
     private void CalculateChamberQualities()
     {
-        ChamberRatio = 0f;
+        MinChamberSize = DungeonGenome.Size * DungeonGenome.Size;
+        MaxChamberSize = 0f;
+        MeanChamberSquareness = 0f;
         MeanChamberArea = 0f;
         foreach (Chamber chamber in Chambers)
         {
-            float q = (0.5f * (Mathf.Min(1.0f, (chamber.Area) / (float) TargetChamberArea))) +
-                (0.5f * chamber.Squareness);
-            ChamberRatio += ((q * chamber.Area) / (float) NumberPassableTiles);
             MeanChamberArea += chamber.Area;
+            MinChamberSize = Mathf.Min(MinChamberSize, chamber.Area);
+            MaxChamberSize = Mathf.Max(MaxChamberSize, chamber.Area);
+            MeanChamberSquareness += 0.5f*chamber.Squareness;
         }
 
-        if (Chambers.Count > 0) MeanChamberArea /= Chambers.Count;
+        if (Chambers.Count > 0)
+        {
+            MeanChamberArea /= Chambers.Count;
+            MeanChamberSquareness /= Chambers.Count;
+        }
+        else
+        {
+            MinChamberSize = 0f;
+            MaxChamberSize = 0f;
+        }
 
        
     }
 
     private void CalculateCorridorQualities()
     {
-        CorridorRatio = 0f;
         MeanCorridorLength = 0f;
+        MaxCorridorLength = 0f;
+        MinCorridorLength = DungeonGenome.Size * DungeonGenome.Size;
         foreach (Corridor corridor in Corridors)
         {
-            float q = Mathf.Min(1.0f, corridor.Length / (float) TargetCorridorLength);
-            CorridorRatio += ((q * corridor.Length) / (float) NumberPassableTiles);
-            MeanCorridorLength += corridor.Length;
-        }
-        if (Corridors.Count > 0) MeanCorridorLength /= (float) Corridors.Count;
-
-        foreach (Connector connector in Connectors)
-        {
-            switch (connector.Type)
-            {
-                case ConnectorType.JOINT:
-                    CorridorRatio += (TargetJointRatio * connector.Area) / (float)NumberPassableTiles;
-                    break;
-                case ConnectorType.TURN:
-                    CorridorRatio += (TargetTurnRatio * connector.Area) / (float)NumberPassableTiles;
-                    break;
-            }
-
             
+            MeanCorridorLength += corridor.Length;
+            MaxCorridorLength = Mathf.Max(MaxCorridorLength, corridor.Length);
+            MinCorridorLength = Mathf.Min(MinCorridorLength, corridor.Length);
         }
+        if (Corridors.Count > 0)
+        {
+            MeanCorridorLength /= Corridors.Count;
+        }
+        else
+        {
+            MaxCorridorLength = 0f;
+            MinCorridorLength = 0f;
+        }
+
+       
     }
 
     private void CalculateTreasureSafety()
