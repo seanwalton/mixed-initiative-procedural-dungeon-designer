@@ -9,6 +9,8 @@ using UnityEngine.UI;
 public class GeneticAlgorithmController : MonoBehaviour
 {
 
+    public Experiment[] Experiments;
+
     public DungeonEditor InitialDungeonEditor;
     public DungeonEditor[] TopFeasibleDungeonEditors;
     public DungeonEditor[] TopInfeasibleDungeonEditors;
@@ -25,6 +27,7 @@ public class GeneticAlgorithmController : MonoBehaviour
     private int numGenerationsUntilStop;
     private int numberSubIterations;
     private int numberBenchmarksRun;
+    private int currentExperiment;
 
     private void Awake()
     {
@@ -32,6 +35,7 @@ public class GeneticAlgorithmController : MonoBehaviour
         InitialDungeonEditor.SetToggleActive(false);
         numberSubIterations = 0;
         numberBenchmarksRun = 0;
+        currentExperiment = 0;
     }
 
     private void Start()
@@ -47,13 +51,35 @@ public class GeneticAlgorithmController : MonoBehaviour
         }
     }
 
+    private void NextExperiment()
+    {
+        currentExperiment++;
+        numberSubIterations = 0;
+        numberBenchmarksRun = 0;
+        BenchmarkLogs = new List<GALog>();
+
+        if (currentExperiment < Experiments.Length)
+        {
+            StartOptimisingBenchmark();
+        }
+        else
+        {
+            Debug.Log("EXPERIMENTS COMPLETE");
+        }
+    }
+
     //Starts optimising after reseting optimiser
     public void StartOptimisingBenchmark()
     {
+        Debug.Log("EXPERIMENT: "+ Experiments[currentExperiment].Name + " RUN: "+ numberBenchmarksRun.ToString());
         StartOptimisationButton.gameObject.SetActive(false);
 
         Random.InitState(System.DateTime.Now.Hour + System.DateTime.Now.Minute + System.DateTime.Now.Second);
         geneticAlgorithm.ResetOptimiser();
+        geneticAlgorithm.ExperimentName = Experiments[currentExperiment].Name;
+        geneticAlgorithm.MutationRate = Experiments[currentExperiment].MutationRate;
+        geneticAlgorithm.CrossOverType = Experiments[currentExperiment].CrossOverType;
+        geneticAlgorithm.MutationType = Experiments[currentExperiment].MutationType;
         Fitness.SetTargetMetricsFromGenome(InitialDungeonEditor.Genome);
         
         numGenerationsUntilStop = NumberOfSubGenerations;
@@ -187,6 +213,7 @@ public class GeneticAlgorithmController : MonoBehaviour
         else
         {
             WriteBenchmarkData();
+            NextExperiment();
         }
 
     }
