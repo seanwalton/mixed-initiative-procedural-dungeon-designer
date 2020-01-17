@@ -10,7 +10,8 @@ public class GeneticAlgorithmController : MonoBehaviour
 {
 
     public DungeonEditor InitialDungeonEditor;
-    public DungeonEditor[] TopDungeonEditors;
+    public DungeonEditor[] TopFeasibleDungeonEditors;
+    public DungeonEditor[] TopInfeasibleDungeonEditors;
     public Button StartOptimisationButton;
 
     public int NumberOfSubGenerations;
@@ -20,6 +21,7 @@ public class GeneticAlgorithmController : MonoBehaviour
 
     private GeneticAlgorithm geneticAlgorithm;
     private Generation lastGen;
+    private Generation lastGenInfeasible;
     private int numGenerationsUntilStop;
     private int numberSubIterations;
     private int numberBenchmarksRun;
@@ -34,9 +36,14 @@ public class GeneticAlgorithmController : MonoBehaviour
 
     private void Start()
     {
-        for (int i = 0; i < TopDungeonEditors.Length; i++)
+        for (int i = 0; i < TopFeasibleDungeonEditors.Length; i++)
         {
-            TopDungeonEditors[i].gameObject.SetActive(false);
+            TopFeasibleDungeonEditors[i].gameObject.SetActive(false);
+        }
+
+        for (int i = 0; i < TopInfeasibleDungeonEditors.Length; i++)
+        {
+            TopInfeasibleDungeonEditors[i].gameObject.SetActive(false);
         }
     }
 
@@ -62,11 +69,19 @@ public class GeneticAlgorithmController : MonoBehaviour
         }
         else
         {
-            for (int i = 0; i < TopDungeonEditors.Length; i++)
+            for (int i = 0; i < TopFeasibleDungeonEditors.Length; i++)
             {
-                if (TopDungeonEditors[i].Liked.isOn)
+                if (TopFeasibleDungeonEditors[i].Liked.isOn)
                 {
-                    Fitness.UpdateTargetMetricsFromGenome(TopDungeonEditors[i].Genome);
+                    Fitness.UpdateTargetMetricsFromGenome(TopFeasibleDungeonEditors[i].Genome);
+                }
+            }
+
+            for (int i = 0; i < TopInfeasibleDungeonEditors.Length; i++)
+            {
+                if (TopInfeasibleDungeonEditors[i].Liked.isOn)
+                {
+                    Fitness.UpdateTargetMetricsFromGenome(TopInfeasibleDungeonEditors[i].Genome);
                 }
             }
         }
@@ -82,20 +97,36 @@ public class GeneticAlgorithmController : MonoBehaviour
 
         //Get the last generation and plot the top individuals
         lastGen = geneticAlgorithm.LastFeasibleGeneration;
+        lastGenInfeasible = geneticAlgorithm.LastInfeasibleGeneration;
 
-        for (int i = 0; i < TopDungeonEditors.Length; i++)
+        for (int i = 0; i < TopFeasibleDungeonEditors.Length; i++)
         {
             if (i < lastGen.NumberOfIndividuals)
             {
-                TopDungeonEditors[i].gameObject.SetActive(true);
-                TopDungeonEditors[i].SetGenome(lastGen.Individuals[i]);
-                TopDungeonEditors[i].SetToggleActive(false);
+                TopFeasibleDungeonEditors[i].gameObject.SetActive(true);
+                TopFeasibleDungeonEditors[i].SetGenome(lastGen.Individuals[i]);
+                TopFeasibleDungeonEditors[i].SetToggleActive(false);
             }
             else
             {
-                TopDungeonEditors[i].gameObject.SetActive(false);
+                TopFeasibleDungeonEditors[i].gameObject.SetActive(false);
             }
             
+        }
+
+        for (int i = 0; i < TopInfeasibleDungeonEditors.Length; i++)
+        {
+            if (i < lastGenInfeasible.NumberOfIndividuals)
+            {
+                TopInfeasibleDungeonEditors[i].gameObject.SetActive(true);
+                TopInfeasibleDungeonEditors[i].SetGenome(lastGenInfeasible.Individuals[i]);
+                TopInfeasibleDungeonEditors[i].SetToggleActive(false);
+            }
+            else
+            {
+                TopInfeasibleDungeonEditors[i].gameObject.SetActive(false);
+            }
+
         }
 
         numGenerationsUntilStop--;
@@ -104,17 +135,32 @@ public class GeneticAlgorithmController : MonoBehaviour
         {
             numberSubIterations++;
             StartOptimisationButton.gameObject.SetActive(true);
-            for (int i = 0; i < TopDungeonEditors.Length; i++)
+            for (int i = 0; i < TopFeasibleDungeonEditors.Length; i++)
             {
                 if (i < lastGen.NumberOfIndividuals)
                 {
-                    TopDungeonEditors[i].SetToggleActive(true);
-                    TopDungeonEditors[i].Liked.isOn = false;
+                    TopFeasibleDungeonEditors[i].SetToggleActive(true);
+                    TopFeasibleDungeonEditors[i].Liked.isOn = false;
                 }
                 else
                 {
-                    TopDungeonEditors[i].gameObject.SetActive(false);
-                    TopDungeonEditors[i].Liked.isOn = false;
+                    TopFeasibleDungeonEditors[i].gameObject.SetActive(false);
+                    TopFeasibleDungeonEditors[i].Liked.isOn = false;
+                }
+
+            }
+
+            for (int i = 0; i < TopInfeasibleDungeonEditors.Length; i++)
+            {
+                if (i < lastGen.NumberOfIndividuals)
+                {
+                    TopInfeasibleDungeonEditors[i].SetToggleActive(true);
+                    TopInfeasibleDungeonEditors[i].Liked.isOn = false;
+                }
+                else
+                {
+                    TopInfeasibleDungeonEditors[i].gameObject.SetActive(false);
+                    TopInfeasibleDungeonEditors[i].Liked.isOn = false;
                 }
 
             }

@@ -668,7 +668,7 @@ PrefabInstance:
     - target: {fileID: 1935143887239583434, guid: 160e40bc7cbce1c4fb7a12a7d23729e4,
         type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 1935143887239583434, guid: 160e40bc7cbce1c4fb7a12a7d23729e4,
         type: 3}
@@ -703,7 +703,7 @@ PrefabInstance:
     - target: {fileID: 1935143887239583444, guid: 160e40bc7cbce1c4fb7a12a7d23729e4,
         type: 3}
       propertyPath: m_Name
-      value: Results 5
+      value: Results 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 160e40bc7cbce1c4fb7a12a7d23729e4, type: 3}
@@ -968,7 +968,7 @@ PrefabInstance:
     - target: {fileID: 1935143887239583434, guid: 160e40bc7cbce1c4fb7a12a7d23729e4,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1935143887239583434, guid: 160e40bc7cbce1c4fb7a12a7d23729e4,
         type: 3}
@@ -1003,7 +1003,7 @@ PrefabInstance:
     - target: {fileID: 1935143887239583444, guid: 160e40bc7cbce1c4fb7a12a7d23729e4,
         type: 3}
       propertyPath: m_Name
-      value: Results 4
+      value: Results 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 160e40bc7cbce1c4fb7a12a7d23729e4, type: 3}
@@ -1069,12 +1069,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InitialDungeonEditor: {fileID: 648696592}
-  TopDungeonEditors:
+  TopFeasibleDungeonEditors:
   - {fileID: 565852855}
   - {fileID: 356376885}
   - {fileID: 206476286}
-  - {fileID: 967359642}
+  TopInfeasibleDungeonEditors:
   - {fileID: 363426653}
+  - {fileID: 967359642}
   - {fileID: 631377604}
   StartOptimisationButton: {fileID: 189653592}
   NumberOfSubGenerations: 150
