@@ -1078,7 +1078,7 @@ MonoBehaviour:
   - {fileID: 631377604}
   StartOptimisationButton: {fileID: 189653592}
   NumberOfSubGenerations: 150
-  NumberOfBenchmarks: 30
+  NumberOfBenchmarks: 10
   BenchmarkLogs: []
 --- !u!4 &1116428058
 Transform:

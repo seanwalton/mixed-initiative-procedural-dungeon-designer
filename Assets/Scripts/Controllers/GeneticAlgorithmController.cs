@@ -1,6 +1,8 @@
 ﻿
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -138,9 +140,97 @@ public class GeneticAlgorithmController : MonoBehaviour
         }
         else
         {
-
+            WriteBenchmarkData();
         }
 
     }
 
+    private void WriteBenchmarkData()
+    {
+        Debug.Log("Writing benchmark data...");
+        WriteBestFitness();
+        WriteMeanFitness();
+    }
+
+    private void WriteBestFitness()
+    {
+        List<string[]> rowData = new List<string[]>();
+
+        for (int i = 0; i < BenchmarkLogs.Count; i++)
+        {
+            string[] rowDataTemp = new string[BenchmarkLogs[i].FeasibleLog.Count];
+            for (int j = 0; j < BenchmarkLogs[i].FeasibleLog.Count; j++)
+            {
+                rowDataTemp[j] = BenchmarkLogs[i].FeasibleLog[j].BestFitness.ToString();
+            }
+
+            rowData.Add(rowDataTemp);
+        }
+
+        string[][] output = new string[rowData.Count][];
+
+        for (int i = 0; i < output.Length; i++)
+        {
+            output[i] = rowData[i];
+        }
+
+        int length = output.GetLength(0);
+        string delimiter = ",";
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int index = 0; index < length; index++)
+            sb.AppendLine(string.Join(delimiter, output[index]));
+
+        string filePath = Application.persistentDataPath + "/" + geneticAlgorithm.ExperimentName + "_"
+            + System.DateTime.Now.Day.ToString() + System.DateTime.Now.Month.ToString() +
+            System.DateTime.Now.Hour.ToString() + System.DateTime.Now.Minute.ToString() +
+            "bestFitnessBenchmarks.csv";
+
+        StreamWriter outStream = System.IO.File.CreateText(filePath);
+        outStream.WriteLine(sb);
+        outStream.Close();
+        Debug.Log(filePath);
+    }
+
+    private void WriteMeanFitness()
+    {
+        List<string[]> rowData = new List<string[]>();
+
+        for (int i = 0; i < BenchmarkLogs.Count; i++)
+        {
+            string[] rowDataTemp = new string[BenchmarkLogs[i].FeasibleLog.Count];
+            for (int j = 0; j < BenchmarkLogs[i].FeasibleLog.Count; j++)
+            {
+                rowDataTemp[j] = BenchmarkLogs[i].FeasibleLog[j].AverageFitness.ToString();
+            }
+
+            rowData.Add(rowDataTemp);
+        }
+
+        string[][] output = new string[rowData.Count][];
+
+        for (int i = 0; i < output.Length; i++)
+        {
+            output[i] = rowData[i];
+        }
+
+        int length = output.GetLength(0);
+        string delimiter = ",";
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int index = 0; index < length; index++)
+            sb.AppendLine(string.Join(delimiter, output[index]));
+
+        string filePath = Application.persistentDataPath + "/" + geneticAlgorithm.ExperimentName + "_"
+            + System.DateTime.Now.Day.ToString() + System.DateTime.Now.Month.ToString() +
+            System.DateTime.Now.Hour.ToString() + System.DateTime.Now.Minute.ToString() +
+            "meanFitnessBenchmarks.csv";
+
+        StreamWriter outStream = System.IO.File.CreateText(filePath);
+        outStream.WriteLine(sb);
+        outStream.Close();
+        Debug.Log(filePath);
+    }
 }
