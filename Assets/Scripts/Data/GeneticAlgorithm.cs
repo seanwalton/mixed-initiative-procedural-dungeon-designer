@@ -25,6 +25,13 @@ public class GeneticAlgorithm : MonoBehaviour
         DungeonGenome.MutationType = MutationType;
     }
 
+    public void ResetOptimiser()
+    {
+        GenerationsFeasiblePop = new List<Generation>();
+        GenerationsInfeasiblePop = new List<Generation>();
+        FeasibleLog = new GALog();
+    }
+
     public void InitializeFirstGeneration(DungeonGenome masterGenome)
     {
         Generation gen1F = new Generation();
@@ -33,7 +40,7 @@ public class GeneticAlgorithm : MonoBehaviour
         //Add a mutated version of the masterGenome
         DungeonGenome genome = new DungeonGenome();
         genome.CopyFromOtherGenome(masterGenome);
-        for (int i = 0; i < Random.Range(DungeonGenome.Size, 4 * DungeonGenome.Size); i++)
+        for (int i = 0; i < Random.Range(1, 2*DungeonGenome.Size); i++)
         {
             genome.Mutate();
         }
@@ -52,7 +59,7 @@ public class GeneticAlgorithm : MonoBehaviour
         {
             DungeonGenome genome2 = new DungeonGenome();
             genome2.CopyFromOtherGenome(gen1F.GetRandomIndividual());
-            for (int j = 0; j < Random.Range(DungeonGenome.Size, 2 * DungeonGenome.Size); j++)
+            for (int j = 0; j < Random.Range(1, 2*DungeonGenome.Size); j++)
             {
                 genome2.Mutate();
             }

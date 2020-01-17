@@ -385,7 +385,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1116428057}
-        m_MethodName: StartOptimising
+        m_MethodName: StartOptimisingBenchmark
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1049,11 +1049,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7492db79298e964aad53fdaf1ae774e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ExperimentName: Fig5f
+  ExperimentName: 'Mutation_0_F5c '
   PopulationSize: 150
-  MutationRate: 0.9
-  CrossOverType: 1
-  MutationType: 2
+  MutationRate: 1
+  CrossOverType: 0
+  MutationType: 0
   FeasibleLog:
     FeasibleLog: []
 --- !u!114 &1116428057
@@ -1078,6 +1078,8 @@ MonoBehaviour:
   - {fileID: 631377604}
   StartOptimisationButton: {fileID: 189653592}
   NumberOfSubGenerations: 150
+  NumberOfBenchmarks: 30
+  BenchmarkLogs: []
 --- !u!4 &1116428058
 Transform:
   m_ObjectHideFlags: 0

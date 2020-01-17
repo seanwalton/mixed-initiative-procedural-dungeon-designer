@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,18 +12,22 @@ public class GeneticAlgorithmController : MonoBehaviour
     public Button StartOptimisationButton;
 
     public int NumberOfSubGenerations;
+    public int NumberOfBenchmarks;
 
+    public List<GALog> BenchmarkLogs = new List<GALog>();
 
     private GeneticAlgorithm geneticAlgorithm;
     private Generation lastGen;
     private int numGenerationsUntilStop;
     private int numberSubIterations;
+    private int numberBenchmarksRun;
 
     private void Awake()
     {
         geneticAlgorithm = gameObject.GetComponent<GeneticAlgorithm>();
         InitialDungeonEditor.SetToggleActive(false);
         numberSubIterations = 0;
+        numberBenchmarksRun = 0;
     }
 
     private void Start()
@@ -31,6 +36,19 @@ public class GeneticAlgorithmController : MonoBehaviour
         {
             TopDungeonEditors[i].gameObject.SetActive(false);
         }
+    }
+
+    //Starts optimising after reseting optimiser
+    public void StartOptimisingBenchmark()
+    {
+        StartOptimisationButton.gameObject.SetActive(false);
+
+        Random.InitState(System.DateTime.Now.Hour + System.DateTime.Now.Minute + System.DateTime.Now.Second);
+        geneticAlgorithm.ResetOptimiser();
+        Fitness.SetTargetMetricsFromGenome(InitialDungeonEditor.Genome);
+        
+        numGenerationsUntilStop = NumberOfSubGenerations;
+        InvokeRepeating("AdvanceGeneration", 0f, 0.1f);
     }
 
     public void StartOptimising()
@@ -102,6 +120,25 @@ public class GeneticAlgorithmController : MonoBehaviour
             geneticAlgorithm.SaveLogs();
 
             CancelInvoke("AdvanceGeneration");
+            DoNextBenchmark();
+        }
+
+    }
+
+    private void DoNextBenchmark()
+    {
+        
+        BenchmarkLogs.Add(geneticAlgorithm.FeasibleLog);
+
+        numberBenchmarksRun++;
+        if (numberBenchmarksRun < NumberOfBenchmarks)
+        {
+            Debug.Log("Benchmark: " + numberBenchmarksRun.ToString());
+            StartOptimisingBenchmark();
+        }
+        else
+        {
+
         }
 
     }
