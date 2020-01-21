@@ -79,7 +79,6 @@ public class GeneticAlgorithmController : MonoBehaviour
         geneticAlgorithm.ExperimentName = Experiments[currentExperiment].Name;
         geneticAlgorithm.MutationRate = Experiments[currentExperiment].MutationRate;
         geneticAlgorithm.CrossOverType = Experiments[currentExperiment].CrossOverType;
-        geneticAlgorithm.MutationType = Experiments[currentExperiment].MutationType;
         Fitness.SetTargetMetricsFromGenome(InitialDungeonEditor.Genome);
         
         numGenerationsUntilStop = NumberOfSubGenerations;

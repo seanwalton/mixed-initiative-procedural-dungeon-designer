@@ -13,7 +13,6 @@ public class DungeonGenome : System.IComparable
     public static float TreasureCoverage = 0.02f;
 
     public static int CrossOverType = 0;
-    public static int MutationType = 0;
 
     public DungeonTileType[,] DungeonMap = new DungeonTileType[Size, Size];
     public List<Node> PathFromEntranceToExit;
@@ -263,7 +262,7 @@ public class DungeonGenome : System.IComparable
     public void Mutate()
     {
 
-        int value = MutationType;
+        int value = Random.Range(0,2);
 
         if (value == 0)
         {

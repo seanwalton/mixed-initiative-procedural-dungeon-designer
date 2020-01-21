@@ -22,7 +22,6 @@ public class GeneticAlgorithm : MonoBehaviour
     private void Start()
     {
         DungeonGenome.CrossOverType = CrossOverType;
-        DungeonGenome.MutationType = MutationType;
     }
 
     public void ResetOptimiser()

@@ -1069,18 +1069,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Experiments:
-  - Name: Mutation_0_F5c
+  - Name: Crossover_0_F5c
     MutationRate: 1
     CrossOverType: 0
-    MutationType: 0
-  - Name: Mutation_1_F5c
+  - Name: Crossover_1_F5c
     MutationRate: 1
-    CrossOverType: 0
-    MutationType: 1
-  - Name: Mutation_2_F5c
+    CrossOverType: 1
+  - Name: Crossover_2_F5c
     MutationRate: 1
-    CrossOverType: 0
-    MutationType: 2
+    CrossOverType: 2
   InitialDungeonEditor: {fileID: 648696592}
   TopFeasibleDungeonEditors:
   - {fileID: 565852855}
@@ -1092,7 +1089,7 @@ MonoBehaviour:
   - {fileID: 631377604}
   StartOptimisationButton: {fileID: 189653592}
   NumberOfSubGenerations: 150
-  NumberOfBenchmarks: 2
+  NumberOfBenchmarks: 30
   BenchmarkLogs: []
 --- !u!4 &1116428058
 Transform:
