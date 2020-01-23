@@ -12,8 +12,6 @@ public class DungeonGenome : System.IComparable
     public static float EnemyCoverage = 0.02f;
     public static float TreasureCoverage = 0.02f;
 
-    public static int CrossOverType = 0;
-
     public DungeonTileType[,] DungeonMap = new DungeonTileType[Size, Size];
     public List<Node> PathFromEntranceToExit;
     public bool ValidPath;
@@ -47,7 +45,7 @@ public class DungeonGenome : System.IComparable
         //The new child must have exactly one entrance and one exit, so lets pick where those come from now
         int exit = Random.Range(0, 2);
         int entrance = Random.Range(0, 2);
-        int crossoverType = CrossOverType;
+        int crossoverType = Random.Range(0, 2);
         int parent = 0;
 
         //First set entrance and exit

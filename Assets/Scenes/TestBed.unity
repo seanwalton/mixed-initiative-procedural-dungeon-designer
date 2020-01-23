@@ -1052,8 +1052,6 @@ MonoBehaviour:
   ExperimentName: 'Mutation_0_F5c '
   PopulationSize: 150
   MutationRate: 1
-  CrossOverType: 0
-  MutationType: 0
   FeasibleLog:
     FeasibleLog: []
 --- !u!114 &1116428057
@@ -1069,15 +1067,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Experiments:
-  - Name: Crossover_0_F5c
+  - Name: Rate_0_F5c
+    MutationRate: 0
+  - Name: Rate_025_F5c
+    MutationRate: 0.25
+  - Name: Rate_050_F5c
+    MutationRate: 0.5
+  - Name: Rate_075_F5c
+    MutationRate: 0.75
+  - Name: Rate_100_F5c
     MutationRate: 1
-    CrossOverType: 0
-  - Name: Crossover_1_F5c
-    MutationRate: 1
-    CrossOverType: 1
-  - Name: Crossover_2_F5c
-    MutationRate: 1
-    CrossOverType: 2
   InitialDungeonEditor: {fileID: 648696592}
   TopFeasibleDungeonEditors:
   - {fileID: 565852855}
