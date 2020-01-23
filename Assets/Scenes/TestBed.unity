@@ -1067,16 +1067,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Experiments:
-  - Name: Rate_0_F5c
-    MutationRate: 0
-  - Name: Rate_025_F5c
-    MutationRate: 0.25
-  - Name: Rate_050_F5c
+  - Name: Novalty_F5a
     MutationRate: 0.5
-  - Name: Rate_075_F5c
-    MutationRate: 0.75
-  - Name: Rate_100_F5c
-    MutationRate: 1
+    NovaltySearch: 1
+  - Name: NoNovalty_F5a
+    MutationRate: 0.5
+    NovaltySearch: 0
   InitialDungeonEditor: {fileID: 648696592}
   TopFeasibleDungeonEditors:
   - {fileID: 565852855}
