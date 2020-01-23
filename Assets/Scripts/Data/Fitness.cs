@@ -51,6 +51,8 @@ public class Fitness
 
     public static int NumberOfTargetGenomes = 0;
 
+    public static bool WithNovaltyMetric = true;
+
     public static DungeonGenome InitialUserDesign;
 
     public DungeonGenome Genome;
@@ -473,7 +475,7 @@ public class Fitness
         FitnessValue += upDownTreasureToEnemyFitness;
         numFitnesses += 1f;
 
-        if (InitialUserDesign != null)
+        if ((InitialUserDesign != null) && (WithNovaltyMetric))
         {
             float novelty = ((float)((DungeonGenome.Size * DungeonGenome.Size) - DungeonGenome.EditDistance(Genome, InitialUserDesign))) /
             (DungeonGenome.Size * DungeonGenome.Size);
