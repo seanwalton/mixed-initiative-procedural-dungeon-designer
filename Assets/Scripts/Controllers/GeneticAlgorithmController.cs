@@ -75,7 +75,7 @@ public class GeneticAlgorithmController : MonoBehaviour
         StartOptimisationButton.gameObject.SetActive(false);
 
         Random.InitState(System.DateTime.Now.Hour + System.DateTime.Now.Minute + System.DateTime.Now.Second);
-        NumberOfSubGenerations = geneticAlgorithm.NumberOfGenerations;
+        NumberOfSubGenerations = Experiments[currentExperiment].NumberOfGenerations;
         geneticAlgorithm.ResetOptimiser(Experiments[currentExperiment].PopulationSize);
         geneticAlgorithm.ExperimentName = Experiments[currentExperiment].Name;
         geneticAlgorithm.MutationRate = Experiments[currentExperiment].MutationRate;
