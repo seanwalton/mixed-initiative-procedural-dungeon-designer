@@ -19,8 +19,9 @@ public class GeneticAlgorithm : MonoBehaviour
     public GALog FeasibleLog = new GALog();
 
     
-    public void ResetOptimiser()
+    public void ResetOptimiser(int popSize)
     {
+        PopulationSize = popSize;
         GenerationsFeasiblePop = new List<Generation>();
         GenerationsInfeasiblePop = new List<Generation>();
         FeasibleLog = new GALog();
