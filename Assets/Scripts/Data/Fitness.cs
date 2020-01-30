@@ -304,8 +304,8 @@ public class Fitness
         CalculateTreasureSafety();
         CalculateConnectorFitness();
 
-        PathLength = genome.PathFromEntranceToExit.Count / (float)NumberPassableTiles;
-        PassableToImpassableRatio = NumberPassableTiles / ((float)NumberWallTiles);
+        PathLength = genome.PathFromEntranceToExit.Count / (DungeonGenome.Size * DungeonGenome.Size);
+        PassableToImpassableRatio = NumberPassableTiles / (Mathf.Max((float)NumberWallTiles, 0.1f));
 
         FitnessValues.Clear();
         FitnessValue = 0f;
@@ -617,9 +617,9 @@ public class Fitness
         UpDownTreasureToEnemyRatio = 0f;
         LeftRightTreasureToEnemyRatio = 0f;
 
-        if ((NumberEnemyTiles+NumberEnemyTiles) > 0)
+        if ((NumberTreasureTiles + NumberEnemyTiles) > 0)
         {
-            UpDownTreasureToEnemyRatio = Mathf.Abs((NumberTreasureTiles_Top - NumberEnemyTiles_Bottom) / (float)(NumberTreasureTiles+NumberEnemyTiles));
+            UpDownTreasureToEnemyRatio = Mathf.Abs((NumberTreasureTiles_Top - NumberEnemyTiles_Bottom) / (float)(NumberTreasureTiles + NumberEnemyTiles));
             LeftRightTreasureToEnemyRatio = Mathf.Abs((NumberTreasureTiles_Left - NumberEnemyTiles_Right) / (float)(NumberTreasureTiles + NumberEnemyTiles));
         }
 
@@ -628,12 +628,12 @@ public class Fitness
 
     private void CalculateEnemyCoverage()
     {
-        EnemyDensity = NumberEnemyTiles / (float) NumberPassableTiles;
+        EnemyDensity = NumberEnemyTiles / Mathf.Max((float) NumberPassableTiles, 0.1f);
     }
 
     private void CalculateTreasureCoverage()
     {
-        TreasureDensity = NumberTreasureTiles / (float) NumberPassableTiles;
+        TreasureDensity = NumberTreasureTiles / Mathf.Max((float)NumberPassableTiles, 0.1f);
     }
 
     private void CalculateFractalDimension()
@@ -766,8 +766,8 @@ public class Fitness
             }
         }
 
-        EntranceSafetyArea /= (float) NumberPassableTiles;
-        EntranceGreedArea /= (float) NumberPassableTiles;
+        EntranceSafetyArea /= (DungeonGenome.Size * DungeonGenome.Size);
+        EntranceGreedArea /= (DungeonGenome.Size * DungeonGenome.Size);
 
 
     }

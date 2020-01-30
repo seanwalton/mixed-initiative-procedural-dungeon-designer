@@ -1070,17 +1070,7 @@ MonoBehaviour:
   - Name: 'Pop_75_F5c '
     MutationRate: 0.5
     NovaltySearch: 0
-    PopulationSize: 75
-    NumberOfGenerations: 2000
-  - Name: 'Pop_150_F5c '
-    MutationRate: 0.5
-    NovaltySearch: 0
     PopulationSize: 150
-    NumberOfGenerations: 1000
-  - Name: 'Pop_300_F5c '
-    MutationRate: 0.5
-    NovaltySearch: 0
-    PopulationSize: 300
     NumberOfGenerations: 500
   InitialDungeonEditor: {fileID: 648696592}
   TopFeasibleDungeonEditors:
