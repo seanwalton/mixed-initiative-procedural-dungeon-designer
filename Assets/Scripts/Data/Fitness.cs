@@ -304,9 +304,9 @@ public class Fitness
         CalculateTreasureSafety();
         CalculateConnectorFitness();
 
-        PathLength = genome.PathFromEntranceToExit.Count / (DungeonGenome.Size * DungeonGenome.Size);
-        PassableToImpassableRatio = NumberPassableTiles / (Mathf.Max((float)NumberWallTiles, 0.1f));
-
+        PathLength = genome.PathFromEntranceToExit.Count / (float) (DungeonGenome.Size * DungeonGenome.Size);
+        PassableToImpassableRatio = NumberWallTiles / (float) NumberPassableTiles;
+            
         FitnessValues.Clear();
         FitnessValue = 0f;
         float numFitnesses = 0f;
@@ -628,12 +628,12 @@ public class Fitness
 
     private void CalculateEnemyCoverage()
     {
-        EnemyDensity = NumberEnemyTiles / Mathf.Max((float) NumberPassableTiles, 0.1f);
+        EnemyDensity = NumberEnemyTiles / (float)(DungeonGenome.Size * DungeonGenome.Size);
     }
 
     private void CalculateTreasureCoverage()
     {
-        TreasureDensity = NumberTreasureTiles / Mathf.Max((float)NumberPassableTiles, 0.1f);
+        TreasureDensity = NumberTreasureTiles / (float)(DungeonGenome.Size * DungeonGenome.Size);
     }
 
     private void CalculateFractalDimension()
@@ -1132,7 +1132,7 @@ public class Fitness
     {
         MeanCorridorLength = 0f;
         MaxCorridorLength = 0f;
-        MinCorridorLength = DungeonGenome.Size * DungeonGenome.Size;
+        MinCorridorLength = (DungeonGenome.Size * DungeonGenome.Size);
         foreach (Corridor corridor in Corridors)
         {
             
