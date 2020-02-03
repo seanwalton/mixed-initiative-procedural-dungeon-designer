@@ -1052,6 +1052,8 @@ MonoBehaviour:
   ExperimentName: 'Mutation_0_F5c '
   PopulationSize: 150
   MutationRate: 1
+  CrossOverType: 0
+  MutationType: 0
   FeasibleLog:
     FeasibleLog: []
 --- !u!114 &1116428057
@@ -1067,11 +1069,69 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Experiments:
-  - Name: 'Pop_75_F5c '
+  - Name: 'M0_C0_F5c '
     MutationRate: 0.5
     NovaltySearch: 0
     PopulationSize: 150
-    NumberOfGenerations: 500
+    NumberOfGenerations: 150
+    CrossOverType: 0
+    MutationType: 0
+  - Name: 'M1_C0_F5c '
+    MutationRate: 0.5
+    NovaltySearch: 0
+    PopulationSize: 150
+    NumberOfGenerations: 150
+    CrossOverType: 0
+    MutationType: 1
+  - Name: 'M2_C0_F5c '
+    MutationRate: 0.5
+    NovaltySearch: 0
+    PopulationSize: 150
+    NumberOfGenerations: 150
+    CrossOverType: 0
+    MutationType: 2
+  - Name: 'M0_C1_F5c '
+    MutationRate: 0.5
+    NovaltySearch: 0
+    PopulationSize: 150
+    NumberOfGenerations: 150
+    CrossOverType: 1
+    MutationType: 0
+  - Name: 'M1_C1_F5c '
+    MutationRate: 0.5
+    NovaltySearch: 0
+    PopulationSize: 150
+    NumberOfGenerations: 150
+    CrossOverType: 1
+    MutationType: 1
+  - Name: 'M2_C1_F5c '
+    MutationRate: 0.5
+    NovaltySearch: 0
+    PopulationSize: 150
+    NumberOfGenerations: 150
+    CrossOverType: 1
+    MutationType: 2
+  - Name: 'M0_C2_F5c '
+    MutationRate: 0.5
+    NovaltySearch: 0
+    PopulationSize: 150
+    NumberOfGenerations: 150
+    CrossOverType: 2
+    MutationType: 0
+  - Name: 'M1_C2_F5c '
+    MutationRate: 0.5
+    NovaltySearch: 0
+    PopulationSize: 150
+    NumberOfGenerations: 150
+    CrossOverType: 2
+    MutationType: 1
+  - Name: 'M2_C2_F5c '
+    MutationRate: 0.5
+    NovaltySearch: 0
+    PopulationSize: 150
+    NumberOfGenerations: 150
+    CrossOverType: 2
+    MutationType: 2
   InitialDungeonEditor: {fileID: 648696592}
   TopFeasibleDungeonEditors:
   - {fileID: 565852855}

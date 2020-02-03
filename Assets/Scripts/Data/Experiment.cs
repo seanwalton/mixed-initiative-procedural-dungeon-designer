@@ -8,7 +8,7 @@ public class Experiment
     public int PopulationSize;
     public int NumberOfGenerations;
 
-    //public int CrossOverType;
-    //public int MutationType;
+    public int CrossOverType;
+    public int MutationType;
    
 }
