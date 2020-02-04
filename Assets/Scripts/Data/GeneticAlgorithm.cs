@@ -11,8 +11,6 @@ public class GeneticAlgorithm : MonoBehaviour
 
     public float MutationRate;
 
-    public int CrossOverType;
-    public int MutationType;
 
     public List<Generation> GenerationsFeasiblePop = new List<Generation>();
     public List<Generation> GenerationsInfeasiblePop = new List<Generation>();
@@ -21,11 +19,6 @@ public class GeneticAlgorithm : MonoBehaviour
     public GALog FeasibleLog = new GALog();
 
 
-    private void Start()
-    {
-        DungeonGenome.CrossOverType = CrossOverType;
-        DungeonGenome.MutationType = MutationType;
-    }
 
     public void ResetOptimiser(int popSize)
     {
