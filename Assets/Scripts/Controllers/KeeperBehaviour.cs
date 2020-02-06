@@ -33,4 +33,15 @@ public class KeeperBehaviour : MonoBehaviour
         }
     }
 
+    public DungeonGenome[] GetAllKeepers()
+    {
+        DungeonGenome[] genomes = new DungeonGenome[numberKeepers];
+        for (int i = 0; i < genomes.Length; i++)
+        {
+            genomes[i] = new DungeonGenome();
+            genomes[i].CopyFromOtherGenome(dungeonEditors[i].Genome);
+        }
+        return genomes;
+    }
+
 }

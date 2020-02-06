@@ -28,6 +28,80 @@ public class GeneticAlgorithm : MonoBehaviour
         FeasibleLog = new GALog();
     }
 
+    public void InitializeFirstGeneration(DungeonGenome[] masterGenome)
+    {
+        Generation gen1F = new Generation();
+        Generation gen1IF = new Generation();
+
+        //Add a mutated version of the masterGenome
+        DungeonGenome genome = new DungeonGenome();
+        for (int i = 0; i < masterGenome.Length; i++)
+        {
+            genome.CopyFromOtherGenome(masterGenome[i]);
+            for (int j = 0; j < DungeonGenome.Size; j++)
+            {
+                genome.Mutate();
+            }
+
+            DungeonGenome genome2 = new DungeonGenome();
+            if (gen1F.NumberOfIndividuals > 0)
+            {
+                genome2 = DungeonGenome.CrossOver(genome, gen1F.GetRandomIndividual());
+            }
+            else if (gen1IF.NumberOfIndividuals > 0)
+            {
+                genome2 = DungeonGenome.CrossOver(genome, gen1IF.GetRandomIndividual());
+            }
+            else
+            {
+                genome2.CopyFromOtherGenome(genome);
+            }
+
+            if (genome2.ValidPath)
+            {
+                gen1F.AddIndividual(genome2);
+            }
+            else
+            {
+                gen1IF.AddIndividual(genome2);
+            }
+        }
+        
+
+
+        while ((gen1F.NumberOfIndividuals + gen1IF.NumberOfIndividuals) < PopulationSize)
+        {
+            DungeonGenome randomGenome = new DungeonGenome();
+            randomGenome.RandomlyInitialise();
+
+            DungeonGenome genome2 = new DungeonGenome();
+            if (gen1F.NumberOfIndividuals > 0)
+            {
+                genome2 = DungeonGenome.CrossOver(randomGenome, gen1F.GetRandomIndividual());
+            }
+            else
+            {
+                genome2 = DungeonGenome.CrossOver(randomGenome, gen1IF.GetRandomIndividual());
+            }
+
+            genome2.Mutate();
+
+            if (genome2.ValidPath)
+            {
+                gen1F.AddIndividual(genome2);
+            }
+            else
+            {
+                gen1IF.AddIndividual(genome2);
+            }
+        }
+        gen1F.Sort();
+        gen1IF.Sort();
+        GenerationsFeasiblePop.Add(gen1F);
+        GenerationsInfeasiblePop.Add(gen1IF);
+
+    }
+
     public void InitializeFirstGeneration(DungeonGenome masterGenome)
     {
         Generation gen1F = new Generation();
