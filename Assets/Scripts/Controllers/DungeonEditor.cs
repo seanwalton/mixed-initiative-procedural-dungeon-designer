@@ -8,7 +8,7 @@ public class DungeonEditor : MonoBehaviour
 
     public DungeonGenome Genome = new DungeonGenome();
     public DrawDungeonBehaviour DungeonDrawer;
-
+    public bool Editable = true;
     public Toggle Liked;
 
     public void SetGenome(DungeonGenome genome)
@@ -25,6 +25,7 @@ public class DungeonEditor : MonoBehaviour
     private void Start()
     {
         Genome.SetAllFloor();
+        SetToggleActive(false);
         DrawGenome();
     }
 
@@ -36,7 +37,7 @@ public class DungeonEditor : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0) && Editable)
         {
             Vector2Int node = GetTileCoordinatesOfCursor();
 
