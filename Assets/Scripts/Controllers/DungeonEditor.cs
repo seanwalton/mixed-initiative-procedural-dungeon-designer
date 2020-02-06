@@ -10,6 +10,7 @@ public class DungeonEditor : MonoBehaviour
     public DrawDungeonBehaviour DungeonDrawer;
     public bool Editable = true;
     public Toggle Liked;
+    public Toggle Keep;
 
     public void SetGenome(DungeonGenome genome)
     {
@@ -20,6 +21,7 @@ public class DungeonEditor : MonoBehaviour
     public void SetToggleActive(bool active)
     {
         Liked.gameObject.SetActive(active);
+        Keep.gameObject.SetActive(active);
     }
 
     private void Start()
