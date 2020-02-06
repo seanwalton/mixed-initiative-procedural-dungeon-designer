@@ -358,7 +358,7 @@ MonoBehaviour:
     Name: MixedInitiative
     MutationRate: 0.5
     PopulationSize: 150
-    NumberOfGenerations: 150
+    NumberOfGenerations: 100
   TopFeasibleDungeonEditors:
   - {fileID: 900720479}
   - {fileID: 1408131462}
