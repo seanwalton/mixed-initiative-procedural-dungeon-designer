@@ -20,6 +20,10 @@ public class MixedInitiativeController : MonoBehaviour
     [SerializeField]
     public GameObject phase2Objects;
 
+    [SerializeField]
+    public GameObject phase3Objects;
+
+
     private GeneticAlgorithm geneticAlgorithm;
     private Generation lastGen;
     private Generation lastGenInfeasible;
@@ -34,6 +38,7 @@ public class MixedInitiativeController : MonoBehaviour
     {
         phase1Objects.SetActive(true);
         phase2Objects.SetActive(false);
+        phase3Objects.SetActive(false);
     }
 
     public void SubmitFirstDungeon()
@@ -41,14 +46,13 @@ public class MixedInitiativeController : MonoBehaviour
         //Setup fitness
         Keepers.AddKeeper(initialEditor.Genome);
         Fitness.SetTargetMetricsFromGenome(initialEditor.Genome);
-        phase1Objects.SetActive(false);
-        phase2Objects.SetActive(true);
-
+        
         StartOptimiser();
     }
 
     private void StartOptimiser()
     {
+
         //Setup GA
         Random.InitState(System.DateTime.Now.DayOfYear +
             System.DateTime.Now.Hour + System.DateTime.Now.Minute + System.DateTime.Now.Second + System.DateTime.Now.Millisecond);
@@ -57,12 +61,11 @@ public class MixedInitiativeController : MonoBehaviour
         geneticAlgorithm.ExperimentName = GAParameters.Name;
         geneticAlgorithm.MutationRate = GAParameters.MutationRate;
 
-        //InvokeRepeating("AdvanceGeneration", 0f, 0.01f);
-        for (int i = 0; i < numGenerationsUntilStop; i++)
-        {
-            AdvanceGeneration();
-        }
-        SetupPhase3();
+        phase1Objects.SetActive(false);
+        phase2Objects.SetActive(true);
+        phase3Objects.SetActive(false);
+        InvokeRepeating("AdvanceGeneration", 0f, 0.1f);
+        
     }
 
     private void AdvanceGeneration()
@@ -104,16 +107,85 @@ public class MixedInitiativeController : MonoBehaviour
 
         }
 
-        //numGenerationsUntilStop--;
-        //if (numGenerationsUntilStop == 0)
-        //{
-        //    CancelInvoke("AdvanceGeneration");
-        //    SetupPhase3();
-        //}
+        numGenerationsUntilStop--;
+        if (numGenerationsUntilStop == 0)
+        {
+            CancelInvoke("AdvanceGeneration");
+            SetupPhase3();
+        }
     }
 
     private void SetupPhase3()
     {
+        phase3Objects.SetActive(true);
+
+        //Set the dungeons editable
+        for (int i = 0; i < TopFeasibleDungeonEditors.Length; i++)
+        {
+            if (i < lastGen.NumberOfIndividuals)
+            {
+                TopFeasibleDungeonEditors[i].gameObject.SetActive(true);
+                TopFeasibleDungeonEditors[i].SetGenome(lastGen.Individuals[i]);
+                TopFeasibleDungeonEditors[i].SetToggleActive(true);
+                TopFeasibleDungeonEditors[i].Editable = true;
+            }
+            else
+            {
+                TopFeasibleDungeonEditors[i].gameObject.SetActive(false);
+            }
+
+        }
+
+        for (int i = 0; i < TopInfeasibleDungeonEditors.Length; i++)
+        {
+            if (i < lastGenInfeasible.NumberOfIndividuals)
+            {
+                TopInfeasibleDungeonEditors[i].gameObject.SetActive(true);
+                TopInfeasibleDungeonEditors[i].SetGenome(lastGenInfeasible.Individuals[i]);
+                TopInfeasibleDungeonEditors[i].SetToggleActive(true);
+                TopInfeasibleDungeonEditors[i].Editable = true;
+            }
+            else
+            {
+                TopInfeasibleDungeonEditors[i].gameObject.SetActive(false);
+            }
+
+        }
+
+    }
+
+    public void FinishPhase3()
+    {
+        for (int i = 0; i < TopFeasibleDungeonEditors.Length; i++)
+        {
+            if (TopFeasibleDungeonEditors[i].Liked.isOn || TopFeasibleDungeonEditors[i].Keep.isOn)
+            {
+                Fitness.UpdateTargetMetricsFromGenome(TopFeasibleDungeonEditors[i].Genome);
+            }
+
+            if (TopFeasibleDungeonEditors[i].Keep.isOn)
+            {
+                Keepers.AddKeeper(TopFeasibleDungeonEditors[i].Genome);
+            }
+        }
+
+        for (int i = 0; i < TopInfeasibleDungeonEditors.Length; i++)
+        {
+            if (TopInfeasibleDungeonEditors[i].Liked.isOn || TopInfeasibleDungeonEditors[i].Keep.isOn)
+            {
+                Fitness.UpdateTargetMetricsFromGenome(TopInfeasibleDungeonEditors[i].Genome);
+            }
+
+            if (TopInfeasibleDungeonEditors[i].Keep.isOn)
+            {
+                Keepers.AddKeeper(TopInfeasibleDungeonEditors[i].Genome);
+            }
+        }
+
+        if (!Keepers.KeepersAreFull())
+        {
+            StartOptimiser();
+        }
 
     }
 
