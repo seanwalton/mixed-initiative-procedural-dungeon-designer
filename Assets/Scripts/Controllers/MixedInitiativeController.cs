@@ -60,6 +60,7 @@ public class MixedInitiativeController : MonoBehaviour
         geneticAlgorithm.ResetOptimiser(GAParameters.NumberOfGenerations);
         geneticAlgorithm.ExperimentName = GAParameters.Name;
         geneticAlgorithm.MutationRate = GAParameters.MutationRate;
+        geneticAlgorithm.InitializeFirstGeneration(initialEditor.Genome);
 
         phase1Objects.SetActive(false);
         phase2Objects.SetActive(true);

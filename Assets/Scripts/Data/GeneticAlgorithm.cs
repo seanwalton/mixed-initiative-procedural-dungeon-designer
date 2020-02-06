@@ -36,7 +36,7 @@ public class GeneticAlgorithm : MonoBehaviour
         //Add a mutated version of the masterGenome
         DungeonGenome genome = new DungeonGenome();
         genome.CopyFromOtherGenome(masterGenome);
-        for (int i = 0; i < Random.Range(1, 2*DungeonGenome.Size); i++)
+        for (int i = 0; i < DungeonGenome.Size; i++)
         {
             genome.Mutate();
         }
@@ -53,12 +53,21 @@ public class GeneticAlgorithm : MonoBehaviour
         
         for (int i = 0; i < PopulationSize; i++)
         {
+            DungeonGenome randomGenome = new DungeonGenome();
+            randomGenome.RandomlyInitialise();
+
             DungeonGenome genome2 = new DungeonGenome();
-            genome2.CopyFromOtherGenome(gen1F.GetRandomIndividual());
-            for (int j = 0; j < Random.Range(1, 2*DungeonGenome.Size); j++)
+            if (gen1F.NumberOfIndividuals > 0)
             {
-                genome2.Mutate();
+                genome2 = DungeonGenome.CrossOver(randomGenome, gen1F.GetRandomIndividual());
             }
+            else
+            {
+                genome2 = DungeonGenome.CrossOver(randomGenome, gen1IF.GetRandomIndividual());
+            }
+                         
+            genome2.Mutate();
+            
             if (genome2.ValidPath)
             {
                 gen1F.AddIndividual(genome2);
