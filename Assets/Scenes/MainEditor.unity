@@ -364,7 +364,7 @@ MonoBehaviour:
   - {fileID: 1408131462}
   - {fileID: 1976822207}
   - {fileID: 1705284202}
-  TopInfeasibleDungeonEditors:
+  BottomDungeonEditors:
   - {fileID: 1117016725}
   - {fileID: 1776029195}
   - {fileID: 937810362}
@@ -2000,7 +2000,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1133550533}
   m_Layer: 0
-  m_Name: Infeasible
+  m_Name: Bottom Dungeons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

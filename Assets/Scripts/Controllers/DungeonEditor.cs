@@ -22,6 +22,8 @@ public class DungeonEditor : MonoBehaviour
     {
         Liked.gameObject.SetActive(active);
         Keep.gameObject.SetActive(active);
+        Liked.isOn = false;
+        Keep.isOn = false;
     }
 
     private void Start()

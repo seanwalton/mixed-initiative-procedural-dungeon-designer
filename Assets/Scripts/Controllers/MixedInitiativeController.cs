@@ -9,7 +9,7 @@ public class MixedInitiativeController : MonoBehaviour
     public Experiment GAParameters;
 
     public DungeonEditor[] TopFeasibleDungeonEditors;
-    public DungeonEditor[] TopInfeasibleDungeonEditors;
+    public DungeonEditor[] BottomDungeonEditors;
 
     [SerializeField]
     private GameObject phase1Objects;
@@ -91,18 +91,20 @@ public class MixedInitiativeController : MonoBehaviour
 
         }
 
-        for (int i = 0; i < TopInfeasibleDungeonEditors.Length; i++)
+        for (int i = 0; i < BottomDungeonEditors.Length; i++)
         {
-            if (i < lastGenInfeasible.NumberOfIndividuals)
+            int j = lastGen.NumberOfIndividuals - (lastGen.NumberOfIndividuals / (2 * (i + 1)));
+            if ((j < lastGen.NumberOfIndividuals) && (j > TopFeasibleDungeonEditors.Length))
             {
-                TopInfeasibleDungeonEditors[i].gameObject.SetActive(true);
-                TopInfeasibleDungeonEditors[i].SetGenome(lastGenInfeasible.Individuals[i]);
-                TopInfeasibleDungeonEditors[i].SetToggleActive(false);
-                TopInfeasibleDungeonEditors[i].Editable = false;
+
+                BottomDungeonEditors[i].gameObject.SetActive(true);
+                BottomDungeonEditors[i].SetGenome(lastGen.Individuals[j]);
+                BottomDungeonEditors[i].SetToggleActive(false);
+                BottomDungeonEditors[i].Editable = false;
             }
             else
             {
-                TopInfeasibleDungeonEditors[i].gameObject.SetActive(false);
+                BottomDungeonEditors[i].gameObject.SetActive(false);
             }
 
         }
@@ -136,18 +138,20 @@ public class MixedInitiativeController : MonoBehaviour
 
         }
 
-        for (int i = 0; i < TopInfeasibleDungeonEditors.Length; i++)
+        for (int i = 0; i < BottomDungeonEditors.Length; i++)
         {
-            if (i < lastGenInfeasible.NumberOfIndividuals)
+            int j = lastGen.NumberOfIndividuals - (lastGen.NumberOfIndividuals / (2 * (i + 1)));
+            if ((j < lastGen.NumberOfIndividuals) && (j > TopFeasibleDungeonEditors.Length))
             {
-                TopInfeasibleDungeonEditors[i].gameObject.SetActive(true);
-                TopInfeasibleDungeonEditors[i].SetGenome(lastGenInfeasible.Individuals[i]);
-                TopInfeasibleDungeonEditors[i].SetToggleActive(true);
-                TopInfeasibleDungeonEditors[i].Editable = true;
+                
+                BottomDungeonEditors[i].gameObject.SetActive(true);
+                BottomDungeonEditors[i].SetGenome(lastGen.Individuals[j]);
+                BottomDungeonEditors[i].SetToggleActive(true);
+                BottomDungeonEditors[i].Editable = true;
             }
             else
             {
-                TopInfeasibleDungeonEditors[i].gameObject.SetActive(false);
+                BottomDungeonEditors[i].gameObject.SetActive(false);
             }
 
         }
@@ -169,16 +173,16 @@ public class MixedInitiativeController : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < TopInfeasibleDungeonEditors.Length; i++)
+        for (int i = 0; i < BottomDungeonEditors.Length; i++)
         {
-            if (TopInfeasibleDungeonEditors[i].Liked.isOn || TopInfeasibleDungeonEditors[i].Keep.isOn)
+            if (BottomDungeonEditors[i].Liked.isOn || BottomDungeonEditors[i].Keep.isOn)
             {
-                Fitness.UpdateTargetMetricsFromGenome(TopInfeasibleDungeonEditors[i].Genome);
+                Fitness.UpdateTargetMetricsFromGenome(BottomDungeonEditors[i].Genome);
             }
 
-            if (TopInfeasibleDungeonEditors[i].Keep.isOn)
+            if (BottomDungeonEditors[i].Keep.isOn)
             {
-                Keepers.AddKeeper(TopInfeasibleDungeonEditors[i].Genome);
+                Keepers.AddKeeper(BottomDungeonEditors[i].Genome);
             }
         }
 
