@@ -911,7 +911,14 @@ public class Fitness
                             }
                         }
 
-                        if (corridor.Length > 1) Corridors.Add(corridor);
+                        if (corridor.Length > 0)
+                        {
+                            Corridors.Add(corridor);
+                            for (int k = 0; k < corridor.Length; k++)
+                            {
+                                CorridorFlag[i + k, j] = Corridors.Count;
+                            }
+                        }
                     }
 
                     if (AreLeftAndRightImpassable(i, j))
@@ -919,7 +926,6 @@ public class Fitness
                         Corridor corridor = new Corridor();
                         corridor.Type = CorridorType.VERTICAL;
                         corridor.Add(new Vector2Int(i, j));
-                        CorridorFlag[i, j] = Corridors.Count;
                         int jj = j;
                         bool endCorridor = false;
 
@@ -930,7 +936,6 @@ public class Fitness
                                 (AreLeftAndRightImpassable(i, jj)))
                             {
                                 corridor.Add(new Vector2Int(i, jj));
-                                CorridorFlag[i, jj] = Corridors.Count;
                             }
                             else
                             {
@@ -938,7 +943,14 @@ public class Fitness
                             }
                         }
 
-                        if (corridor.Length > 1) Corridors.Add(corridor);
+                        if (corridor.Length > 0)
+                        {
+                            Corridors.Add(corridor);
+                            for (int k = 0; k < corridor.Length; k++)
+                            {
+                                CorridorFlag[i, j+k] = Corridors.Count;
+                            }
+                        }
                     }
 
                 }
