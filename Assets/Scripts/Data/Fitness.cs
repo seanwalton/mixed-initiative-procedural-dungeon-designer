@@ -373,10 +373,6 @@ public class Fitness
         FitnessValue += chamberMaxSquareFitness;
         numFitnesses += 1f;
 
-
-
-
-
         float numChamberFitness = Mathf.Abs(TargetNumberChambers - Chambers.Count)/
             (DungeonGenome.Size * DungeonGenome.Size);
         FitnessValues.Add(numChamberFitness);
@@ -784,57 +780,50 @@ public class Fitness
                     Vector2Int startCorner = new Vector2Int(i, j);
                     Vector2Int endCorner = new Vector2Int(i, j);
 
-                    int sizeOfChamberSquare = 0;
 
-                    bool endChamber = false;
-
-                    while (!endChamber)
+                    //First march from start in i
+                    int chamberWidth = 0;
+                    bool endWidth = false;
+                    while (!endWidth)
                     {
-                        int testSize = sizeOfChamberSquare + 1;
-
+                        int testSize = chamberWidth + 1;
                         bool valid = true;
-
                         for (int ii = 0; ii <= testSize; ii++)
                         {
-                            for (int jj = 0; jj <= testSize; jj++)
-                            {
-                                int testi = i + ii;
-                                int testj = j + jj;
-
-                                if ((testi >= DungeonGenome.Size) || (testj >= DungeonGenome.Size)
+                            int testi = i + ii;
+                            int testj = j;
+                            if ((testi >= DungeonGenome.Size) || (testj >= DungeonGenome.Size)
                                     || (ChamberFlag[testi, testj] > 0) || (!passable[testi, testj])) valid = false;
-                            }
                         }
 
                         if (valid)
                         {
-                            sizeOfChamberSquare++;
+                            chamberWidth++;
                         }
                         else
                         {
-                            endChamber = true;
+                            endWidth = true;
                         }
                     }
+             
 
-                    if (sizeOfChamberSquare > 0)
+                    if (chamberWidth > 0)
                     {
+                        endCorner.x = i + chamberWidth;
 
-                        int size_i = sizeOfChamberSquare;
-                        bool endChamber_i = false;
-
-                        while (!endChamber_i)
+                        //March in j
+                        int chamberHeight = 0;
+                        bool endHeight = false;
+                        while (!endHeight)
                         {
+                            int testSize = chamberHeight + 1;
                             bool valid = true;
-
-                            int testSize_i = size_i + 1;
-
-                            for (int ii = 0; ii <= testSize_i; ii++)
+                            for (int ii = startCorner.x; ii <= endCorner.x; ii++)
                             {
-                                for (int jj = 0; jj <= sizeOfChamberSquare; jj++)
+                                for (int jj = 0; jj <= testSize; jj++)
                                 {
-                                    int testi = i + ii;
+                                    int testi = ii;
                                     int testj = j + jj;
-
                                     if ((testi >= DungeonGenome.Size) || (testj >= DungeonGenome.Size)
                                         || (ChamberFlag[testi, testj] > 0) || (!passable[testi, testj])) valid = false;
                                 }
@@ -842,60 +831,33 @@ public class Fitness
 
                             if (valid)
                             {
-                                size_i++;
+                                chamberHeight++;
                             }
                             else
                             {
-                                endChamber_i = true;
+                                endHeight = true;
                             }
                         }
 
-                        int size_j = sizeOfChamberSquare;
-                        bool endChamber_j = false;
-                        while (!endChamber_j)
+                        if (chamberHeight > 0)
                         {
-                            bool valid = true;
-
-                            int testSize_j = size_j + 1;
-
-                            for (int ii = 0; ii <= size_i; ii++)
+                            //Enter this Chamber
+                            endCorner.Set(i + chamberWidth, j + chamberHeight);
+                            Chamber chamber = new Chamber(startCorner, endCorner);
+                            Chambers.Add(chamber);
+                            for (int ii = 0; ii <= chamberWidth; ii++)
                             {
-                                for (int jj = 0; jj <= testSize_j; jj++)
+                                for (int jj = 0; jj <= chamberHeight; jj++)
                                 {
                                     int testi = i + ii;
                                     int testj = j + jj;
 
-                                    if ((testi >= DungeonGenome.Size) || (testj >= DungeonGenome.Size)
-                                        || (ChamberFlag[testi, testj] > 0) || (!passable[testi, testj])) valid = false;
+                                    ChamberFlag[testi, testj] = Chambers.Count;
                                 }
                             }
-
-                            if (valid)
-                            {
-                                size_j++;
-                            }
-                            else
-                            {
-                                endChamber_j = true;
-                            }
                         }
-
-                        //Enter this Chamber
-                        endCorner.Set(i + size_i, j + size_j);
-                        Chamber chamber = new Chamber(startCorner, endCorner);
-                        Chambers.Add(chamber);
-                        for (int ii = 0; ii <= size_i; ii++)
-                        {
-                            for (int jj = 0; jj <= size_j; jj++)
-                            {
-                                int testi = i + ii;
-                                int testj = j + jj;
-
-                                ChamberFlag[testi, testj] = Chambers.Count;
-                            }
-                        }
-
-
+          
+                       
                     }
 
                 }
