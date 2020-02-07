@@ -64,12 +64,17 @@ public class DrawDungeonBehaviour : MonoBehaviour
                 //    MyMap.SetColor(currentCell, chamberColour);
                 //}
 
-                if (genome.MyFitness.CorridorFlag[i, j] > 0)
+                //if (genome.MyFitness.CorridorFlag[i, j] > 0)
+                //{
+                //    float t = (genome.MyFitness.CorridorFlag[i, j]) /
+                //        (float)genome.MyFitness.Corridors.Count;
+                //    Color chamberColour = Color.Lerp(PathColor, Color.blue, t);
+                //    MyMap.SetColor(currentCell, chamberColour);
+                //}
+
+                if (genome.MyFitness.DeadFlag[i, j] > 0)
                 {
-                    float t = (genome.MyFitness.CorridorFlag[i, j]) /
-                        (float)genome.MyFitness.Corridors.Count;
-                    Color chamberColour = Color.Lerp(PathColor, Color.blue, t);
-                    MyMap.SetColor(currentCell, chamberColour);
+                    MyMap.SetColor(currentCell, PathColor);
                 }
 
             }

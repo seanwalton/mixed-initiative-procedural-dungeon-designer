@@ -37,6 +37,8 @@ public class Fitness
 
     public static float TargetPassableToImpassableRatio = 0.7f;
 
+    public static float TargetDeadTileDensity = 0.1f;
+
     public static float TargetUpDownWallRatio = 0f;
     public static float TargetLeftRightWallRatio = 0f;
 
@@ -59,6 +61,7 @@ public class Fitness
     public int NumberEnemyTiles = 0;
     public int NumberTreasureTiles = 0;
     public int NumberWallTiles = 0;
+    public int NumberDeadTiles = 0;
 
     public int NumberWallTiles_Left = 0;
     public int NumberWallTiles_Right = 0;
@@ -78,6 +81,7 @@ public class Fitness
 
     public float EnemyDensity = 0.0f;
     public float TreasureDensity = 0.0f;
+    public float DeadTileDensity = 0.0f;
     public float FractalDimension = 0.0f;
     public float FractalDimensionFitness = 0.0f;
 
@@ -95,6 +99,8 @@ public class Fitness
     public float MeanCorridorLength { get; private set; }
 
     public int[,] CorridorFlag = new int[DungeonGenome.Size, DungeonGenome.Size];
+
+    public int[,] DeadFlag = new int[DungeonGenome.Size, DungeonGenome.Size];
 
     public List<Chamber> Chambers = new List<Chamber>();
 
@@ -176,6 +182,7 @@ public class Fitness
 
         TargetTreasureDensity = genome.MyFitness.TreasureDensity;
         TargetEnemyDensity = genome.MyFitness.EnemyDensity;
+        TargetDeadTileDensity = genome.MyFitness.DeadTileDensity;
 
         EntranceSafety = genome.MyFitness.EntranceSafetyArea;
         EntranceGreed = genome.MyFitness.EntranceGreedArea;
@@ -254,6 +261,8 @@ public class Fitness
             / (NumberOfTargetGenomes + 1);
         TargetEnemyDensity = ((NumberOfTargetGenomes * TargetEnemyDensity) + genome.MyFitness.EnemyDensity)
             / (NumberOfTargetGenomes + 1);
+        TargetDeadTileDensity = ((NumberOfTargetGenomes * TargetDeadTileDensity) + genome.MyFitness.DeadTileDensity)
+            / (NumberOfTargetGenomes + 1);
 
         EntranceSafety = ((NumberOfTargetGenomes * EntranceSafety) + 
             (genome.MyFitness.EntranceSafetyArea)) / (NumberOfTargetGenomes + 1);
@@ -294,13 +303,13 @@ public class Fitness
         CalculateTreasureCoverage();
         CalculateFractalDimension();
         FindCorridors();
-        FindConnectors();
         FindChambers();
+        FindDeadTiles();
         CalculateChamberQualities();
         CalculateCorridorQualities();
         CalculateEntranceSafetyAndGreed();
         CalculateTreasureSafety();
-        CalculateConnectorFitness();
+        //CalculateConnectorFitness();
 
         PathLength = genome.PathFromEntranceToExit.Count / (float) (DungeonGenome.Size * DungeonGenome.Size);
         PassableToImpassableRatio = NumberWallTiles / (float) NumberPassableTiles;
@@ -310,17 +319,17 @@ public class Fitness
         float numFitnesses = 0f;
 
 
-        float jointFitness = Mathf.Abs(TargetNumberOfJoints - NumJoints) /
-            (DungeonGenome.Size * DungeonGenome.Size);
-        FitnessValues.Add(jointFitness);
-        FitnessValue += jointFitness;
-        numFitnesses += 1f;
+        //float jointFitness = Mathf.Abs(TargetNumberOfJoints - NumJoints) /
+        //    (DungeonGenome.Size * DungeonGenome.Size);
+        //FitnessValues.Add(jointFitness);
+        //FitnessValue += jointFitness;
+        //numFitnesses += 1f;
 
-        float turnFitness = Mathf.Abs(TargetNumberOfTurns - NumTurns) /
-            (DungeonGenome.Size * DungeonGenome.Size);
-        FitnessValues.Add(turnFitness);
-        FitnessValue += turnFitness;
-        numFitnesses += 1f;
+        //float turnFitness = Mathf.Abs(TargetNumberOfTurns - NumTurns) /
+        //    (DungeonGenome.Size * DungeonGenome.Size);
+        //FitnessValues.Add(turnFitness);
+        //FitnessValue += turnFitness;
+        //numFitnesses += 1f;
 
         float corridorMeanFitness = Mathf.Abs(TargetMeanCorridorLength - MeanCorridorLength) /
             (DungeonGenome.Size * DungeonGenome.Size);
@@ -383,6 +392,11 @@ public class Fitness
             (DungeonGenome.Size * DungeonGenome.Size);
         FitnessValues.Add(numCorridorFitness);
         FitnessValue += numCorridorFitness;
+        numFitnesses += 1f;
+
+        float deadTileFitness = Mathf.Abs(DeadTileDensity - TargetDeadTileDensity);
+        FitnessValues.Add(deadTileFitness);
+        FitnessValue += deadTileFitness;
         numFitnesses += 1f;
 
         float safeEntranceFitness = Mathf.Abs( EntranceSafetyArea - EntranceSafety);
@@ -792,7 +806,7 @@ public class Fitness
                         {
                             int testi = i + ii;
                             int testj = j;
-                            if ((testi >= DungeonGenome.Size) || (testj >= DungeonGenome.Size)
+                            if ((testi >= DungeonGenome.Size) || (testj >= DungeonGenome.Size) || (CorridorFlag[testi, testj] > 0)
                                     || (ChamberFlag[testi, testj] > 0) || (!passable[testi, testj])) valid = false;
                         }
 
@@ -824,7 +838,7 @@ public class Fitness
                                 {
                                     int testi = ii;
                                     int testj = j + jj;
-                                    if ((testi >= DungeonGenome.Size) || (testj >= DungeonGenome.Size)
+                                    if ((testi >= DungeonGenome.Size) || (testj >= DungeonGenome.Size) || (CorridorFlag[testi, testj] > 0)
                                         || (ChamberFlag[testi, testj] > 0) || (!passable[testi, testj])) valid = false;
                                 }
                             }
@@ -956,6 +970,32 @@ public class Fitness
                 }
             }
         }
+    }
+
+
+    private void FindDeadTiles()
+    {
+        NumberDeadTiles = 0;
+
+        for (int i = 0; i < DungeonGenome.Size; i++)
+        {
+            for (int j = 0; j < DungeonGenome.Size; j++)
+            {
+                if (passable[i,j] && CorridorFlag[i,j] <=0 && ChamberFlag[i,j] <= 0)
+                {
+                    NumberDeadTiles++;
+                    DeadFlag[i, j] = 1;
+                }
+                else
+                {
+                    DeadFlag[i, j] = -1;
+                }
+            }
+
+        }
+
+        DeadTileDensity = NumberDeadTiles / (float)(DungeonGenome.Size * DungeonGenome.Size);
+
     }
 
     private void CalculateConnectorFitness()
