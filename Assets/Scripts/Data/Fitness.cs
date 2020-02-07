@@ -51,6 +51,10 @@ public class Fitness
     public static float TargetUpDownTreasureToEnemyRatio = 0f;
     public static float TargetLeftRightTreasureToEnemyRatio = 0f;
 
+    public static float TargetRotationalSymmetry = 0f;
+    public static float TargetISymmetry = 0f;
+    public static float TargetJSymmetry = 0f;
+
     public static int NumberOfTargetGenomes = 0;
 
     public static DungeonGenome InitialUserDesign;
@@ -147,6 +151,12 @@ public class Fitness
     public float LeftRightTreasureToEnemyRatio = 0f;
     public float UpDownTreasureToEnemyRatio = 0f;
 
+    public float RotationalSymmetry = 0f;
+    public float ISymmetry = 0f;
+    public float JSymmetry = 0f;
+
+
+
     public static void SetTargetMetricsFromGenome(DungeonGenome genome)
     {
         genome.CalculateFitnesses();
@@ -203,6 +213,10 @@ public class Fitness
 
         TargetUpDownTreasureToEnemyRatio = genome.MyFitness.UpDownTreasureToEnemyRatio;
         TargetLeftRightTreasureToEnemyRatio = genome.MyFitness.LeftRightTreasureToEnemyRatio;
+
+        TargetRotationalSymmetry = genome.MyFitness.RotationalSymmetry;
+        TargetISymmetry = genome.MyFitness.ISymmetry;
+        TargetJSymmetry = genome.MyFitness.JSymmetry;
 
         NumberOfTargetGenomes = 1;
 
@@ -284,11 +298,23 @@ public class Fitness
         TargetUpDownEnemyRatio = ((NumberOfTargetGenomes * TargetUpDownEnemyRatio) + genome.MyFitness.UpDownEnemyRatio) / (NumberOfTargetGenomes + 1);
         TargetLeftRightEnemyRatio = ((NumberOfTargetGenomes * TargetLeftRightEnemyRatio) + genome.MyFitness.LeftRightEnemyRatio) / (NumberOfTargetGenomes + 1);
 
-        TargetUpDownTreasureRatio = ((NumberOfTargetGenomes * TargetUpDownTreasureRatio) + genome.MyFitness.UpDownTreasureRatio) / (NumberOfTargetGenomes + 1);
-        TargetLeftRightTreasureRatio = ((NumberOfTargetGenomes * TargetLeftRightTreasureRatio) + genome.MyFitness.LeftRightTreasureRatio) / (NumberOfTargetGenomes + 1);
+        TargetUpDownTreasureRatio = ((NumberOfTargetGenomes * TargetUpDownTreasureRatio) + genome.MyFitness.UpDownTreasureRatio) 
+            / (NumberOfTargetGenomes + 1);
+        TargetLeftRightTreasureRatio = ((NumberOfTargetGenomes * TargetLeftRightTreasureRatio) + genome.MyFitness.LeftRightTreasureRatio) 
+            / (NumberOfTargetGenomes + 1);
 
-        TargetUpDownTreasureToEnemyRatio = ((NumberOfTargetGenomes * TargetUpDownTreasureToEnemyRatio) + genome.MyFitness.UpDownTreasureToEnemyRatio) / (NumberOfTargetGenomes + 1);
-        TargetLeftRightTreasureToEnemyRatio = ((NumberOfTargetGenomes * TargetLeftRightTreasureToEnemyRatio) + genome.MyFitness.LeftRightTreasureToEnemyRatio) / (NumberOfTargetGenomes + 1);
+        TargetUpDownTreasureToEnemyRatio = ((NumberOfTargetGenomes * TargetUpDownTreasureToEnemyRatio) + genome.MyFitness.UpDownTreasureToEnemyRatio) 
+            / (NumberOfTargetGenomes + 1);
+        TargetLeftRightTreasureToEnemyRatio = ((NumberOfTargetGenomes * TargetLeftRightTreasureToEnemyRatio) + genome.MyFitness.LeftRightTreasureToEnemyRatio) 
+            / (NumberOfTargetGenomes + 1);
+
+
+        TargetRotationalSymmetry = ((NumberOfTargetGenomes * TargetRotationalSymmetry) + genome.MyFitness.RotationalSymmetry)
+            / (NumberOfTargetGenomes + 1);
+        TargetISymmetry = ((NumberOfTargetGenomes * TargetISymmetry) + genome.MyFitness.ISymmetry)
+            / (NumberOfTargetGenomes + 1);
+        TargetJSymmetry = ((NumberOfTargetGenomes * TargetJSymmetry) + genome.MyFitness.JSymmetry)
+            / (NumberOfTargetGenomes + 1);
 
         NumberOfTargetGenomes++;
 
@@ -301,7 +327,6 @@ public class Fitness
         CalculateNumberOfTiles();    
         CalculateEnemyCoverage();
         CalculateTreasureCoverage();
-        CalculateFractalDimension();
         FindCorridors();
         FindChambers();
         FindConnectors();
@@ -310,6 +335,7 @@ public class Fitness
         CalculateCorridorQualities();
         CalculateEntranceSafetyAndGreed();
         CalculateTreasureSafety();
+        CalculateSymmetryMeasures();
         //CalculateConnectorFitness();
 
         PathLength = genome.PathFromEntranceToExit.Count / (float) (DungeonGenome.Size * DungeonGenome.Size);
@@ -483,7 +509,22 @@ public class Fitness
         FitnessValues.Add(upDownTreasureToEnemyFitness);
         FitnessValue += upDownTreasureToEnemyFitness;
         numFitnesses += 1f;
-        
+
+        float rotSymFitness = Mathf.Abs(TargetRotationalSymmetry - RotationalSymmetry);
+        FitnessValues.Add(rotSymFitness);
+        FitnessValue += rotSymFitness;
+        numFitnesses += 1f;
+
+        float ISymFitness = Mathf.Abs(TargetISymmetry - ISymmetry);
+        FitnessValues.Add(ISymFitness);
+        FitnessValue += ISymFitness;
+        numFitnesses += 1f;
+
+        float JSymFitness = Mathf.Abs(TargetJSymmetry - JSymmetry);
+        FitnessValues.Add(JSymFitness);
+        FitnessValue += JSymFitness;
+        numFitnesses += 1f;
+
 
         FitnessValue /= numFitnesses;
 
@@ -1214,5 +1255,27 @@ public class Fitness
 
     }
 
+    private void CalculateSymmetryMeasures()
+    {
+        int numRotationalSymmetry = 0;
+        int numISymmetry = 0;
+        int numJSymmetry = 0;
+
+        for (int i = 0; i < DungeonGenome.Size; i++)
+        {
+            for (int j = 0; j < DungeonGenome.Size; j++)
+            {
+                if (Genome.DungeonMap[i, j] == Genome.DungeonMap[j, i]) numRotationalSymmetry++;
+                if (Genome.DungeonMap[i, j] == Genome.DungeonMap[(DungeonGenome.Size - i) - 1, j]) numISymmetry++;
+                if (Genome.DungeonMap[i, j] == Genome.DungeonMap[i, (DungeonGenome.Size - j) - 1]) numJSymmetry++;
+            }
+        }
+
+        RotationalSymmetry = numRotationalSymmetry / (float)(DungeonGenome.Size * DungeonGenome.Size);
+        ISymmetry = numISymmetry / (float)(DungeonGenome.Size * DungeonGenome.Size);
+        JSymmetry = numJSymmetry / (float)(DungeonGenome.Size * DungeonGenome.Size);
+
+        //Debug.Log("Rot:" + RotationalSymmetry.ToString() + "I:" + ISymmetry.ToString() + "J:" + JSymmetry.ToString());
+    }
     
 }
