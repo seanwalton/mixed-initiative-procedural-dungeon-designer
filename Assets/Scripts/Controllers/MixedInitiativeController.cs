@@ -28,6 +28,7 @@ public class MixedInitiativeController : MonoBehaviour
     private Generation lastGen;
     private Generation lastGenInfeasible;
     private int numGenerationsUntilStop;
+    private bool optimisationRunning = false;
 
     private void Awake()
     {
@@ -39,6 +40,7 @@ public class MixedInitiativeController : MonoBehaviour
         phase1Objects.SetActive(true);
         phase2Objects.SetActive(false);
         phase3Objects.SetActive(false);
+        optimisationRunning = false;
     }
 
     public void SubmitFirstDungeon()
@@ -65,8 +67,14 @@ public class MixedInitiativeController : MonoBehaviour
         phase1Objects.SetActive(false);
         phase2Objects.SetActive(true);
         phase3Objects.SetActive(false);
-        InvokeRepeating("AdvanceGeneration", 0f, 0.1f);
+        //InvokeRepeating("AdvanceGeneration", 0f, 0.1f);
+        optimisationRunning = true;
         
+    }
+
+    private void Update()
+    {
+        if (optimisationRunning) AdvanceGeneration();
     }
 
     private void AdvanceGeneration()
@@ -113,7 +121,8 @@ public class MixedInitiativeController : MonoBehaviour
         numGenerationsUntilStop--;
         if (numGenerationsUntilStop == 0)
         {
-            CancelInvoke("AdvanceGeneration");
+            //CancelInvoke("AdvanceGeneration");
+            optimisationRunning = false;
             SetupPhase3();
         }
     }
