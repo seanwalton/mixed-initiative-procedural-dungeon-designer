@@ -72,10 +72,10 @@ public class DrawDungeonBehaviour : MonoBehaviour
                 //    MyMap.SetColor(currentCell, chamberColour);
                 //}
 
-                if (genome.MyFitness.DeadFlag[i, j] > 0)
-                {
-                    MyMap.SetColor(currentCell, PathColor);
-                }
+                //if (genome.MyFitness.DeadFlag[i, j] > 0)
+                //{
+                //    MyMap.SetColor(currentCell, PathColor);
+                //}
 
             }
         }
@@ -89,7 +89,7 @@ public class DrawDungeonBehaviour : MonoBehaviour
                 currentCell.z = firstCell.z;
 
                 MyMap.SetTileFlags(currentCell, TileFlags.None);
-                //MyMap.SetColor(currentCell, PathColor);
+                MyMap.SetColor(currentCell, PathColor);
             }
         }
 

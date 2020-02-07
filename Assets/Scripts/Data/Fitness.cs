@@ -304,6 +304,7 @@ public class Fitness
         CalculateFractalDimension();
         FindCorridors();
         FindChambers();
+        FindConnectors();
         FindDeadTiles();
         CalculateChamberQualities();
         CalculateCorridorQualities();
@@ -430,7 +431,7 @@ public class Fitness
         numFitnesses += 1f;
 
         //Visual fitnesses
-        float numberOfPassableFitness =  Mathf.Abs(PassableToImpassableRatio - TargetPassableToImpassableRatio);
+        float numberOfPassableFitness = Mathf.Abs(PassableToImpassableRatio - TargetPassableToImpassableRatio);
         FitnessValues.Add(numberOfPassableFitness);
         FitnessValue += numberOfPassableFitness;
         numFitnesses += 1f;
@@ -981,7 +982,7 @@ public class Fitness
         {
             for (int j = 0; j < DungeonGenome.Size; j++)
             {
-                if (passable[i,j] && CorridorFlag[i,j] <=0 && ChamberFlag[i,j] <= 0)
+                if (passable[i,j] && CorridorFlag[i,j] <=0 && ChamberFlag[i,j] <= 0 && ConnectorFlag[i, j] <= 0)
                 {
                     NumberDeadTiles++;
                     DeadFlag[i, j] = 1;
