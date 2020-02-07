@@ -57,7 +57,7 @@ public class MixedInitiativeController : MonoBehaviour
         Random.InitState(System.DateTime.Now.DayOfYear +
             System.DateTime.Now.Hour + System.DateTime.Now.Minute + System.DateTime.Now.Second + System.DateTime.Now.Millisecond);
         numGenerationsUntilStop = GAParameters.NumberOfGenerations;
-        geneticAlgorithm.ResetOptimiser(GAParameters.NumberOfGenerations);
+        geneticAlgorithm.ResetOptimiser(GAParameters.PopulationSize);
         geneticAlgorithm.ExperimentName = GAParameters.Name;
         geneticAlgorithm.MutationRate = GAParameters.MutationRate;
         //geneticAlgorithm.InitializeFirstGeneration(Keepers.GetAllKeepers());
