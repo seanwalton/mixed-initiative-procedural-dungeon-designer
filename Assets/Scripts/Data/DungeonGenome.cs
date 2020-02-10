@@ -46,7 +46,26 @@ public class DungeonGenome : System.IComparable
         //The new child must have exactly one entrance and one exit, so lets pick where those come from now
         int exit = Random.Range(0, 2);
         int entrance = Random.Range(0, 2);
-        int crossoverType = Random.Range(0, 2);
+
+        int crossoverType = 0;
+
+        switch (GeneticAlgorithm.CrossoverMethod)
+        {
+            case CrossoverMethod.RANDOM:
+                crossoverType = 0;
+                break;
+            case CrossoverMethod.FIXED_POINT:
+                crossoverType = 1;
+                break;
+            case CrossoverMethod.EDIT_DISTANCE:
+                crossoverType = 2;
+                break;
+            case CrossoverMethod.RANDOM_METHOD:
+                crossoverType = Random.Range(0, 2);
+                break;           
+        }
+
+
         int parent = 0;
 
         //First set entrance and exit
@@ -260,9 +279,25 @@ public class DungeonGenome : System.IComparable
 
     public void Mutate()
     {
+        int value = 0;
 
-        int value = Random.Range(0,2);
+        switch (GeneticAlgorithm.MutationMethod)
+        {
+            case MutationMethod.REPLACE:
+                value = 1;
+                break;
+            case MutationMethod.SWAP:
+                value = 0;
+                break;
+            case MutationMethod.ROTATE:
+                value = 2;
+                break;
+            case MutationMethod.RANDOM_METHOD:
+                value = Random.Range(0, 2);
+                break;
+        }
 
+        
         if (value == 0)
         {
             MutateSwap();

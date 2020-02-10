@@ -1051,6 +1051,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ExperimentName: 'Mutation_0_F5c '
   PopulationSize: 150
+  TournamentSize: 0
+  NumberOfElite: 0
   MutationRate: 1
   FeasibleLog:
     FeasibleLog: []
@@ -1068,25 +1070,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Experiments:
   - Name: 'Rate_0_F5c '
-    MutationRate: 0
-    PopulationSize: 150
-    NumberOfGenerations: 150
-  - Name: 'Rate_025_F5c '
-    MutationRate: 0.25
-    PopulationSize: 150
-    NumberOfGenerations: 150
-  - Name: 'Rate_050_F5c '
     MutationRate: 0.5
+    TournamentSize: 2
+    NumberOfElite: 1
     PopulationSize: 150
-    NumberOfGenerations: 150
-  - Name: 'Rate_075_F5c '
-    MutationRate: 0.75
+    NumberOfGenerations: 100
+  - Name: 'Rate_025_F5c '
+    MutationRate: 0.5
+    TournamentSize: 4
+    NumberOfElite: 1
     PopulationSize: 150
-    NumberOfGenerations: 150
-  - Name: 'Rate_100_F5c '
-    MutationRate: 1
-    PopulationSize: 150
-    NumberOfGenerations: 150
+    NumberOfGenerations: 100
   InitialDungeonEditor: {fileID: 648696592}
   TopFeasibleDungeonEditors:
   - {fileID: 565852855}
@@ -1097,8 +1091,6 @@ MonoBehaviour:
   - {fileID: 967359642}
   - {fileID: 631377604}
   StartOptimisationButton: {fileID: 189653592}
-  NumberOfSubGenerations: 150
-  NumberOfBenchmarks: 30
   BenchmarkLogs: []
 --- !u!4 &1116428058
 Transform:

@@ -64,6 +64,8 @@ public class MixedInitiativeController : MonoBehaviour
         geneticAlgorithm.MutationRate = GAParameters.MutationRate;
         geneticAlgorithm.TournamentSize = GAParameters.TournamentSize;
         geneticAlgorithm.NumberOfElite = GAParameters.NumberOfElite;
+        GeneticAlgorithm.MutationMethod = GAParameters.MutationMethod;
+        GeneticAlgorithm.CrossoverMethod = GAParameters.CrossoverMethod;
         //geneticAlgorithm.InitializeFirstGeneration(Keepers.GetAllKeepers());
 
         phase1Objects.SetActive(false);

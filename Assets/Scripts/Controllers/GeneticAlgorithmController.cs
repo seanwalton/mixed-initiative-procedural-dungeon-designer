@@ -16,7 +16,6 @@ public class GeneticAlgorithmController : MonoBehaviour
     public DungeonEditor[] TopInfeasibleDungeonEditors;
     public Button StartOptimisationButton;
 
-    public int NumberOfSubGenerations;
     public int NumberOfBenchmarks;
 
     public List<GALog> BenchmarkLogs = new List<GALog>();
@@ -28,6 +27,8 @@ public class GeneticAlgorithmController : MonoBehaviour
     private int numberSubIterations;
     private int numberBenchmarksRun;
     private int currentExperiment;
+    private bool optimisationRunning = false;
+
 
     private void Awake()
     {
@@ -36,6 +37,8 @@ public class GeneticAlgorithmController : MonoBehaviour
         numberSubIterations = 0;
         numberBenchmarksRun = 0;
         currentExperiment = 0;
+        optimisationRunning = false;
+
     }
 
     private void Start()
@@ -74,46 +77,28 @@ public class GeneticAlgorithmController : MonoBehaviour
         Debug.Log("EXPERIMENT: "+ Experiments[currentExperiment].Name + " RUN: "+ numberBenchmarksRun.ToString());
         StartOptimisationButton.gameObject.SetActive(false);
 
-        Random.InitState(System.DateTime.Now.Hour + System.DateTime.Now.Minute + System.DateTime.Now.Second);
-        NumberOfSubGenerations = Experiments[currentExperiment].NumberOfGenerations;
+        Random.InitState(System.DateTime.Now.DayOfYear 
+            + System.DateTime.Now.Hour + System.DateTime.Now.Minute + System.DateTime.Now.Second + System.DateTime.Now.Millisecond);
+        numGenerationsUntilStop = Experiments[currentExperiment].NumberOfGenerations;
         geneticAlgorithm.ResetOptimiser(Experiments[currentExperiment].PopulationSize);
         geneticAlgorithm.ExperimentName = Experiments[currentExperiment].Name;
         geneticAlgorithm.MutationRate = Experiments[currentExperiment].MutationRate;
+        geneticAlgorithm.TournamentSize = Experiments[currentExperiment].TournamentSize;
+        geneticAlgorithm.NumberOfElite = Experiments[currentExperiment].NumberOfElite;
+        GeneticAlgorithm.MutationMethod = Experiments[currentExperiment].MutationMethod;
+        GeneticAlgorithm.CrossoverMethod = Experiments[currentExperiment].CrossoverMethod;
         Fitness.SetTargetMetricsFromGenome(InitialDungeonEditor.Genome);
         
-        numGenerationsUntilStop = NumberOfSubGenerations;
-        InvokeRepeating("AdvanceGeneration", 0f, 0.1f);
+        //InvokeRepeating("AdvanceGeneration", 0f, 0.1f);
+        optimisationRunning = true;
+
     }
 
-    public void StartOptimising()
+    private void Update()
     {
-        StartOptimisationButton.gameObject.SetActive(false);
-        if (numberSubIterations == 0)
-        {
-            Fitness.SetTargetMetricsFromGenome(InitialDungeonEditor.Genome);
-        }
-        else
-        {
-            for (int i = 0; i < TopFeasibleDungeonEditors.Length; i++)
-            {
-                if (TopFeasibleDungeonEditors[i].Liked.isOn)
-                {
-                    Fitness.UpdateTargetMetricsFromGenome(TopFeasibleDungeonEditors[i].Genome);
-                }
-            }
-
-            for (int i = 0; i < TopInfeasibleDungeonEditors.Length; i++)
-            {
-                if (TopInfeasibleDungeonEditors[i].Liked.isOn)
-                {
-                    Fitness.UpdateTargetMetricsFromGenome(TopInfeasibleDungeonEditors[i].Genome);
-                }
-            }
-        }
-        
-        numGenerationsUntilStop = NumberOfSubGenerations;
-        InvokeRepeating("AdvanceGeneration", 0f, 0.1f);
+        if (optimisationRunning) AdvanceGeneration();
     }
+
 
     private void AdvanceGeneration()
     {
@@ -159,40 +144,9 @@ public class GeneticAlgorithmController : MonoBehaviour
         if (numGenerationsUntilStop == 0)
         {
             numberSubIterations++;
-            StartOptimisationButton.gameObject.SetActive(true);
-            for (int i = 0; i < TopFeasibleDungeonEditors.Length; i++)
-            {
-                if (i < lastGen.NumberOfIndividuals)
-                {
-                    TopFeasibleDungeonEditors[i].SetToggleActive(true);
-                    TopFeasibleDungeonEditors[i].Liked.isOn = false;
-                }
-                else
-                {
-                    TopFeasibleDungeonEditors[i].gameObject.SetActive(false);
-                    TopFeasibleDungeonEditors[i].Liked.isOn = false;
-                }
-
-            }
-
-            for (int i = 0; i < TopInfeasibleDungeonEditors.Length; i++)
-            {
-                if (i < lastGen.NumberOfIndividuals)
-                {
-                    TopInfeasibleDungeonEditors[i].SetToggleActive(true);
-                    TopInfeasibleDungeonEditors[i].Liked.isOn = false;
-                }
-                else
-                {
-                    TopInfeasibleDungeonEditors[i].gameObject.SetActive(false);
-                    TopInfeasibleDungeonEditors[i].Liked.isOn = false;
-                }
-
-            }
-
             geneticAlgorithm.SaveLogs();
 
-            CancelInvoke("AdvanceGeneration");
+            optimisationRunning = false;
             DoNextBenchmark();
         }
 

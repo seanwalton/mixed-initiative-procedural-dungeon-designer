@@ -6,6 +6,10 @@ using UnityEngine;
 [System.Serializable]
 public class GeneticAlgorithm : MonoBehaviour
 {
+
+    public static MutationMethod MutationMethod;
+    public static CrossoverMethod CrossoverMethod;
+
     public string ExperimentName;
     public int PopulationSize;
 
