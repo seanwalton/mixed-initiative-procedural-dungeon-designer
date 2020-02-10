@@ -9,6 +9,10 @@ public class GeneticAlgorithm : MonoBehaviour
     public string ExperimentName;
     public int PopulationSize;
 
+    //TournamentSize = 2 is binary
+    public int TournamentSize;
+    public int NumberOfElite;
+
     public float MutationRate;
 
 
@@ -194,108 +198,57 @@ public class GeneticAlgorithm : MonoBehaviour
             Generation genF = new Generation();
             Generation genIF = new Generation();
 
-            for (int i = 0; i < LastFeasibleGeneration.NumberOfIndividuals; i++)
+            //First elitism
+            for (int i = 0; i < NumberOfElite; i++)
             {
-                DungeonGenome parent1 = LastFeasibleGeneration.GetRandomIndividual();
+                genF.AddIndividual(LastFeasibleGeneration.Individuals[i]);
+            }
 
-                DungeonGenome parent2 = LastFeasibleGeneration.Individuals[i];
+            int k = 0;
 
-                DungeonGenome genome = DungeonGenome.CrossOver(parent1, parent2);
+            while ((genF.NumberOfIndividuals + genIF.NumberOfIndividuals) < PopulationSize)
+            {
+                DungeonGenome parent1;
+                DungeonGenome parent2;
 
-                if (Random.value < MutationRate) genome.Mutate();
-                
-                if (i > (MutationRate * LastFeasibleGeneration.NumberOfIndividuals))
+                if (k < LastFeasibleGeneration.NumberOfIndividuals)
                 {
-                    if (genome.ValidPath)
-                    {
-                        genF.AddIndividual(genome);
-                    }
-                    else
-                    {
-                        genIF.AddIndividual(genome);
-                    }
+                    parent1 = TournamentSelection(LastFeasibleGeneration, TournamentSize);
+                    parent2 = TournamentSelection(LastFeasibleGeneration, TournamentSize);
                 }
                 else
                 {
-                    if (parent2.CompareTo(genome) > 0)
-                    {
-                        if (genome.ValidPath)
-                        {
-                            genF.AddIndividual(genome);
-                        }
-                        else
-                        {
-                            genIF.AddIndividual(genome);
-                        }
-
-                    }
-                    else
-                    {
-                        if (parent2.ValidPath)
-                        {
-                            genF.AddIndividual(parent2);
-                        }
-                        else
-                        {
-                            genIF.AddIndividual(parent2);
-                        }
-                    }
+                    parent1 = TournamentSelection(LastInfeasibleGeneration, TournamentSize);
+                    parent2 = TournamentSelection(LastInfeasibleGeneration, TournamentSize);
                 }
-
                 
-                               
-            }
+                DungeonGenome child1 = DungeonGenome.CrossOver(parent1, parent2);
+                DungeonGenome child2 = DungeonGenome.CrossOver(parent1, parent2);
 
-            for (int i = 0; i < LastInfeasibleGeneration.NumberOfIndividuals; i++)
-            {
-                DungeonGenome parent1 = LastInfeasibleGeneration.GetRandomIndividual();
+                if (Random.value < MutationRate) child1.Mutate();
+                if (Random.value < MutationRate) child2.Mutate();
 
-                DungeonGenome parent2 = LastInfeasibleGeneration.Individuals[i];
-
-                DungeonGenome genome = DungeonGenome.CrossOver(parent1, parent2);
-
-                if (Random.value < MutationRate) genome.Mutate();
-
-                if (i > (MutationRate * LastInfeasibleGeneration.NumberOfIndividuals))
+                DungeonGenome genome;
+                if (child1.CompareTo(child2) > 0)
                 {
-                    if (genome.ValidPath)
-                    {
-                        genF.AddIndividual(genome);
-                    }
-                    else
-                    {
-                        genIF.AddIndividual(genome);
-                    }
+                    genome = child2;
                 }
                 else
                 {
-                    if (parent2.CompareTo(genome) > 0)
-                    {
-                        if (genome.ValidPath)
-                        {
-                            genF.AddIndividual(genome);
-                        }
-                        else
-                        {
-                            genIF.AddIndividual(genome);
-                        }
-
-                    }
-                    else
-                    {
-                        if (parent2.ValidPath)
-                        {
-                            genF.AddIndividual(parent2);
-                        }
-                        else
-                        {
-                            genIF.AddIndividual(parent2);
-                        }
-                    }
+                    genome = child1;
                 }
-                
 
-            }
+                if (genome.ValidPath)
+                {
+                    genF.AddIndividual(genome);
+                }
+                else
+                {
+                    genIF.AddIndividual(genome);
+                }
+
+                k++;
+            }        
 
             genF.Sort();
             genIF.Sort();
@@ -308,6 +261,23 @@ public class GeneticAlgorithm : MonoBehaviour
         Debug.Log("Generation " + GenerationsFeasiblePop.Count
             + " Feasible Average: " + LastFeasibleGeneration.GetAverageFitness()
             + " Feasible Best: " + LastFeasibleGeneration.GetBestFitness());
+    }
+
+    //k = number of possible parents to compete
+    private DungeonGenome TournamentSelection(Generation gen, int k)
+    {
+        DungeonGenome best = gen.GetRandomIndividual();
+
+        for (int i = 2; i < k; i++)
+        {
+            DungeonGenome ind = gen.GetRandomIndividual();
+            if (best.CompareTo(ind) > 0)
+            {
+                best = ind;
+            }
+        }
+
+        return best;
     }
 
 

@@ -62,6 +62,8 @@ public class MixedInitiativeController : MonoBehaviour
         geneticAlgorithm.ResetOptimiser(GAParameters.PopulationSize);
         geneticAlgorithm.ExperimentName = GAParameters.Name;
         geneticAlgorithm.MutationRate = GAParameters.MutationRate;
+        geneticAlgorithm.TournamentSize = GAParameters.TournamentSize;
+        geneticAlgorithm.NumberOfElite = GAParameters.NumberOfElite;
         //geneticAlgorithm.InitializeFirstGeneration(Keepers.GetAllKeepers());
 
         phase1Objects.SetActive(false);

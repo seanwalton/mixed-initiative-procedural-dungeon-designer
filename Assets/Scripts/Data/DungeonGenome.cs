@@ -294,13 +294,19 @@ public class DungeonGenome : System.IComparable
             }
         }
 
+        bool allTheSame = true;
+
         for (int i = rotation1.x; i < rotation2.x; i++)
         {
             for (int j = rotation1.y; j < rotation2.y; j++)
             {
+                if (DungeonMap[i, j] != transposeHelper[j, i]) allTheSame = false;
+
                 DungeonMap[i, j] = transposeHelper[j, i];
             }
         }
+
+        if (allTheSame) MutateReplace();
     }
 
     private void MutateReplace()
