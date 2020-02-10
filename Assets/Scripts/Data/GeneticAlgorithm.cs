@@ -204,8 +204,7 @@ public class GeneticAlgorithm : MonoBehaviour
 
                 if (Random.value < MutationRate) genome.Mutate();
                 
-                if ((parent2.CompareTo(genome) > 0) || 
-                    (i > (MutationRate * LastFeasibleGeneration.NumberOfIndividuals)))
+                if (i > (MutationRate * LastFeasibleGeneration.NumberOfIndividuals))
                 {
                     if (genome.ValidPath)
                     {
@@ -215,19 +214,35 @@ public class GeneticAlgorithm : MonoBehaviour
                     {
                         genIF.AddIndividual(genome);
                     }
-                    
                 }
                 else
                 {
-                    if (parent2.ValidPath)
+                    if (parent2.CompareTo(genome) > 0)
                     {
-                        genF.AddIndividual(parent2);
+                        if (genome.ValidPath)
+                        {
+                            genF.AddIndividual(genome);
+                        }
+                        else
+                        {
+                            genIF.AddIndividual(genome);
+                        }
+
                     }
                     else
                     {
-                        genIF.AddIndividual(parent2);
+                        if (parent2.ValidPath)
+                        {
+                            genF.AddIndividual(parent2);
+                        }
+                        else
+                        {
+                            genIF.AddIndividual(parent2);
+                        }
                     }
                 }
+
+                
                                
             }
 
@@ -241,8 +256,7 @@ public class GeneticAlgorithm : MonoBehaviour
 
                 if (Random.value < MutationRate) genome.Mutate();
 
-                if ((parent2.CompareTo(genome) > 0) ||
-                    (i > (MutationRate * LastInfeasibleGeneration.NumberOfIndividuals)))
+                if (i > (MutationRate * LastInfeasibleGeneration.NumberOfIndividuals))
                 {
                     if (genome.ValidPath)
                     {
@@ -252,19 +266,34 @@ public class GeneticAlgorithm : MonoBehaviour
                     {
                         genIF.AddIndividual(genome);
                     }
-
                 }
                 else
                 {
-                    if (parent2.ValidPath)
+                    if (parent2.CompareTo(genome) > 0)
                     {
-                        genF.AddIndividual(parent2);
+                        if (genome.ValidPath)
+                        {
+                            genF.AddIndividual(genome);
+                        }
+                        else
+                        {
+                            genIF.AddIndividual(genome);
+                        }
+
                     }
                     else
                     {
-                        genIF.AddIndividual(parent2);
+                        if (parent2.ValidPath)
+                        {
+                            genF.AddIndividual(parent2);
+                        }
+                        else
+                        {
+                            genIF.AddIndividual(parent2);
+                        }
                     }
                 }
+                
 
             }
 

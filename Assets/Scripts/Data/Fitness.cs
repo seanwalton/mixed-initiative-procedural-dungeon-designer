@@ -167,7 +167,6 @@ public class Fitness
         TargetFractalIndex = genome.MyFitness.FractalDimension;
 
         TargetPathLength = genome.MyFitness.PathLength;
-        Debug.Log("Target Path Length " + TargetPathLength.ToString());
 
         TargetMeanCorridorLength = genome.MyFitness.MeanCorridorLength;
         
@@ -233,10 +232,7 @@ public class Fitness
         TargetPathLength = ((NumberOfTargetGenomes*TargetPathLength) + 
             (genome.MyFitness.PathLength)) / (NumberOfTargetGenomes + 1);
 
-        Debug.Log("Target Path Length " + TargetPathLength.ToString());
-
-
-        
+       
 
         TargetMeanCorridorLength = ((NumberOfTargetGenomes * TargetMeanCorridorLength) + genome.MyFitness.MeanCorridorLength) / (NumberOfTargetGenomes + 1);
 
@@ -1275,7 +1271,6 @@ public class Fitness
         ISymmetry = numISymmetry / (float)(DungeonGenome.Size * DungeonGenome.Size);
         JSymmetry = numJSymmetry / (float)(DungeonGenome.Size * DungeonGenome.Size);
 
-        //Debug.Log("Rot:" + RotationalSymmetry.ToString() + "I:" + ISymmetry.ToString() + "J:" + JSymmetry.ToString());
     }
     
 }
