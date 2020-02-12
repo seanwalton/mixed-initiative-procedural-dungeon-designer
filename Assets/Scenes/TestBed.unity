@@ -1069,15 +1069,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Experiments:
-  - Name: 'R_R '
-    MutationMethod: 0
+  - Name: Rate_0
+    MutationMethod: 1
     CrossoverMethod: 0
-    MutationRate: 0.5
+    MutationRate: 0
     TournamentSize: 2
     NumberOfElite: 1
     PopulationSize: 100
     NumberOfGenerations: 100
-  - Name: 'S_R '
+  - Name: Rate_025
+    MutationMethod: 1
+    CrossoverMethod: 0
+    MutationRate: 0.25
+    TournamentSize: 2
+    NumberOfElite: 1
+    PopulationSize: 100
+    NumberOfGenerations: 100
+  - Name: Rate_05
     MutationMethod: 1
     CrossoverMethod: 0
     MutationRate: 0.5
@@ -1085,114 +1093,18 @@ MonoBehaviour:
     NumberOfElite: 1
     PopulationSize: 100
     NumberOfGenerations: 100
-  - Name: 'RO_R '
-    MutationMethod: 2
+  - Name: Rate_075
+    MutationMethod: 1
     CrossoverMethod: 0
-    MutationRate: 0.5
+    MutationRate: 0.75
     TournamentSize: 2
     NumberOfElite: 1
     PopulationSize: 100
     NumberOfGenerations: 100
-  - Name: 'RM_R '
-    MutationMethod: 3
+  - Name: Rate_1
+    MutationMethod: 1
     CrossoverMethod: 0
-    MutationRate: 0.5
-    TournamentSize: 2
-    NumberOfElite: 1
-    PopulationSize: 100
-    NumberOfGenerations: 100
-  - Name: R_F
-    MutationMethod: 0
-    CrossoverMethod: 1
-    MutationRate: 0.5
-    TournamentSize: 2
-    NumberOfElite: 1
-    PopulationSize: 100
-    NumberOfGenerations: 100
-  - Name: S_F
-    MutationMethod: 1
-    CrossoverMethod: 1
-    MutationRate: 0.5
-    TournamentSize: 2
-    NumberOfElite: 1
-    PopulationSize: 100
-    NumberOfGenerations: 100
-  - Name: RO_F
-    MutationMethod: 2
-    CrossoverMethod: 1
-    MutationRate: 0.5
-    TournamentSize: 2
-    NumberOfElite: 1
-    PopulationSize: 100
-    NumberOfGenerations: 100
-  - Name: RM_F
-    MutationMethod: 3
-    CrossoverMethod: 1
-    MutationRate: 0.5
-    TournamentSize: 2
-    NumberOfElite: 1
-    PopulationSize: 100
-    NumberOfGenerations: 100
-  - Name: R_E
-    MutationMethod: 0
-    CrossoverMethod: 2
-    MutationRate: 0.5
-    TournamentSize: 2
-    NumberOfElite: 1
-    PopulationSize: 100
-    NumberOfGenerations: 100
-  - Name: S_E
-    MutationMethod: 1
-    CrossoverMethod: 2
-    MutationRate: 0.5
-    TournamentSize: 2
-    NumberOfElite: 1
-    PopulationSize: 100
-    NumberOfGenerations: 100
-  - Name: RO_E
-    MutationMethod: 2
-    CrossoverMethod: 2
-    MutationRate: 0.5
-    TournamentSize: 2
-    NumberOfElite: 1
-    PopulationSize: 100
-    NumberOfGenerations: 100
-  - Name: RM_E
-    MutationMethod: 3
-    CrossoverMethod: 2
-    MutationRate: 0.5
-    TournamentSize: 2
-    NumberOfElite: 1
-    PopulationSize: 100
-    NumberOfGenerations: 100
-  - Name: R_RM
-    MutationMethod: 0
-    CrossoverMethod: 3
-    MutationRate: 0.5
-    TournamentSize: 2
-    NumberOfElite: 1
-    PopulationSize: 100
-    NumberOfGenerations: 100
-  - Name: S_RM
-    MutationMethod: 1
-    CrossoverMethod: 3
-    MutationRate: 0.5
-    TournamentSize: 2
-    NumberOfElite: 1
-    PopulationSize: 100
-    NumberOfGenerations: 100
-  - Name: RO_RM
-    MutationMethod: 2
-    CrossoverMethod: 3
-    MutationRate: 0.5
-    TournamentSize: 2
-    NumberOfElite: 1
-    PopulationSize: 100
-    NumberOfGenerations: 100
-  - Name: RM_RM
-    MutationMethod: 3
-    CrossoverMethod: 3
-    MutationRate: 0.5
+    MutationRate: 1
     TournamentSize: 2
     NumberOfElite: 1
     PopulationSize: 100
