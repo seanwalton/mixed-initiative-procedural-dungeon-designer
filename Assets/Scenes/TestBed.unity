@@ -1069,62 +1069,46 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Experiments:
-  - Name: 10_1000
+  - Name: 1
     MutationMethod: 1
     CrossoverMethod: 0
-    MutationRate: 0
-    TournamentSize: 2
-    NumberOfElite: 1
-    PopulationSize: 10
-    NumberOfGenerations: 1000
-  - Name: 20_500
-    MutationMethod: 1
-    CrossoverMethod: 0
-    MutationRate: 0
+    MutationRate: 0.5
     TournamentSize: 2
     NumberOfElite: 1
     PopulationSize: 20
     NumberOfGenerations: 500
-  - Name: 50_200
+  - Name: 2
     MutationMethod: 1
     CrossoverMethod: 0
-    MutationRate: 0
+    MutationRate: 0.5
     TournamentSize: 2
-    NumberOfElite: 1
-    PopulationSize: 50
-    NumberOfGenerations: 200
-  - Name: 100_100
+    NumberOfElite: 2
+    PopulationSize: 20
+    NumberOfGenerations: 500
+  - Name: 4
     MutationMethod: 1
     CrossoverMethod: 0
-    MutationRate: 0
+    MutationRate: 0.5
     TournamentSize: 2
-    NumberOfElite: 1
-    PopulationSize: 100
-    NumberOfGenerations: 100
-  - Name: 200_50
+    NumberOfElite: 4
+    PopulationSize: 20
+    NumberOfGenerations: 500
+  - Name: 8
     MutationMethod: 1
     CrossoverMethod: 0
-    MutationRate: 0
+    MutationRate: 0.5
     TournamentSize: 2
-    NumberOfElite: 1
-    PopulationSize: 200
-    NumberOfGenerations: 50
-  - Name: 500_20
+    NumberOfElite: 8
+    PopulationSize: 20
+    NumberOfGenerations: 500
+  - Name: 16
     MutationMethod: 1
     CrossoverMethod: 0
-    MutationRate: 0
+    MutationRate: 0.5
     TournamentSize: 2
-    NumberOfElite: 1
-    PopulationSize: 500
-    NumberOfGenerations: 20
-  - Name: 1000_10
-    MutationMethod: 1
-    CrossoverMethod: 0
-    MutationRate: 0
-    TournamentSize: 2
-    NumberOfElite: 1
-    PopulationSize: 1000
-    NumberOfGenerations: 10
+    NumberOfElite: 16
+    PopulationSize: 20
+    NumberOfGenerations: 500
   InitialDungeonEditor: {fileID: 648696592}
   TopFeasibleDungeonEditors:
   - {fileID: 565852855}
