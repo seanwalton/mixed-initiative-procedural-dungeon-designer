@@ -203,7 +203,8 @@ public class GeneticAlgorithm : MonoBehaviour
             Generation genIF = new Generation();
 
             //First elitism
-            for (int i = 0; i < NumberOfElite; i++)
+            int elite = Mathf.Min(NumberOfElite, LastFeasibleGeneration.NumberOfIndividuals);
+            for (int i = 0; i < elite; i++)
             {
                 genF.AddIndividual(LastFeasibleGeneration.Individuals[i]);
             }
