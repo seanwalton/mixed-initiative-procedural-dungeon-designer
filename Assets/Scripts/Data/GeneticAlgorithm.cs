@@ -270,6 +270,9 @@ public class GeneticAlgorithm : MonoBehaviour
     //k = number of possible parents to compete
     private DungeonGenome TournamentSelection(Generation gen, int k)
     {
+
+        k = Mathf.Min(k, gen.NumberOfIndividuals);
+
         DungeonGenome best = gen.GetRandomIndividual();
 
         for (int i = 2; i < k; i++)
