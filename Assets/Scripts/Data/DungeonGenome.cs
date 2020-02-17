@@ -193,14 +193,14 @@ public class DungeonGenome : System.IComparable
         return child;
     }
 
-    public void SetAllFloor()
+    public void SetAllWall()
     {
         //First set everything to floor
         for (int i = 0; i < Size; i++)
         {
             for (int j = 0; j < Size; j++)
             {
-                DungeonMap[i, j] = DungeonTileType.FLOOR;
+                DungeonMap[i, j] = DungeonTileType.WALL;
             }
         }
         CalculateFitnesses();

@@ -28,7 +28,7 @@ public class DungeonEditor : MonoBehaviour
 
     private void Start()
     {
-        Genome.SetAllFloor();
+        Genome.SetAllWall();
         SetToggleActive(false);
         DrawGenome();
     }
@@ -41,14 +41,23 @@ public class DungeonEditor : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonUp(0) && Editable)
+        if ((Input.GetMouseButtonUp(0) || Input.GetMouseButtonUp(1)) && Editable)
         {
             Vector2Int node = GetTileCoordinatesOfCursor();
 
             if (((node.x < DungeonGenome.Size) && (node.y < DungeonGenome.Size)) &&
                 ((node.x >= 0) && (node.y >= 0)))
             {
-                Genome.DungeonMap[node.x, node.y] = NextTileType(Genome.DungeonMap[node.x, node.y]);
+
+                if (Input.GetMouseButtonUp(0))
+                {
+                    Genome.DungeonMap[node.x, node.y] = NextTileType(Genome.DungeonMap[node.x, node.y]);
+                }
+                else
+                {
+                    Genome.DungeonMap[node.x, node.y] = LastTileType(Genome.DungeonMap[node.x, node.y]);
+                }
+
                 DrawGenome();             
             }
            
@@ -67,14 +76,32 @@ public class DungeonEditor : MonoBehaviour
         return new Vector2Int(coordinate.x, coordinate.y);
     }
 
+    private DungeonTileType LastTileType(DungeonTileType oldTile)
+    {
+        switch (oldTile)
+        {
+            case DungeonTileType.FLOOR:
+                return DungeonTileType.WALL;
+            case DungeonTileType.ENEMY:
+                return DungeonTileType.FLOOR;
+            case DungeonTileType.TREASURE:
+                return DungeonTileType.ENEMY;
+            case DungeonTileType.ENTRANCE:
+                return DungeonTileType.TREASURE;
+            case DungeonTileType.EXIT:
+                return DungeonTileType.ENTRANCE;
+            case DungeonTileType.WALL:
+                return DungeonTileType.EXIT;
+            default:
+                return oldTile;
+        }
+    }
 
     private DungeonTileType NextTileType(DungeonTileType oldTile)
     {
         switch (oldTile)
         {
             case DungeonTileType.FLOOR:
-                return DungeonTileType.WALL;
-            case DungeonTileType.WALL:
                 return DungeonTileType.ENEMY;
             case DungeonTileType.ENEMY:
                 return DungeonTileType.TREASURE;
@@ -83,9 +110,11 @@ public class DungeonEditor : MonoBehaviour
             case DungeonTileType.ENTRANCE:
                 return DungeonTileType.EXIT;
             case DungeonTileType.EXIT:
-                return DungeonTileType.FLOOR;
+                return DungeonTileType.WALL;
+            case DungeonTileType.WALL:
+                return DungeonTileType.FLOOR;          
             default:
-                return DungeonTileType.FLOOR;
+                return oldTile;
         }
     }
 

@@ -170,10 +170,14 @@ public class MixedInitiativeController : MonoBehaviour
 
         }
 
+
+
     }
 
     public void FinishPhase3()
     {
+
+
         for (int i = 0; i < TopFeasibleDungeonEditors.Length; i++)
         {
             if (TopFeasibleDungeonEditors[i].Liked.isOn || TopFeasibleDungeonEditors[i].Keep.isOn)
@@ -200,10 +204,15 @@ public class MixedInitiativeController : MonoBehaviour
             }
         }
 
+        
+
+
         if (!Keepers.KeepersAreFull())
         {
             StartOptimiser();
         }
+
+
 
     }
 
