@@ -356,11 +356,13 @@ MonoBehaviour:
   Keepers: {fileID: 1497844558}
   GAParameters:
     Name: MixedInitiative
+    MutationMethod: 1
+    CrossoverMethod: 0
     MutationRate: 0.5
     TournamentSize: 2
     NumberOfElite: 1
-    PopulationSize: 150
-    NumberOfGenerations: 1000
+    PopulationSize: 20
+    NumberOfGenerations: 500
   TopFeasibleDungeonEditors:
   - {fileID: 900720479}
   - {fileID: 1408131462}
