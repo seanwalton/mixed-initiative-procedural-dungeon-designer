@@ -28,7 +28,7 @@ public class DungeonEditor : MonoBehaviour
 
     private void Start()
     {
-        Genome.SetAllWall();
+        Genome.SetAllFloor();
         SetToggleActive(false);
         DrawGenome();
     }
@@ -49,7 +49,7 @@ public class DungeonEditor : MonoBehaviour
                 ((node.x >= 0) && (node.y >= 0)))
             {
 
-                if (Input.GetMouseButtonUp(0))
+                if (Input.GetMouseButtonUp(1))
                 {
                     Genome.DungeonMap[node.x, node.y] = NextTileType(Genome.DungeonMap[node.x, node.y]);
                 }
