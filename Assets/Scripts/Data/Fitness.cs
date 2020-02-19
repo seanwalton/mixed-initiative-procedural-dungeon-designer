@@ -4,56 +4,56 @@ using UnityEngine;
 
 public class Fitness
 {
-    public static float TargetMeanCorridorLength = 4f;
-    public static float TargetMeanChamberArea = 25f;
-    public static float TargetPathLength = 0.5f;
+    public static List<float> TargetMeanCorridorLength = new List<float>();
+    public static List<float> TargetMeanChamberArea = new List<float>();
+    public static List<float> TargetPathLength = new List<float>();
 
-    public static float TargetMaxCorridorLength = 5f;
-    public static float TargetMinCorridorLength = 5f;
+    public static List<float> TargetMaxCorridorLength = new List<float>();
+    public static List<float> TargetMinCorridorLength = new List<float>();
 
-    public static float TargetMaxChamberSize = 25f;
-    public static float TargetMinChamberSize = 5f;
+    public static List<float> TargetMaxChamberSize = new List<float>();
+    public static List<float> TargetMinChamberSize = new List<float>();
 
-    public static float TargetMaxChamberSquareness = 0.5f;
-    public static float TargetMinChamberSquareness = 0.5f;
-    public static float TargetMeanChamberSquareness = 0.5f;
+    public static List<float> TargetMaxChamberSquareness = new List<float>();
+    public static List<float> TargetMinChamberSquareness = new List<float>();
+    public static List<float> TargetMeanChamberSquareness = new List<float>();
 
-    public static float TargetNumberCorridors = 1f;
-    public static float TargetNumberChambers = 1f;
+    public static List<float> TargetNumberCorridors = new List<float>();
+    public static List<float> TargetNumberChambers = new List<float>();
 
-    public static float TargetNumberOfJoints = 0.5f;
-    public static float TargetNumberOfTurns = 0.5f;
+    public static List<float> TargetNumberOfJoints = new List<float>();
+    public static List<float> TargetNumberOfTurns = new List<float>();
 
-    public static float TargetTreasureDensity = 0.02f;
-    public static float TargetEnemyDensity = 0.02f;
+    public static List<float> TargetTreasureDensity = new List<float>();
+    public static List<float> TargetEnemyDensity = new List<float>();
 
-    public static float EntranceSafety = 0.01f;
-    public static float EntranceGreed = 0.01f;
+    public static List<float> TargetEntranceSafety = new List<float>();
+    public static List<float> TargetEntranceGreed = new List<float>();
 
-    public static float TargetTreasureSafety = 0.5f;
-    public static float TargetTreasureSafetyVariance = 0.2f;
+    public static List<float> TargetTreasureSafety = new List<float>();
+    public static List<float> TargetTreasureSafetyVariance = new List<float>();
 
-    public static float TargetFractalIndex = 1.35f;
+    public static List<float> TargetFractalIndex = new List<float>();
 
-    public static float TargetPassableToImpassableRatio = 0.7f;
+    public static List<float> TargetPassableToImpassableRatio = new List<float>();
 
-    public static float TargetDeadTileDensity = 0.1f;
+    public static List<float> TargetDeadTileDensity = new List<float>();
 
-    public static float TargetUpDownWallRatio = 0f;
-    public static float TargetLeftRightWallRatio = 0f;
+    public static List<float> TargetUpDownWallRatio = new List<float>();
+    public static List<float> TargetLeftRightWallRatio = new List<float>();
 
-    public static float TargetUpDownEnemyRatio = 0f;
-    public static float TargetLeftRightEnemyRatio = 0f;
+    public static List<float> TargetUpDownEnemyRatio = new List<float>();
+    public static List<float> TargetLeftRightEnemyRatio = new List<float>();
 
-    public static float TargetUpDownTreasureRatio = 0f;
-    public static float TargetLeftRightTreasureRatio = 0f;
+    public static List<float> TargetUpDownTreasureRatio = new List<float>();
+    public static List<float> TargetLeftRightTreasureRatio = new List<float>();
 
-    public static float TargetUpDownTreasureToEnemyRatio = 0f;
-    public static float TargetLeftRightTreasureToEnemyRatio = 0f;
+    public static List<float> TargetUpDownTreasureToEnemyRatio = new List<float>();
+    public static List<float> TargetLeftRightTreasureToEnemyRatio = new List<float>();
 
-    public static float TargetRotationalSymmetry = 0f;
-    public static float TargetISymmetry = 0f;
-    public static float TargetJSymmetry = 0f;
+    public static List<float> TargetRotationalSymmetry = new List<float>();
+    public static List<float> TargetISymmetry = new List<float>();
+    public static List<float> TargetJSymmetry = new List<float>();
 
     public static int NumberOfTargetGenomes = 0;
 
@@ -164,58 +164,64 @@ public class Fitness
         InitialUserDesign = new DungeonGenome();
         InitialUserDesign.CopyFromOtherGenome(genome);
 
-        TargetFractalIndex = genome.MyFitness.FractalDimension;
+        TargetFractalIndex.Add(genome.MyFitness.FractalDimension);
 
-        TargetPathLength = genome.MyFitness.PathLength;
+        TargetPathLength.Add(genome.MyFitness.PathLength);
 
-        TargetMeanCorridorLength = genome.MyFitness.MeanCorridorLength;
+        TargetMeanCorridorLength.Add(genome.MyFitness.MeanCorridorLength);
+
+        TargetMeanChamberArea.Add(genome.MyFitness.MeanChamberArea);
+
+        TargetNumberChambers.Add(genome.MyFitness.Chambers.Count);
+
+        TargetNumberCorridors.Add(genome.MyFitness.Corridors.Count);
+
+        TargetMaxCorridorLength.Add(genome.MyFitness.MaxCorridorLength);
+
+        TargetMinCorridorLength.Add(genome.MyFitness.MinCorridorLength);
+
+        TargetMaxChamberSize.Add(genome.MyFitness.MaxChamberSize);
+
+        TargetMinChamberSize.Add(genome.MyFitness.MinChamberSize);
+
+        TargetMeanChamberSquareness.Add(genome.MyFitness.MeanChamberSquareness);
+
+        TargetMinChamberSquareness.Add(genome.MyFitness.MinChamberSquareness);
+
+        TargetMaxChamberSquareness.Add(genome.MyFitness.MaxChamberSquareness);
+
+        TargetNumberOfJoints.Add(genome.MyFitness.NumJoints);
+        TargetNumberOfTurns.Add(genome.MyFitness.NumTurns);
+
         
 
-        TargetMeanChamberArea = genome.MyFitness.MeanChamberArea;
+        TargetTreasureDensity.Add(genome.MyFitness.TreasureDensity);
+        TargetEnemyDensity.Add(genome.MyFitness.EnemyDensity);
+        TargetDeadTileDensity.Add(genome.MyFitness.DeadTileDensity);
 
-        TargetNumberChambers = genome.MyFitness.Chambers.Count;
-        TargetNumberCorridors = genome.MyFitness.Corridors.Count;
+        TargetEntranceSafety.Add(genome.MyFitness.EntranceSafetyArea);
+        TargetEntranceGreed.Add(genome.MyFitness.EntranceGreedArea);
 
-        TargetMaxCorridorLength = genome.MyFitness.MaxCorridorLength;
-        TargetMinCorridorLength = genome.MyFitness.MinCorridorLength;
-        TargetMaxChamberSize = genome.MyFitness.MaxChamberSize;
-        TargetMinChamberSize = genome.MyFitness.MinChamberSize;
-        TargetMeanChamberSquareness = genome.MyFitness.MeanChamberSquareness;
-        TargetMinChamberSquareness = genome.MyFitness.MinChamberSquareness;
-        TargetMaxChamberSquareness = genome.MyFitness.MaxChamberSquareness;
+        TargetTreasureSafety.Add(genome.MyFitness.MeanTreasureSafety);
+        TargetTreasureSafetyVariance.Add(genome.MyFitness.TreasureSafetyVariance);
 
-        TargetNumberOfJoints = genome.MyFitness.NumJoints;
-        TargetNumberOfTurns = genome.MyFitness.NumTurns;
+        TargetPassableToImpassableRatio.Add(genome.MyFitness.PassableToImpassableRatio);
 
-        
+        TargetUpDownWallRatio.Add(genome.MyFitness.UpDownWallRatio);
+        TargetLeftRightWallRatio.Add(genome.MyFitness.LeftRightWallRatio);
 
-        TargetTreasureDensity = genome.MyFitness.TreasureDensity;
-        TargetEnemyDensity = genome.MyFitness.EnemyDensity;
-        TargetDeadTileDensity = genome.MyFitness.DeadTileDensity;
+        TargetUpDownEnemyRatio.Add(genome.MyFitness.UpDownEnemyRatio);
+        TargetLeftRightEnemyRatio.Add(genome.MyFitness.LeftRightEnemyRatio);
 
-        EntranceSafety = genome.MyFitness.EntranceSafetyArea;
-        EntranceGreed = genome.MyFitness.EntranceGreedArea;
+        TargetUpDownTreasureRatio.Add(genome.MyFitness.UpDownTreasureRatio);
+        TargetLeftRightTreasureRatio.Add(genome.MyFitness.LeftRightTreasureRatio);
 
-        TargetTreasureSafety = genome.MyFitness.MeanTreasureSafety;
-        TargetTreasureSafetyVariance = genome.MyFitness.TreasureSafetyVariance;
+        TargetUpDownTreasureToEnemyRatio.Add(genome.MyFitness.UpDownTreasureToEnemyRatio);
+        TargetLeftRightTreasureToEnemyRatio.Add(genome.MyFitness.LeftRightTreasureToEnemyRatio);
 
-        TargetPassableToImpassableRatio = genome.MyFitness.PassableToImpassableRatio;
-
-        TargetUpDownWallRatio = genome.MyFitness.UpDownWallRatio;
-        TargetLeftRightWallRatio = genome.MyFitness.LeftRightWallRatio;
-
-        TargetUpDownEnemyRatio = genome.MyFitness.UpDownEnemyRatio;
-        TargetLeftRightEnemyRatio = genome.MyFitness.LeftRightEnemyRatio;
-
-        TargetUpDownTreasureRatio = genome.MyFitness.UpDownTreasureRatio;
-        TargetLeftRightTreasureRatio = genome.MyFitness.LeftRightTreasureRatio;
-
-        TargetUpDownTreasureToEnemyRatio = genome.MyFitness.UpDownTreasureToEnemyRatio;
-        TargetLeftRightTreasureToEnemyRatio = genome.MyFitness.LeftRightTreasureToEnemyRatio;
-
-        TargetRotationalSymmetry = genome.MyFitness.RotationalSymmetry;
-        TargetISymmetry = genome.MyFitness.ISymmetry;
-        TargetJSymmetry = genome.MyFitness.JSymmetry;
+        TargetRotationalSymmetry.Add(genome.MyFitness.RotationalSymmetry);
+        TargetISymmetry.Add(genome.MyFitness.ISymmetry);
+        TargetJSymmetry.Add(genome.MyFitness.JSymmetry);
 
         NumberOfTargetGenomes = 1;
 
@@ -226,91 +232,64 @@ public class Fitness
     {
         genome.CalculateFitnesses();
 
-        TargetFractalIndex = ((NumberOfTargetGenomes*TargetFractalIndex) + genome.MyFitness.FractalDimension) / (NumberOfTargetGenomes + 1);
+        TargetFractalIndex.Add(genome.MyFitness.FractalDimension);
 
-    
-        TargetPathLength = ((NumberOfTargetGenomes*TargetPathLength) + 
-            (genome.MyFitness.PathLength)) / (NumberOfTargetGenomes + 1);
+        TargetPathLength.Add(genome.MyFitness.PathLength);
 
-       
+        TargetMeanCorridorLength.Add(genome.MyFitness.MeanCorridorLength);
 
-        TargetMeanCorridorLength = ((NumberOfTargetGenomes * TargetMeanCorridorLength) + genome.MyFitness.MeanCorridorLength) / (NumberOfTargetGenomes + 1);
+        TargetMeanChamberArea.Add(genome.MyFitness.MeanChamberArea);
 
-        TargetMeanChamberArea = ((NumberOfTargetGenomes * TargetMeanChamberArea) + genome.MyFitness.MeanChamberArea) / (NumberOfTargetGenomes + 1);
+        TargetNumberChambers.Add(genome.MyFitness.Chambers.Count);
 
+        TargetNumberCorridors.Add(genome.MyFitness.Corridors.Count);
 
+        TargetMaxCorridorLength.Add(genome.MyFitness.MaxCorridorLength);
 
-        
-        TargetMaxCorridorLength = ((NumberOfTargetGenomes * TargetMaxCorridorLength) + genome.MyFitness.MaxCorridorLength)
-            / (NumberOfTargetGenomes + 1);
-        TargetMinCorridorLength = ((NumberOfTargetGenomes * TargetMinCorridorLength) + genome.MyFitness.MinCorridorLength)
-            / (NumberOfTargetGenomes + 1);
-        TargetMaxChamberSize = ((NumberOfTargetGenomes * TargetMaxChamberSize) + genome.MyFitness.MaxChamberSize)
-            / (NumberOfTargetGenomes + 1);
-        TargetMinChamberSize = ((NumberOfTargetGenomes * TargetMinChamberSize) + genome.MyFitness.MinChamberSize)
-            / (NumberOfTargetGenomes + 1);
+        TargetMinCorridorLength.Add(genome.MyFitness.MinCorridorLength);
 
-        TargetMeanChamberSquareness = ((NumberOfTargetGenomes * TargetMeanChamberSquareness) + genome.MyFitness.MeanChamberSquareness)
-            / (NumberOfTargetGenomes + 1);
-        TargetMinChamberSquareness = ((NumberOfTargetGenomes * TargetMinChamberSquareness) + genome.MyFitness.MinChamberSquareness)
-            / (NumberOfTargetGenomes + 1);
-        TargetMaxChamberSquareness = ((NumberOfTargetGenomes * TargetMaxChamberSquareness) + genome.MyFitness.MaxChamberSquareness)
-            / (NumberOfTargetGenomes + 1);
+        TargetMaxChamberSize.Add(genome.MyFitness.MaxChamberSize);
+
+        TargetMinChamberSize.Add(genome.MyFitness.MinChamberSize);
+
+        TargetMeanChamberSquareness.Add(genome.MyFitness.MeanChamberSquareness);
+
+        TargetMinChamberSquareness.Add(genome.MyFitness.MinChamberSquareness);
+
+        TargetMaxChamberSquareness.Add(genome.MyFitness.MaxChamberSquareness);
+
+        TargetNumberOfJoints.Add(genome.MyFitness.NumJoints);
+        TargetNumberOfTurns.Add(genome.MyFitness.NumTurns);
 
 
-        TargetNumberChambers = ((NumberOfTargetGenomes * TargetNumberChambers) + genome.MyFitness.Chambers.Count)
-            / (NumberOfTargetGenomes + 1);
-        TargetNumberCorridors = ((NumberOfTargetGenomes * TargetNumberCorridors) + genome.MyFitness.Corridors.Count)
-            / (NumberOfTargetGenomes + 1);
 
-        TargetNumberOfJoints = ((NumberOfTargetGenomes * TargetNumberOfJoints) + genome.MyFitness.NumJoints) / (NumberOfTargetGenomes + 1);
-        TargetNumberOfTurns = ((NumberOfTargetGenomes * TargetNumberOfJoints) + genome.MyFitness.NumTurns) / (NumberOfTargetGenomes + 1);
+        TargetTreasureDensity.Add(genome.MyFitness.TreasureDensity);
+        TargetEnemyDensity.Add(genome.MyFitness.EnemyDensity);
+        TargetDeadTileDensity.Add(genome.MyFitness.DeadTileDensity);
 
+        TargetEntranceSafety.Add(genome.MyFitness.EntranceSafetyArea);
+        TargetEntranceGreed.Add(genome.MyFitness.EntranceGreedArea);
 
-        TargetTreasureDensity = ((NumberOfTargetGenomes * TargetTreasureDensity) + genome.MyFitness.TreasureDensity) 
-            / (NumberOfTargetGenomes + 1);
-        TargetEnemyDensity = ((NumberOfTargetGenomes * TargetEnemyDensity) + genome.MyFitness.EnemyDensity)
-            / (NumberOfTargetGenomes + 1);
-        TargetDeadTileDensity = ((NumberOfTargetGenomes * TargetDeadTileDensity) + genome.MyFitness.DeadTileDensity)
-            / (NumberOfTargetGenomes + 1);
+        TargetTreasureSafety.Add(genome.MyFitness.MeanTreasureSafety);
+        TargetTreasureSafetyVariance.Add(genome.MyFitness.TreasureSafetyVariance);
 
-        EntranceSafety = ((NumberOfTargetGenomes * EntranceSafety) + 
-            (genome.MyFitness.EntranceSafetyArea)) / (NumberOfTargetGenomes + 1);
+        TargetPassableToImpassableRatio.Add(genome.MyFitness.PassableToImpassableRatio);
 
-        EntranceGreed = ((NumberOfTargetGenomes * EntranceGreed) + 
-            (genome.MyFitness.EntranceGreedArea)) / (NumberOfTargetGenomes + 1);
+        TargetUpDownWallRatio.Add(genome.MyFitness.UpDownWallRatio);
+        TargetLeftRightWallRatio.Add(genome.MyFitness.LeftRightWallRatio);
 
-        TargetTreasureSafety = ((NumberOfTargetGenomes * TargetTreasureSafety) + genome.MyFitness.MeanTreasureSafety) / (NumberOfTargetGenomes + 1);
+        TargetUpDownEnemyRatio.Add(genome.MyFitness.UpDownEnemyRatio);
+        TargetLeftRightEnemyRatio.Add(genome.MyFitness.LeftRightEnemyRatio);
 
-        TargetTreasureSafetyVariance = ((NumberOfTargetGenomes * TargetTreasureSafetyVariance) 
-            + genome.MyFitness.TreasureSafetyVariance) / (NumberOfTargetGenomes + 1);
+        TargetUpDownTreasureRatio.Add(genome.MyFitness.UpDownTreasureRatio);
+        TargetLeftRightTreasureRatio.Add(genome.MyFitness.LeftRightTreasureRatio);
 
-        TargetPassableToImpassableRatio = ((NumberOfTargetGenomes * TargetPassableToImpassableRatio) 
-            + (genome.MyFitness.PassableToImpassableRatio)) / (NumberOfTargetGenomes + 1);
+        TargetUpDownTreasureToEnemyRatio.Add(genome.MyFitness.UpDownTreasureToEnemyRatio);
+        TargetLeftRightTreasureToEnemyRatio.Add(genome.MyFitness.LeftRightTreasureToEnemyRatio);
 
-        TargetUpDownWallRatio = ((NumberOfTargetGenomes * TargetUpDownWallRatio) + genome.MyFitness.UpDownWallRatio) / (NumberOfTargetGenomes + 1);
-        TargetLeftRightWallRatio = ((NumberOfTargetGenomes * TargetLeftRightWallRatio) + genome.MyFitness.LeftRightWallRatio) / (NumberOfTargetGenomes + 1);
-
-        TargetUpDownEnemyRatio = ((NumberOfTargetGenomes * TargetUpDownEnemyRatio) + genome.MyFitness.UpDownEnemyRatio) / (NumberOfTargetGenomes + 1);
-        TargetLeftRightEnemyRatio = ((NumberOfTargetGenomes * TargetLeftRightEnemyRatio) + genome.MyFitness.LeftRightEnemyRatio) / (NumberOfTargetGenomes + 1);
-
-        TargetUpDownTreasureRatio = ((NumberOfTargetGenomes * TargetUpDownTreasureRatio) + genome.MyFitness.UpDownTreasureRatio) 
-            / (NumberOfTargetGenomes + 1);
-        TargetLeftRightTreasureRatio = ((NumberOfTargetGenomes * TargetLeftRightTreasureRatio) + genome.MyFitness.LeftRightTreasureRatio) 
-            / (NumberOfTargetGenomes + 1);
-
-        TargetUpDownTreasureToEnemyRatio = ((NumberOfTargetGenomes * TargetUpDownTreasureToEnemyRatio) + genome.MyFitness.UpDownTreasureToEnemyRatio) 
-            / (NumberOfTargetGenomes + 1);
-        TargetLeftRightTreasureToEnemyRatio = ((NumberOfTargetGenomes * TargetLeftRightTreasureToEnemyRatio) + genome.MyFitness.LeftRightTreasureToEnemyRatio) 
-            / (NumberOfTargetGenomes + 1);
-
-
-        TargetRotationalSymmetry = ((NumberOfTargetGenomes * TargetRotationalSymmetry) + genome.MyFitness.RotationalSymmetry)
-            / (NumberOfTargetGenomes + 1);
-        TargetISymmetry = ((NumberOfTargetGenomes * TargetISymmetry) + genome.MyFitness.ISymmetry)
-            / (NumberOfTargetGenomes + 1);
-        TargetJSymmetry = ((NumberOfTargetGenomes * TargetJSymmetry) + genome.MyFitness.JSymmetry)
-            / (NumberOfTargetGenomes + 1);
+        TargetRotationalSymmetry.Add(genome.MyFitness.RotationalSymmetry);
+        TargetISymmetry.Add(genome.MyFitness.ISymmetry);
+        TargetJSymmetry.Add(genome.MyFitness.JSymmetry);
 
         NumberOfTargetGenomes++;
 
@@ -341,182 +320,324 @@ public class Fitness
         FitnessValue = 0f;
         float numFitnesses = 0f;
 
+        if (NumberOfTargetGenomes < 1) return;
 
-        //float jointFitness = Mathf.Abs(TargetNumberOfJoints - NumJoints) /
-        //    (DungeonGenome.Size * DungeonGenome.Size);
-        //FitnessValues.Add(jointFitness);
-        //FitnessValue += jointFitness;
-        //numFitnesses += 1f;
-
-        //float turnFitness = Mathf.Abs(TargetNumberOfTurns - NumTurns) /
-        //    (DungeonGenome.Size * DungeonGenome.Size);
-        //FitnessValues.Add(turnFitness);
-        //FitnessValue += turnFitness;
-        //numFitnesses += 1f;
-
-        float corridorMeanFitness = Mathf.Abs(TargetMeanCorridorLength - MeanCorridorLength) /
+        float corridorMeanFitness = Mathf.Abs(TargetMeanCorridorLength[0] - MeanCorridorLength) /
             (DungeonGenome.Size * DungeonGenome.Size);
+
+        for (int i = 0; i < NumberOfTargetGenomes-1; i++)
+        {
+            corridorMeanFitness = Mathf.Min(corridorMeanFitness, Mathf.Abs(TargetMeanCorridorLength[i] - MeanCorridorLength) /
+            (DungeonGenome.Size * DungeonGenome.Size));
+        }
+
         FitnessValues.Add(corridorMeanFitness);
         FitnessValue += corridorMeanFitness;
         numFitnesses += 1f;
 
-        float corridorMaxFitness = Mathf.Abs(TargetMaxCorridorLength - MaxCorridorLength) /
+        float corridorMaxFitness = Mathf.Abs(TargetMaxCorridorLength[0] - MaxCorridorLength) /
             (DungeonGenome.Size * DungeonGenome.Size);
+
+        for (int i = 0; i < NumberOfTargetGenomes - 1; i++)
+        {
+            corridorMaxFitness = Mathf.Min(corridorMaxFitness, Mathf.Abs(TargetMaxCorridorLength[i] - MaxCorridorLength) /
+            (DungeonGenome.Size * DungeonGenome.Size));
+        }
+
         FitnessValues.Add(corridorMaxFitness);
         FitnessValue += corridorMaxFitness;
         numFitnesses += 1f;
 
-        float corridorMinFitness = Mathf.Abs(TargetMinCorridorLength - MinCorridorLength) /
+        float corridorMinFitness = Mathf.Abs(TargetMinCorridorLength[0] - MinCorridorLength) /
             (DungeonGenome.Size * DungeonGenome.Size);
+        for (int i = 0; i < NumberOfTargetGenomes - 1; i++)
+        {
+            corridorMinFitness = Mathf.Min(corridorMinFitness, Mathf.Abs(TargetMinCorridorLength[i] - MinCorridorLength) /
+            (DungeonGenome.Size * DungeonGenome.Size));
+        }
         FitnessValues.Add(corridorMinFitness);
         FitnessValue += corridorMinFitness;
         numFitnesses += 1f;
 
-        float chamberMeanFitness = Mathf.Abs(TargetMeanChamberArea - MeanChamberArea) /
+        float chamberMeanFitness = Mathf.Abs(TargetMeanChamberArea[0] - MeanChamberArea) /
             (DungeonGenome.Size * DungeonGenome.Size);
+        for (int i = 0; i < NumberOfTargetGenomes - 1; i++)
+        {
+            chamberMeanFitness = Mathf.Min(chamberMeanFitness, Mathf.Abs(TargetMeanChamberArea[i] - MeanChamberArea) /
+            (DungeonGenome.Size * DungeonGenome.Size));
+        }
         FitnessValues.Add(chamberMeanFitness);
         FitnessValue += chamberMeanFitness;
         numFitnesses += 1f;
 
-        float chamberMaxFitness = Mathf.Abs(TargetMaxChamberSize - MaxChamberSize) /
+        float chamberMaxFitness = Mathf.Abs(TargetMaxChamberSize[0] - MaxChamberSize) /
             (DungeonGenome.Size * DungeonGenome.Size);
+        for (int i = 0; i < NumberOfTargetGenomes - 1; i++)
+        {
+            chamberMaxFitness = Mathf.Min(chamberMaxFitness, Mathf.Abs(TargetMaxChamberSize[i] - MaxChamberSize) /
+            (DungeonGenome.Size * DungeonGenome.Size));
+        }
         FitnessValues.Add(chamberMaxFitness);
         FitnessValue += chamberMaxFitness;
         numFitnesses += 1f;
 
-        float chamberMinFitness = Mathf.Abs(TargetMinChamberSize - MinChamberSize) /
+        float chamberMinFitness = Mathf.Abs(TargetMinChamberSize[0] - MinChamberSize) /
             (DungeonGenome.Size * DungeonGenome.Size);
+        for (int i = 0; i < NumberOfTargetGenomes - 1; i++)
+        {
+            chamberMinFitness = Mathf.Min(chamberMinFitness, Mathf.Abs(TargetMinChamberSize[i] - MinChamberSize) /
+            (DungeonGenome.Size * DungeonGenome.Size));
+        }
         FitnessValues.Add(chamberMinFitness);
         FitnessValue += chamberMinFitness;
         numFitnesses += 1f;
 
-        float chamberSquareFitness = Mathf.Abs(TargetMeanChamberSquareness - MeanChamberSquareness);
+        float chamberSquareFitness = Mathf.Abs(TargetMeanChamberSquareness[0] - MeanChamberSquareness);
+        for (int i = 0; i < NumberOfTargetGenomes - 1; i++)
+        {
+            chamberSquareFitness = Mathf.Min(chamberSquareFitness, 
+                Mathf.Abs(TargetMeanChamberSquareness[i] - MeanChamberSquareness)
+            );
+        }
         FitnessValues.Add(chamberSquareFitness);
         FitnessValue += chamberSquareFitness;
         numFitnesses += 1f;
 
-        float chamberMinSquareFitness = Mathf.Abs(TargetMinChamberSquareness - MinChamberSquareness);
+        float chamberMinSquareFitness = Mathf.Abs(TargetMinChamberSquareness[0] - MinChamberSquareness);
+        
+        for (int i = 0; i < NumberOfTargetGenomes - 1; i++)
+        {
+            chamberMinSquareFitness = Mathf.Min(chamberMinSquareFitness,
+                Mathf.Abs(TargetMinChamberSquareness[i] - MinChamberSquareness));
+        }
         FitnessValues.Add(chamberMinSquareFitness);
         FitnessValue += chamberMinSquareFitness;
         numFitnesses += 1f;
 
-        float chamberMaxSquareFitness = Mathf.Abs(TargetMaxChamberSquareness - MaxChamberSquareness);
+        float chamberMaxSquareFitness = Mathf.Abs(TargetMaxChamberSquareness[0] - MaxChamberSquareness);
+        
+        for (int i = 0; i < NumberOfTargetGenomes - 1; i++)
+        {
+            chamberMaxSquareFitness = Mathf.Min(chamberMaxSquareFitness,
+                Mathf.Abs(TargetMaxChamberSquareness[i] - MaxChamberSquareness));
+        }
         FitnessValues.Add(chamberMaxSquareFitness);
         FitnessValue += chamberMaxSquareFitness;
         numFitnesses += 1f;
 
-        float numChamberFitness = Mathf.Abs(TargetNumberChambers - Chambers.Count)/
+        float numChamberFitness = Mathf.Abs(TargetNumberChambers[0] - Chambers.Count)/
             (DungeonGenome.Size * DungeonGenome.Size);
+        for (int i = 0; i < NumberOfTargetGenomes - 1; i++)
+        {
+            numChamberFitness = Mathf.Min(numChamberFitness, Mathf.Abs(TargetNumberChambers[i] - Chambers.Count) /
+            (DungeonGenome.Size * DungeonGenome.Size));
+        }
         FitnessValues.Add(numChamberFitness);
         FitnessValue += numChamberFitness;
         numFitnesses += 1f;
 
-        float numCorridorFitness = Mathf.Abs(TargetNumberCorridors - Corridors.Count) /
+        float numCorridorFitness = Mathf.Abs(TargetNumberCorridors[0] - Corridors.Count) /
             (DungeonGenome.Size * DungeonGenome.Size);
+        for (int i = 0; i < NumberOfTargetGenomes - 1; i++)
+        {
+            numCorridorFitness = Mathf.Min(numCorridorFitness,
+                Mathf.Abs(TargetNumberCorridors[i] - Corridors.Count) /
+            (DungeonGenome.Size * DungeonGenome.Size));
+        }
         FitnessValues.Add(numCorridorFitness);
         FitnessValue += numCorridorFitness;
         numFitnesses += 1f;
 
-        float deadTileFitness = Mathf.Abs(DeadTileDensity - TargetDeadTileDensity);
+        float deadTileFitness = Mathf.Abs(DeadTileDensity - TargetDeadTileDensity[0]);
+        for (int i = 0; i < NumberOfTargetGenomes - 1; i++)
+        {
+            deadTileFitness = Mathf.Min(deadTileFitness, Mathf.Abs(DeadTileDensity - TargetDeadTileDensity[i]));
+        }
         FitnessValues.Add(deadTileFitness);
         FitnessValue += deadTileFitness;
         numFitnesses += 1f;
 
-        float safeEntranceFitness = Mathf.Abs( EntranceSafetyArea - EntranceSafety);
+        float safeEntranceFitness = Mathf.Abs( EntranceSafetyArea - TargetEntranceSafety[0]);
+        for (int i = 0; i < NumberOfTargetGenomes - 1; i++)
+        {
+            safeEntranceFitness = Mathf.Min(safeEntranceFitness, Mathf.Abs(EntranceSafetyArea - TargetEntranceSafety[i]));
+        }
         FitnessValues.Add(safeEntranceFitness);
         FitnessValue += safeEntranceFitness;
         numFitnesses += 1f;
 
-        float greedEntranceFitness = Mathf.Abs(EntranceGreedArea - EntranceGreed);
+        float greedEntranceFitness = Mathf.Abs(EntranceGreedArea - TargetEntranceGreed[0]);
+        for (int i = 0; i < NumberOfTargetGenomes - 1; i++)
+        {
+            greedEntranceFitness = Mathf.Min(greedEntranceFitness, Mathf.Abs(EntranceGreedArea - TargetEntranceGreed[i]));
+        }
         FitnessValues.Add(greedEntranceFitness);
         FitnessValue += greedEntranceFitness;
         numFitnesses += 1f;
 
-        float enemyFitness = Mathf.Abs(EnemyDensity - TargetEnemyDensity);
+        float enemyFitness = Mathf.Abs(EnemyDensity - TargetEnemyDensity[0]);
+        for (int i = 0; i < NumberOfTargetGenomes - 1; i++)
+        {
+            enemyFitness = Mathf.Min(enemyFitness, Mathf.Abs(EnemyDensity - TargetEnemyDensity[i]));
+        }
         FitnessValues.Add(enemyFitness);
         FitnessValue += enemyFitness;
         numFitnesses += 1f;
 
-        float treasureFitness = Mathf.Abs(TreasureDensity - TargetTreasureDensity);
+        float treasureFitness = Mathf.Abs(TreasureDensity - TargetTreasureDensity[0]);
+        for (int i = 0; i < NumberOfTargetGenomes - 1; i++)
+        {
+            treasureFitness = Mathf.Min(treasureFitness, Mathf.Abs(TreasureDensity - TargetTreasureDensity[i]));
+        }
         FitnessValues.Add(treasureFitness);
         FitnessValue += treasureFitness;
         numFitnesses += 1f;
 
-        float treasureSafetyFitness = Mathf.Abs(MeanTreasureSafety - TargetTreasureSafety);
+        float treasureSafetyFitness = Mathf.Abs(MeanTreasureSafety - TargetTreasureSafety[0]);
+        for (int i = 0; i < NumberOfTargetGenomes - 1; i++)
+        {
+            treasureSafetyFitness = Mathf.Min(treasureSafetyFitness, Mathf.Abs(MeanTreasureSafety - TargetTreasureSafety[i]));
+        }
         FitnessValues.Add(treasureSafetyFitness);
         FitnessValue += treasureSafetyFitness;
         numFitnesses += 1f;
 
-        float treasureSafetyVarFitness = Mathf.Abs(TreasureSafetyVariance - TargetTreasureSafetyVariance);
+        float treasureSafetyVarFitness = Mathf.Abs(TreasureSafetyVariance - TargetTreasureSafetyVariance[0]);
+        for (int i = 0; i < NumberOfTargetGenomes - 1; i++)
+        {
+            treasureSafetyVarFitness = Mathf.Min(treasureSafetyVarFitness,
+                Mathf.Abs(TreasureSafetyVariance - TargetTreasureSafetyVariance[i]));
+        }
         FitnessValues.Add(treasureSafetyVarFitness);
         FitnessValue += treasureSafetyVarFitness;
         numFitnesses += 1f;
 
         //Visual fitnesses
-        float numberOfPassableFitness = Mathf.Abs(PassableToImpassableRatio - TargetPassableToImpassableRatio);
+        float numberOfPassableFitness = Mathf.Abs(PassableToImpassableRatio - TargetPassableToImpassableRatio[0]);
+        for (int i = 0; i < NumberOfTargetGenomes - 1; i++)
+        {
+            numberOfPassableFitness = Mathf.Min(numberOfPassableFitness,
+                Mathf.Abs(PassableToImpassableRatio - TargetPassableToImpassableRatio[i]));
+        }
         FitnessValues.Add(numberOfPassableFitness);
         FitnessValue += numberOfPassableFitness;
         numFitnesses += 1f;
 
-        float pathFitness = Mathf.Abs(TargetPathLength - PathLength);
+        float pathFitness = Mathf.Abs(TargetPathLength[0] - PathLength);
+        for (int i = 0; i < NumberOfTargetGenomes - 1; i++)
+        {
+            pathFitness = Mathf.Min(pathFitness, Mathf.Abs(TargetPathLength[i] - PathLength));
+        }
         FitnessValues.Add(pathFitness);
         FitnessValue += pathFitness;
         numFitnesses += 1f;
 
-        //float fractalFitness = 1.0f - Mathf.Abs(TargetFractalIndex - FractalDimension);
-        //FitnessValues.Add(fractalFitness);
+        
 
-        float leftRightWallFitness = Mathf.Abs(TargetLeftRightWallRatio - LeftRightWallRatio);
+        float leftRightWallFitness = Mathf.Abs(TargetLeftRightWallRatio[0] - LeftRightWallRatio);
+        for (int i = 0; i < NumberOfTargetGenomes - 1; i++)
+        {
+            leftRightWallFitness = Mathf.Min(leftRightWallFitness,
+                Mathf.Abs(TargetLeftRightWallRatio[i] - LeftRightWallRatio));
+        }
         FitnessValues.Add(leftRightWallFitness);
         FitnessValue += leftRightWallFitness;
         numFitnesses += 1f;
 
-        float upDownWallFitness = Mathf.Abs(TargetUpDownWallRatio - UpDownWallRatio);
+        float upDownWallFitness = Mathf.Abs(TargetUpDownWallRatio[0] - UpDownWallRatio);
+        for (int i = 0; i < NumberOfTargetGenomes - 1; i++)
+        {
+            upDownWallFitness = Mathf.Min(upDownWallFitness,
+                Mathf.Abs(TargetUpDownWallRatio[i] - UpDownWallRatio));
+        }
         FitnessValues.Add(upDownWallFitness);
         FitnessValue += upDownWallFitness;
         numFitnesses += 1f;
 
-        float leftRightEnemyFitness = Mathf.Abs(TargetLeftRightEnemyRatio - LeftRightEnemyRatio);
+        float leftRightEnemyFitness = Mathf.Abs(TargetLeftRightEnemyRatio[0] - LeftRightEnemyRatio);
+        for (int i = 0; i < NumberOfTargetGenomes - 1; i++)
+        {
+            leftRightEnemyFitness = Mathf.Min(leftRightEnemyFitness,
+                 Mathf.Abs(TargetLeftRightEnemyRatio[i] - LeftRightEnemyRatio));
+        }
         FitnessValues.Add(leftRightEnemyFitness);
         FitnessValue += leftRightEnemyFitness;
         numFitnesses += 1f;
 
-        float upDownEnemyFitness = Mathf.Abs(TargetUpDownEnemyRatio - UpDownEnemyRatio);
+        float upDownEnemyFitness = Mathf.Abs(TargetUpDownEnemyRatio[0] - UpDownEnemyRatio);
+        for (int i = 0; i < NumberOfTargetGenomes - 1; i++)
+        {
+            upDownEnemyFitness = Mathf.Min(upDownEnemyFitness,
+                Mathf.Abs(TargetUpDownEnemyRatio[i] - UpDownEnemyRatio));
+        }
         FitnessValues.Add(upDownEnemyFitness);
         FitnessValue += upDownEnemyFitness;
         numFitnesses += 1f;
 
-        float leftRightTreasureFitness = Mathf.Abs(TargetLeftRightTreasureRatio - LeftRightTreasureRatio);
+        float leftRightTreasureFitness = Mathf.Abs(TargetLeftRightTreasureRatio[0] - LeftRightTreasureRatio);
+        for (int i = 0; i < NumberOfTargetGenomes - 1; i++)
+        {
+            leftRightTreasureFitness = Mathf.Min(leftRightTreasureFitness,
+                Mathf.Abs(TargetLeftRightTreasureRatio[i] - LeftRightTreasureRatio));
+        }
         FitnessValues.Add(leftRightTreasureFitness);
         FitnessValue += leftRightTreasureFitness;
         numFitnesses += 1f;
 
-        float upDownTreasureFitness = Mathf.Abs(TargetUpDownTreasureRatio - UpDownTreasureRatio);
+        float upDownTreasureFitness = Mathf.Abs(TargetUpDownTreasureRatio[0] - UpDownTreasureRatio);
+        for (int i = 0; i < NumberOfTargetGenomes - 1; i++)
+        {
+            upDownTreasureFitness = Mathf.Min(upDownTreasureFitness,
+                Mathf.Abs(TargetUpDownTreasureRatio[i] - UpDownTreasureRatio));
+        }
         FitnessValues.Add(upDownTreasureFitness);
         FitnessValue += upDownTreasureFitness;
         numFitnesses += 1f;
 
-        float leftRightTreasureToEnemyFitness = Mathf.Abs(TargetLeftRightTreasureToEnemyRatio - LeftRightTreasureToEnemyRatio);
+        float leftRightTreasureToEnemyFitness = 
+            Mathf.Abs(TargetLeftRightTreasureToEnemyRatio[0] - LeftRightTreasureToEnemyRatio);
+        for (int i = 0; i < NumberOfTargetGenomes - 1; i++)
+        {
+            leftRightTreasureToEnemyFitness = Mathf.Min(leftRightTreasureToEnemyFitness,
+                Mathf.Abs(TargetLeftRightTreasureToEnemyRatio[i] - LeftRightTreasureToEnemyRatio));
+        }
         FitnessValues.Add(leftRightTreasureToEnemyFitness);
         FitnessValue += leftRightTreasureToEnemyFitness;
         numFitnesses += 1f;
 
-        float upDownTreasureToEnemyFitness = Mathf.Abs(TargetUpDownTreasureToEnemyRatio - UpDownTreasureToEnemyRatio);
+        float upDownTreasureToEnemyFitness = Mathf.Abs(TargetUpDownTreasureToEnemyRatio[0] - UpDownTreasureToEnemyRatio);
+        for (int i = 0; i < NumberOfTargetGenomes - 1; i++)
+        {
+            upDownTreasureToEnemyFitness = Mathf.Min(upDownTreasureToEnemyFitness,
+                Mathf.Abs(TargetUpDownTreasureToEnemyRatio[i] - UpDownTreasureToEnemyRatio));
+        }
         FitnessValues.Add(upDownTreasureToEnemyFitness);
         FitnessValue += upDownTreasureToEnemyFitness;
         numFitnesses += 1f;
 
-        float rotSymFitness = Mathf.Abs(TargetRotationalSymmetry - RotationalSymmetry);
+        float rotSymFitness = Mathf.Abs(TargetRotationalSymmetry[0] - RotationalSymmetry);
+        for (int i = 0; i < NumberOfTargetGenomes - 1; i++)
+        {
+            rotSymFitness = Mathf.Min(rotSymFitness, Mathf.Abs(TargetRotationalSymmetry[i] - RotationalSymmetry));
+        }
         FitnessValues.Add(rotSymFitness);
         FitnessValue += rotSymFitness;
         numFitnesses += 1f;
 
-        float ISymFitness = Mathf.Abs(TargetISymmetry - ISymmetry);
+        float ISymFitness = Mathf.Abs(TargetISymmetry[0] - ISymmetry);
+        for (int i = 0; i < NumberOfTargetGenomes - 1; i++)
+        {
+            ISymFitness = Mathf.Min(ISymFitness, Mathf.Abs(TargetISymmetry[i] - ISymmetry));
+        }
         FitnessValues.Add(ISymFitness);
         FitnessValue += ISymFitness;
         numFitnesses += 1f;
 
-        float JSymFitness = Mathf.Abs(TargetJSymmetry - JSymmetry);
+        float JSymFitness = Mathf.Abs(TargetJSymmetry[0] - JSymmetry);
+        for (int i = 0; i < NumberOfTargetGenomes - 1; i++)
+        {
+            JSymFitness = Mathf.Min(JSymFitness, Mathf.Abs(TargetJSymmetry[i] - JSymmetry));
+        }
         FitnessValues.Add(JSymFitness);
         FitnessValue += JSymFitness;
         numFitnesses += 1f;
