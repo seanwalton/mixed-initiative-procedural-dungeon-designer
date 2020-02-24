@@ -184,15 +184,17 @@ public class GeneticAlgorithm : MonoBehaviour
                 gen1IF.AddIndividual(genome);
             }
         }
-        gen1F.Sort();
-        gen1IF.Sort();
+
+        if (!StudyManager.IsRandom) gen1F.Sort();
+        if (!StudyManager.IsRandom) gen1IF.Sort();
+
         GenerationsFeasiblePop.Add(gen1F);
         GenerationsInfeasiblePop.Add(gen1IF);
     }
 
     public void NextGeneration()
     {
-        if ((GenerationsFeasiblePop.Count+GenerationsInfeasiblePop.Count) == 0)
+        if (((GenerationsFeasiblePop.Count+GenerationsInfeasiblePop.Count) == 0) || StudyManager.IsRandom)
         {
             InitializeFirstGeneration();        
         }
