@@ -170,6 +170,14 @@ public class MixedInitiativeController : MonoBehaviour
 
         }
 
+        //Make the last editor empty
+        DungeonGenome empty = new DungeonGenome();
+        empty.SetAllFloor();
+
+        BottomDungeonEditors[BottomDungeonEditors.Length-1].gameObject.SetActive(true);
+        BottomDungeonEditors[BottomDungeonEditors.Length - 1].SetGenome(empty);
+        BottomDungeonEditors[BottomDungeonEditors.Length - 1].SetToggleActive(true);
+        BottomDungeonEditors[BottomDungeonEditors.Length - 1].Editable = true;
 
 
     }
@@ -180,27 +188,34 @@ public class MixedInitiativeController : MonoBehaviour
 
         for (int i = 0; i < TopFeasibleDungeonEditors.Length; i++)
         {
-            if (TopFeasibleDungeonEditors[i].Liked.isOn || TopFeasibleDungeonEditors[i].Keep.isOn)
+            if (TopFeasibleDungeonEditors[i].gameObject.activeSelf)
             {
-                Fitness.UpdateTargetMetricsFromGenome(TopFeasibleDungeonEditors[i].Genome);
-            }
 
-            if (TopFeasibleDungeonEditors[i].Keep.isOn)
-            {
-                Keepers.AddKeeper(TopFeasibleDungeonEditors[i].Genome);
+                if (TopFeasibleDungeonEditors[i].Liked.isOn || TopFeasibleDungeonEditors[i].Keep.isOn)
+                {
+                    Fitness.UpdateTargetMetricsFromGenome(TopFeasibleDungeonEditors[i].Genome);
+                }
+
+                if (TopFeasibleDungeonEditors[i].Keep.isOn)
+                {
+                    Keepers.AddKeeper(TopFeasibleDungeonEditors[i].Genome);
+                }
             }
         }
 
         for (int i = 0; i < BottomDungeonEditors.Length; i++)
         {
-            if (BottomDungeonEditors[i].Liked.isOn || BottomDungeonEditors[i].Keep.isOn)
+            if (BottomDungeonEditors[i].gameObject.activeSelf)
             {
-                Fitness.UpdateTargetMetricsFromGenome(BottomDungeonEditors[i].Genome);
-            }
+                if (BottomDungeonEditors[i].Liked.isOn || BottomDungeonEditors[i].Keep.isOn)
+                {
+                    Fitness.UpdateTargetMetricsFromGenome(BottomDungeonEditors[i].Genome);
+                }
 
-            if (BottomDungeonEditors[i].Keep.isOn)
-            {
-                Keepers.AddKeeper(BottomDungeonEditors[i].Genome);
+                if (BottomDungeonEditors[i].Keep.isOn)
+                {
+                    Keepers.AddKeeper(BottomDungeonEditors[i].Genome);
+                }
             }
         }
 
