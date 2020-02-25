@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class MixedInitiativeController : MonoBehaviour
@@ -10,6 +11,9 @@ public class MixedInitiativeController : MonoBehaviour
 
     public DungeonEditor[] TopFeasibleDungeonEditors;
     public DungeonEditor[] BottomDungeonEditors;
+
+    private DungeonGenome[] OriginalFeasibleEditors;
+    private DungeonGenome[] OriginalBottomEditors;
 
     [SerializeField]
     private GameObject phase1Objects;
@@ -30,9 +34,13 @@ public class MixedInitiativeController : MonoBehaviour
     private int numGenerationsUntilStop;
     private bool optimisationRunning = false;
 
+    private UserStudyData studyData;
+
     private void Awake()
     {
         geneticAlgorithm = gameObject.GetComponent<GeneticAlgorithm>();
+        OriginalFeasibleEditors = new DungeonGenome[TopFeasibleDungeonEditors.Length];
+        OriginalBottomEditors = new DungeonGenome[BottomDungeonEditors.Length];
     }
 
     private void Start()
@@ -41,6 +49,7 @@ public class MixedInitiativeController : MonoBehaviour
         phase2Objects.SetActive(false);
         phase3Objects.SetActive(false);
         optimisationRunning = false;
+        studyData = new UserStudyData(StudyManager.ParticipantID, StudyManager.IsRandom);
     }
 
     public void SubmitFirstDungeon()
@@ -144,6 +153,9 @@ public class MixedInitiativeController : MonoBehaviour
                 TopFeasibleDungeonEditors[i].SetGenome(lastGen.Individuals[i]);
                 TopFeasibleDungeonEditors[i].SetToggleActive(true);
                 TopFeasibleDungeonEditors[i].Editable = true;
+
+                OriginalFeasibleEditors[i] = new DungeonGenome();
+                OriginalFeasibleEditors[i].CopyFromOtherGenome(lastGen.Individuals[i]);
             }
             else
             {
@@ -162,6 +174,9 @@ public class MixedInitiativeController : MonoBehaviour
                 BottomDungeonEditors[i].SetGenome(lastGen.Individuals[j]);
                 BottomDungeonEditors[i].SetToggleActive(true);
                 BottomDungeonEditors[i].Editable = true;
+
+                OriginalBottomEditors[i] = new DungeonGenome();
+                OriginalBottomEditors[i].CopyFromOtherGenome(lastGen.Individuals[j]);
             }
             else
             {
@@ -194,11 +209,17 @@ public class MixedInitiativeController : MonoBehaviour
                 if (TopFeasibleDungeonEditors[i].Liked.isOn || TopFeasibleDungeonEditors[i].Keep.isOn)
                 {
                     Fitness.UpdateTargetMetricsFromGenome(TopFeasibleDungeonEditors[i].Genome);
+                    studyData.Likes++;
+                    studyData.EditDistanceLiked.Add(DungeonGenome.EditDistance(TopFeasibleDungeonEditors[i].Genome,
+                        OriginalFeasibleEditors[i]));
                 }
 
                 if (TopFeasibleDungeonEditors[i].Keep.isOn)
                 {
                     Keepers.AddKeeper(TopFeasibleDungeonEditors[i].Genome);
+                    studyData.Keeps++;
+                    studyData.EditDistanceKeep.Add(DungeonGenome.EditDistance(TopFeasibleDungeonEditors[i].Genome,
+                        OriginalFeasibleEditors[i]));
                 }
             }
         }
@@ -210,11 +231,32 @@ public class MixedInitiativeController : MonoBehaviour
                 if (BottomDungeonEditors[i].Liked.isOn || BottomDungeonEditors[i].Keep.isOn)
                 {
                     Fitness.UpdateTargetMetricsFromGenome(BottomDungeonEditors[i].Genome);
+
+                    if (i==BottomDungeonEditors.Length - 1)
+                    {
+                        studyData.NumberOfLikesOwnDesign++;
+                    }
+                    else
+                    {
+                        studyData.Likes++;
+                        studyData.EditDistanceLiked.Add(DungeonGenome.EditDistance(BottomDungeonEditors[i].Genome,
+                            OriginalBottomEditors[i]));
+                    }
                 }
 
                 if (BottomDungeonEditors[i].Keep.isOn)
                 {
                     Keepers.AddKeeper(BottomDungeonEditors[i].Genome);
+                    if (i == BottomDungeonEditors.Length - 1)
+                    {
+                        studyData.NumberOfKeepsOwnDesign++;
+                    }
+                    else
+                    {
+                        studyData.Keeps++;
+                        studyData.EditDistanceKeep.Add(DungeonGenome.EditDistance(BottomDungeonEditors[i].Genome,
+                            OriginalBottomEditors[i]));
+                    }
                 }
             }
         }
@@ -226,8 +268,32 @@ public class MixedInitiativeController : MonoBehaviour
         {
             StartOptimiser();
         }
+        else
+        {
+            SaveLogs();
+        }
 
 
+    }
+
+    public void SaveLogs()
+    {
+        string filepath = Application.persistentDataPath + "/" + geneticAlgorithm.ExperimentName + "_"
+            + System.DateTime.Now.Day.ToString() + System.DateTime.Now.Month.ToString() +
+            System.DateTime.Now.Hour.ToString() + System.DateTime.Now.Minute.ToString() + "/";
+
+        Directory.CreateDirectory(filepath);
+
+        Debug.Log("Saving logs to " + filepath);
+
+
+        string saveJSON = JsonUtility.ToJson(studyData);
+        using (StreamWriter sw = new StreamWriter(filepath + geneticAlgorithm.ExperimentName + ".JSON"))
+        {
+            sw.WriteLine(saveJSON);
+        }
+
+        ScreenCapture.CaptureScreenshot(filepath + geneticAlgorithm.ExperimentName + "_img.png");
 
     }
 
