@@ -27,6 +27,9 @@ public class MixedInitiativeController : MonoBehaviour
     [SerializeField]
     public GameObject phase3Objects;
 
+    [SerializeField]
+    public GameObject thankYouMessage;
+
 
     private GeneticAlgorithm geneticAlgorithm;
     private Generation lastGen;
@@ -48,6 +51,7 @@ public class MixedInitiativeController : MonoBehaviour
         phase1Objects.SetActive(true);
         phase2Objects.SetActive(false);
         phase3Objects.SetActive(false);
+        thankYouMessage.SetActive(false);
         optimisationRunning = false;
         studyData = new UserStudyData(StudyManager.ParticipantID, StudyManager.IsRandom);
     }
@@ -271,6 +275,8 @@ public class MixedInitiativeController : MonoBehaviour
         else
         {
             SaveLogs();
+            phase3Objects.SetActive(false);
+            thankYouMessage.SetActive(true);
         }
 
 
