@@ -60,7 +60,7 @@ public class MixedInitiativeController : MonoBehaviour
             System.DateTime.Now.Hour + System.DateTime.Now.Minute + System.DateTime.Now.Second + System.DateTime.Now.Millisecond);
         numGenerationsUntilStop = GAParameters.NumberOfGenerations;
         geneticAlgorithm.ResetOptimiser(GAParameters.PopulationSize);
-        geneticAlgorithm.ExperimentName = GAParameters.Name;
+        geneticAlgorithm.ExperimentName = StudyManager.ParticipantID.ToString() + "_" + StudyManager.IsRandom.ToString();
         geneticAlgorithm.MutationRate = GAParameters.MutationRate;
         geneticAlgorithm.TournamentSize = GAParameters.TournamentSize;
         geneticAlgorithm.NumberOfElite = GAParameters.NumberOfElite;
