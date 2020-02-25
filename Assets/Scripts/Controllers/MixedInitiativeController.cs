@@ -269,14 +269,14 @@ public class MixedInitiativeController : MonoBehaviour
                 }
             }
 
-            studyData.Likes.Add(likes);
-            studyData.Keeps.Add(keeps);
-            studyData.NumberOfKeepsOwnDesign.Add(ownKeeps);
-            studyData.NumberOfLikesOwnDesign.Add(ownLikes);
+            
         }
 
-        
 
+        studyData.Likes.Add(likes);
+        studyData.Keeps.Add(keeps);
+        studyData.NumberOfKeepsOwnDesign.Add(ownKeeps);
+        studyData.NumberOfLikesOwnDesign.Add(ownLikes);
 
         if (!Keepers.KeepersAreFull())
         {
