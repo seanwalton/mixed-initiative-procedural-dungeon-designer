@@ -204,6 +204,11 @@ public class MixedInitiativeController : MonoBehaviour
     public void FinishPhase3()
     {
 
+        int likes = 0;
+        int keeps = 0;
+
+        int ownLikes = 0;
+        int ownKeeps = 0;
 
         for (int i = 0; i < TopFeasibleDungeonEditors.Length; i++)
         {
@@ -213,7 +218,7 @@ public class MixedInitiativeController : MonoBehaviour
                 if (TopFeasibleDungeonEditors[i].Liked.isOn || TopFeasibleDungeonEditors[i].Keep.isOn)
                 {
                     Fitness.UpdateTargetMetricsFromGenome(TopFeasibleDungeonEditors[i].Genome);
-                    studyData.Likes++;
+                    likes++;
                     studyData.EditDistanceLiked.Add(DungeonGenome.EditDistance(TopFeasibleDungeonEditors[i].Genome,
                         OriginalFeasibleEditors[i]));
                 }
@@ -221,7 +226,7 @@ public class MixedInitiativeController : MonoBehaviour
                 if (TopFeasibleDungeonEditors[i].Keep.isOn)
                 {
                     Keepers.AddKeeper(TopFeasibleDungeonEditors[i].Genome);
-                    studyData.Keeps++;
+                    keeps++;
                     studyData.EditDistanceKeep.Add(DungeonGenome.EditDistance(TopFeasibleDungeonEditors[i].Genome,
                         OriginalFeasibleEditors[i]));
                 }
@@ -238,11 +243,11 @@ public class MixedInitiativeController : MonoBehaviour
 
                     if (i==BottomDungeonEditors.Length - 1)
                     {
-                        studyData.NumberOfLikesOwnDesign++;
+                        ownLikes++;
                     }
                     else
                     {
-                        studyData.Likes++;
+                        likes++;
                         studyData.EditDistanceLiked.Add(DungeonGenome.EditDistance(BottomDungeonEditors[i].Genome,
                             OriginalBottomEditors[i]));
                     }
@@ -253,16 +258,21 @@ public class MixedInitiativeController : MonoBehaviour
                     Keepers.AddKeeper(BottomDungeonEditors[i].Genome);
                     if (i == BottomDungeonEditors.Length - 1)
                     {
-                        studyData.NumberOfKeepsOwnDesign++;
+                        ownKeeps++;
                     }
                     else
                     {
-                        studyData.Keeps++;
+                        keeps++;
                         studyData.EditDistanceKeep.Add(DungeonGenome.EditDistance(BottomDungeonEditors[i].Genome,
                             OriginalBottomEditors[i]));
                     }
                 }
             }
+
+            studyData.Likes.Add(likes);
+            studyData.Keeps.Add(keeps);
+            studyData.NumberOfKeepsOwnDesign.Add(ownKeeps);
+            studyData.NumberOfLikesOwnDesign.Add(ownLikes);
         }
 
         

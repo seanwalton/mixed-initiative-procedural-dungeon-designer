@@ -9,11 +9,11 @@ public class UserStudyData
 
     public bool IsRandom;
 
-    public int Likes;
-    public int Keeps;
+    public List<int> Likes = new List<int>();
+    public List<int> Keeps = new List<int>();
 
-    public int NumberOfLikesOwnDesign;
-    public int NumberOfKeepsOwnDesign;
+    public List<int> NumberOfLikesOwnDesign = new List<int>();
+    public List<int> NumberOfKeepsOwnDesign = new List<int>();
 
     public List<int> EditDistanceLiked = new List<int>();
 
@@ -24,11 +24,11 @@ public class UserStudyData
         ParticipantID = participantID;
         IsRandom = isRandom;
 
-        Likes = 0;
-        Keeps = 0;
+        Likes.Clear();
+        Keeps.Clear();
 
-        NumberOfKeepsOwnDesign = 0;
-        NumberOfKeepsOwnDesign = 0;
+        NumberOfKeepsOwnDesign.Clear();
+        NumberOfKeepsOwnDesign.Clear();
 
         EditDistanceLiked.Clear();
         EditDistanceKeep.Clear();
