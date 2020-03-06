@@ -19,24 +19,31 @@ public class StudyManager : MonoBehaviour
         ParticipantID = int.Parse(IDInput.text);
         Debug.Log("Participant ID:" + ParticipantID.ToString());
 
-        Random.InitState(1984);
-
-        int randInt = 0;
-
-        for (int i = 0; i < ParticipantID; i++)
-        {
-            randInt = Random.Range(0, 2);
-        }
-
-        if (randInt == 0)
+        if (ParticipantID < 0)
         {
             IsRandom = false;
         }
         else
         {
-            IsRandom = true;
-        }
+            Random.InitState(1984);
 
+            int randInt = 0;
+
+            for (int i = 0; i < ParticipantID; i++)
+            {
+                randInt = Random.Range(0, 2);
+            }
+
+            if (randInt == 0)
+            {
+                IsRandom = false;
+            }
+            else
+            {
+                IsRandom = true;
+            }
+        }
+       
         Debug.Log("Is Random :" + IsRandom.ToString());
 
         SceneManager.LoadScene("MainEditor");
