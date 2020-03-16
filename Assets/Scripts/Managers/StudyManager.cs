@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class StudyManager : MonoBehaviour
 {
-    public static int ParticipantID = 0;
+    public static int ParticipantID = -1;
     public static bool IsRandom = false;
 
     public TMP_InputField IDInput;
