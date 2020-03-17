@@ -302,8 +302,8 @@ public class MixedInitiativeController : MonoBehaviour
 
         Debug.Log("Saving logs to " + filepath);
 
-        thankYouMessage.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Thank you for taking part in this study. Please fill out the questionnaire and " +
-            "send the folder\n" + filepath + "\n to s.p.walton@swansea.ac.uk";
+        thankYouMessage.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Thank you for taking part in this study. " +
+            "Please attach the files found in\n" + filepath + "\n to your survey response and answer the remaining questions";
 
         string saveJSON = JsonUtility.ToJson(studyData);
         using (StreamWriter sw = new StreamWriter(filepath + geneticAlgorithm.ExperimentName + ".JSON"))
