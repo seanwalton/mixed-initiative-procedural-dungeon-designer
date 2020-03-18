@@ -28,6 +28,9 @@ public class MixedInitiativeController : MonoBehaviour
     public GameObject phase3Objects;
 
     [SerializeField]
+    public GameObject generatingSuggestionsText;
+
+    [SerializeField]
     public GameObject thankYouMessage;
 
 
@@ -51,6 +54,7 @@ public class MixedInitiativeController : MonoBehaviour
         phase1Objects.SetActive(true);
         phase2Objects.SetActive(false);
         phase3Objects.SetActive(false);
+        generatingSuggestionsText.SetActive(false);
         thankYouMessage.SetActive(false);
         optimisationRunning = false;
         studyData = new UserStudyData(StudyManager.ParticipantID, StudyManager.IsRandom);
@@ -83,6 +87,7 @@ public class MixedInitiativeController : MonoBehaviour
 
         phase1Objects.SetActive(false);
         phase2Objects.SetActive(true);
+        generatingSuggestionsText.SetActive(true);
         phase3Objects.SetActive(false);
         //InvokeRepeating("AdvanceGeneration", 0f, 0.1f);
         optimisationRunning = true;
@@ -147,7 +152,7 @@ public class MixedInitiativeController : MonoBehaviour
     private void SetupPhase3()
     {
         phase3Objects.SetActive(true);
-
+        generatingSuggestionsText.SetActive(false);
         //Set the dungeons editable
         for (int i = 0; i < TopFeasibleDungeonEditors.Length; i++)
         {
@@ -281,6 +286,7 @@ public class MixedInitiativeController : MonoBehaviour
         if (!Keepers.KeepersAreFull())
         {
             StartOptimiser();
+            generatingSuggestionsText.SetActive(true);
         }
         else
         {
