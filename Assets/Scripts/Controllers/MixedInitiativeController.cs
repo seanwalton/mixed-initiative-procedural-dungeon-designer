@@ -41,6 +41,7 @@ public class MixedInitiativeController : MonoBehaviour
     private bool optimisationRunning = false;
 
     private UserStudyData studyData;
+    private string filepath;
 
     private void Awake()
     {
@@ -300,7 +301,7 @@ public class MixedInitiativeController : MonoBehaviour
 
     public void SaveLogs()
     {
-        string filepath = Application.persistentDataPath + "/" + geneticAlgorithm.ExperimentName + "_"
+        filepath = Application.persistentDataPath + "/" + geneticAlgorithm.ExperimentName + "_"
             + System.DateTime.Now.Day.ToString() + System.DateTime.Now.Month.ToString() +
             System.DateTime.Now.Hour.ToString() + System.DateTime.Now.Minute.ToString() + "/";
 
@@ -309,7 +310,7 @@ public class MixedInitiativeController : MonoBehaviour
         Debug.Log("Saving logs to " + filepath);
 
         thankYouMessage.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = "Thank you for taking part in this study. " +
-            "Please attach the files found in\n" + filepath + "\n to your survey response and answer the remaining questions";
+            "Please attach the files in the folder which just opened to your survey answers";
 
         string saveJSON = JsonUtility.ToJson(studyData);
         using (StreamWriter sw = new StreamWriter(filepath + geneticAlgorithm.ExperimentName + ".JSON"))
@@ -319,6 +320,17 @@ public class MixedInitiativeController : MonoBehaviour
 
         ScreenCapture.CaptureScreenshot(filepath + geneticAlgorithm.ExperimentName + "_img.png");
 
+        Application.OpenURL("file://" + filepath);
+
     }
+
+
+    public void OpenFilePath()
+    {
+        
+         Application.OpenURL("file://" + filepath);
+        
+    }
+
 
 }
