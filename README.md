@@ -1,5 +1,5 @@
 # Mixed Initiative Procedural Dungeon Designer
-A unity3d tool which designs dungeon maps based on a level designer's preferences. This was developed for the publication *Mixed-Initiative Procedural Content Generation using Level Design Patterns and Interactive Evolutionary Optimisation* which is currently under review, but will shortly be available as a preprint on arXiv.org. It is a tool to assist level designers to design levels which would be shipped with a game. Our two design goals were:
+A unity3d tool which designs dungeon maps based on a level designer's preferences. This was developed for the publication *Mixed-Initiative Procedural Content Generation using Level Design Patterns and Interactive Evolutionary Optimisation* which is currently under review, but is available as a [pre-print](https://arxiv.org/abs/2005.07478). It is a tool to assist level designers to design levels which would be shipped with a game. Our two design goals were:
 1. Allow level designers to interact and effect the results of the algorithm through the act of level design and
 2. Support designers to explore the design space.
 
